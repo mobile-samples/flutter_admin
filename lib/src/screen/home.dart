@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/auth.dart';
 import 'package:flutter_admin/src/providers/HomeProvider.dart';
 import 'package:flutter_admin/src/screen/user/user.dart';
+import 'package:flutter_admin/src/screen/role/role.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -61,6 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   builder: (context) => UserScreen(
                                         authInfo: authInfo,
                                       )),
+                            );
+                          } else if (item.id == 'role') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RoleScreen()),
                             );
                           }
                         },
