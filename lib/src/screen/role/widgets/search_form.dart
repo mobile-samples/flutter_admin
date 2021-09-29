@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 class RoleForm extends StatefulWidget {
   const RoleForm({Key? key}) : super(key: key);
-
   @override
   _RoleFormState createState() => _RoleFormState();
 }
 
 class _RoleFormState extends State<RoleForm> {
+  TextEditingController roleNameController = TextEditingController();
   bool checkActive = false;
   bool checkInactive = false;
-  int dropdownValue = 20;
+  int limit = 10;
+  List<String> status = [];
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -29,56 +31,69 @@ class _RoleFormState extends State<RoleForm> {
                 ),
                 Expanded(
                   flex: 4,
-                  child: TextField(),
+                  child: TextField(
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    controller: roleNameController,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Status:',
-                    style: TextStyle(fontSize: 20.0),
+            GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Status:',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.white,
-                        activeColor: Colors.lightGreen,
-                        value: checkActive,
-                        onChanged: (value) {
-                          setState(() {
-                            checkActive = value!;
-                          });
-                        },
-                      ),
-                      Text('Active')
-                    ],
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          checkColor: Colors.white,
+                          activeColor: Colors.lightGreen,
+                          value: checkActive,
+                          onChanged: (value) {
+                            setState(() {
+                              checkActive = value!;
+                            });
+                          },
+                        ),
+                        Text('Active')
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.white,
-                        activeColor: Colors.lightGreen,
-                        value: checkInactive,
-                        onChanged: (value) {
-                          setState(() {
-                            checkInactive = value!;
-                          });
-                        },
-                      ),
-                      Text('Inactive')
-                    ],
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          checkColor: Colors.white,
+                          activeColor: Colors.lightGreen,
+                          value: checkInactive,
+                          onChanged: (value) {
+                            setState(() {
+                              checkInactive = value!;
+                            });
+                          },
+                        ),
+                        Text('Inactive')
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,11 +109,11 @@ class _RoleFormState extends State<RoleForm> {
                     children: [
                       Text('Page Size: ', style: TextStyle(fontSize: 16.0)),
                       DropdownButton<String>(
-                        value: dropdownValue.toString(),
+                        value: limit.toString(),
                         iconSize: 0.0,
                         onChanged: (String? newValue) {
                           setState(() {
-                            dropdownValue = int.parse(newValue!);
+                            limit = int.parse(newValue!);
                           });
                         },
                         items: <String>['5', '10', '20', '40']
@@ -113,7 +128,10 @@ class _RoleFormState extends State<RoleForm> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    // handleOnClick();
+                  },
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.green),

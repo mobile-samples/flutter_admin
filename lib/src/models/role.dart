@@ -1,28 +1,51 @@
-class Role {
+class RoleSM {
   String roleId;
   String roleName;
   String status;
   String remark;
-  String? createdBy;
-  DateTime? createdAt;
-  String? updatedBy;
-  DateTime? updatedAt;
 
-  Role({
+  RoleSM({
     required this.roleId,
     required this.roleName,
     required this.status,
     required this.remark,
-    this.createdBy,
-    this.createdAt,
-    this.updatedBy,
-    this.updatedAt,
   });
 
-  factory Role.fromJson(Map<String, dynamic> json) => Role(
+  factory RoleSM.fromJson(Map<String, dynamic> json) => RoleSM(
         roleId: json['roleId'],
         roleName: json['roleName'],
         status: json['status'],
         remark: json['remark'],
       );
+}
+
+class SearchResult {
+  List<RoleSM> list;
+  int total;
+  bool? last;
+  String? nextPageToken;
+
+  SearchResult({
+    required this.list,
+    required this.total,
+  });
+
+  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(
+        list: json['list'] != null
+            ? List<RoleSM>.from(json['list'].map((x) => RoleSM.fromJson(x)))
+            : [],
+        total: json['total'],
+      );
+}
+
+class RoleFilter {
+  String? roleName;
+  List<String>? status;
+  int limit;
+
+  RoleFilter({
+    required this.limit,
+    this.roleName,
+    this.status,
+  });
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/src/models/role.dart';
 
 class RoleCard extends StatefulWidget {
-  const RoleCard({Key? key}) : super(key: key);
-
+  const RoleCard({Key? key, required this.role}) : super(key: key);
+  final RoleSM role;
   @override
   _RoleCardState createState() => _RoleCardState();
 }
@@ -32,7 +33,7 @@ class _RoleCardState extends State<RoleCard> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 3),
                   child: Text(
-                    'Admin',
+                    widget.role.roleName,
                     style: TextStyle(
                         color: Colors.teal[700],
                         fontSize: 20,
@@ -40,7 +41,7 @@ class _RoleCardState extends State<RoleCard> {
                   ),
                 ),
                 Text(
-                  'Admin',
+                  widget.role.remark,
                   style: TextStyle(fontSize: 16, color: Colors.black),
                   maxLines: 1,
                   overflow: TextOverflow.visible,

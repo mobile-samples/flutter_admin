@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_admin/src/models/auth.dart';
+import 'package:flutter_admin/src/models/role.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
@@ -37,5 +38,32 @@ class APIService {
       AuthInfo auth = AuthInfo.fromJson(authRes);
       return auth;
     });
+  }
+
+  Future<SearchResult> getRole(
+      {required String token, required RoleFilter filters}) async {
+    late String baseUrl = '';
+    if (Platform.isAndroid) {
+      baseUrl = baseUrlAndroid;
+    } else if (Platform.isIOS) {
+      baseUrl = baseUrlIOS;
+    }
+    final response = await http.post(
+      Uri.parse(baseUrl + '/roles/search'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer' + token
+      },
+      body: jsonEncode(<String, dynamic>{
+        'role': filters.roleName != null ? filters.roleName : '',
+        'status': filters.status != null ? filters.status : [],
+        'limit': filters.limit.isNaN ? 0 : filters.limit,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return SearchResult.fromJson(jsonDecode(response.body));
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
   }
 }
