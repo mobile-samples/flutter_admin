@@ -41,11 +41,13 @@ class SearchResult {
 class RoleFilter {
   String? roleName;
   List<String>? status;
+  int? page;
   int limit;
 
   RoleFilter({
-    required this.limit,
     this.roleName,
     this.status,
+    required this.limit,
+    this.page,
   });
 }

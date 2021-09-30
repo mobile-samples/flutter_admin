@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/auth.dart';
 import 'package:flutter_admin/src/models/role.dart';
+import 'package:flutter_admin/src/screen/role/widgets/paginationButton.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';
 import 'package:flutter_admin/src/services/auth.dart';
@@ -17,23 +18,37 @@ class RoleScreen extends StatefulWidget {
 }
 
 class _RoleScreenState extends State<RoleScreen> {
-  final RoleFilter filtersInitial = RoleFilter(limit: 10);
+  late RoleFilter roleFilter = RoleFilter(limit: 10);
   late List<RoleSM> roles = [];
-  final int total = 0;
+  late int total = 0;
 
   @override
   void initState() {
-    super.initState();
     getRole();
+    super.initState();
   }
 
   getRole() async {
     final res = await APIService.instance
-        .getRole(token: widget.authInfo.token, filters: filtersInitial);
+        .getRole(token: widget.authInfo.token, filters: roleFilter);
     setState(() {
-      roles.addAll(res.list);
+      roles = res.list;
+      total = res.total;
     });
   }
+
+  handleSearchFilter(RoleFilter formFilter) async {
+    print(formFilter.limit);
+    final res = await APIService.instance
+        .getRole(token: widget.authInfo.token, filters: formFilter);
+    print(res.list.length);
+    setState(() {
+      roles = res.list;
+      total = res.total;
+    });
+  }
+
+  handlePagination(RoleFilter formFilter) {}
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +61,9 @@ class _RoleScreenState extends State<RoleScreen> {
               title: Text('Search Roles'),
             ),
             RoleForm(
-                // handleSearchClick: handleFilters,
-                ),
+              initialRolel: roleFilter,
+              handleSearchFilter: handleSearchFilter,
+            ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -58,6 +74,9 @@ class _RoleScreenState extends State<RoleScreen> {
                 childCount: roles.length > 0 ? roles.length : 0,
               ),
             ),
+            PaginationButton(
+              handlePagination: handlePagination,
+            )
           ],
         ));
   }

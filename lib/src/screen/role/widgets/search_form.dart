@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/src/models/role.dart';
 
 class RoleForm extends StatefulWidget {
-  const RoleForm({Key? key}) : super(key: key);
+  const RoleForm({
+    Key? key,
+    required this.initialRolel,
+    required this.handleSearchFilter,
+  }) : super(key: key);
+
+  final RoleFilter initialRolel;
+  final Function handleSearchFilter;
+
   @override
   _RoleFormState createState() => _RoleFormState();
 }
 
 class _RoleFormState extends State<RoleForm> {
+  late int limit = widget.initialRolel.limit;
   TextEditingController roleNameController = TextEditingController();
   bool checkActive = false;
   bool checkInactive = false;
-  int limit = 10;
-  List<String> status = [];
+  List<String> newStatus = [];
+
+  handleSearchClick() {
+    final RoleFilter formFilter = RoleFilter(
+      limit: limit,
+      roleName: roleNameController.value.text,
+      status: newStatus,
+      page: 1,
+    );
+    widget.handleSearchFilter(formFilter);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +86,9 @@ class _RoleFormState extends State<RoleForm> {
                           onChanged: (value) {
                             setState(() {
                               checkActive = value!;
+                              checkActive == true
+                                  ? newStatus.add("A")
+                                  : newStatus.remove("A");
                             });
                           },
                         ),
@@ -85,6 +107,9 @@ class _RoleFormState extends State<RoleForm> {
                           onChanged: (value) {
                             setState(() {
                               checkInactive = value!;
+                              checkInactive == true
+                                  ? newStatus.add("I")
+                                  : newStatus.remove("I");
                             });
                           },
                         ),
@@ -130,7 +155,7 @@ class _RoleFormState extends State<RoleForm> {
                 ElevatedButton(
                   onPressed: () {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    // handleOnClick();
+                    handleSearchClick();
                   },
                   style: ButtonStyle(
                     backgroundColor:
