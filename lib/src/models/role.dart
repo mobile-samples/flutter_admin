@@ -39,15 +39,15 @@ class SearchResult {
 }
 
 class RoleFilter {
-  String? roleName;
-  List<String>? status;
-  int? page;
+  String roleName;
+  List<String> status;
+  int page;
   int limit;
 
   RoleFilter({
-    this.roleName,
-    this.status,
+    required this.roleName,
+    required this.status,
     required this.limit,
-    this.page,
+    required this.page,
   });
 }

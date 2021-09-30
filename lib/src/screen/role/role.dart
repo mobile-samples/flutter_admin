@@ -18,7 +18,8 @@ class RoleScreen extends StatefulWidget {
 }
 
 class _RoleScreenState extends State<RoleScreen> {
-  late RoleFilter roleFilter = RoleFilter(limit: 10);
+  late RoleFilter roleFilter =
+      RoleFilter(limit: 10, page: 1, roleName: '', status: []);
   late List<RoleSM> roles = [];
   late int total = 0;
 
@@ -38,17 +39,23 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handleSearchFilter(RoleFilter formFilter) async {
-    print(formFilter.limit);
     final res = await APIService.instance
         .getRole(token: widget.authInfo.token, filters: formFilter);
-    print(res.list.length);
     setState(() {
       roles = res.list;
       total = res.total;
+      roleFilter = formFilter;
     });
   }
 
-  handlePagination(RoleFilter formFilter) {}
+  handlePagination(RoleFilter formFilter) async {
+    final res = await APIService.instance
+        .getRole(token: widget.authInfo.token, filters: formFilter);
+    setState(() {
+      roles = res.list;
+      roleFilter = formFilter;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +81,18 @@ class _RoleScreenState extends State<RoleScreen> {
                 childCount: roles.length > 0 ? roles.length : 0,
               ),
             ),
-            PaginationButton(
-              handlePagination: handlePagination,
-            )
+            (total != 0 && total > roleFilter.limit)
+                ? PaginationButton(
+                    handlePagination: handlePagination,
+                    roleFilter: roleFilter,
+                    total: total,
+                  )
+                : SliverToBoxAdapter(
+                    child: SizedBox(
+                      width: 0,
+                      height: 0,
+                    ),
+                  )
           ],
         ));
   }

@@ -55,10 +55,10 @@ class APIService {
         'Authorization': 'Bearer' + token
       },
       body: jsonEncode(<String, dynamic>{
-        'roleName': filters.roleName != null ? filters.roleName : '',
-        'status': filters.status != null ? filters.status : [],
+        'roleName': filters.roleName.isNotEmpty ? filters.roleName : '',
+        'status': filters.status.isNotEmpty ? filters.status : [],
         'limit': filters.limit.isNaN ? 0 : filters.limit,
-        'page': filters.page != null ? filters.page : 0,
+        'page': filters.page.isNaN ? 0 : filters.page,
       }),
     );
     if (response.statusCode == 200) {
