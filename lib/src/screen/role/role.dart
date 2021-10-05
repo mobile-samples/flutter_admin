@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/auth.dart';
 import 'package:flutter_admin/src/models/role.dart';
-import 'package:flutter_admin/src/screen/role/widgets/paginationButton.dart';
+import 'package:flutter_admin/src/screen/editRole/edit_role.dart';
+import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';
 import 'package:flutter_admin/src/services/auth.dart';
@@ -74,8 +75,19 @@ class _RoleScreenState extends State<RoleScreen> {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return RoleCard(
-                    role: roles[index],
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditRoleScreen(
+                                    token: widget.authInfo.token,
+                                    roleId: roles[index].roleId,
+                                  )));
+                    },
+                    child: RoleCard(
+                      role: roles[index],
+                    ),
                   );
                 },
                 childCount: roles.length > 0 ? roles.length : 0,

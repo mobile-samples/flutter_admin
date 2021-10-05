@@ -67,4 +67,52 @@ class APIService {
       throw json.decode(response.body)['error']['message'];
     }
   }
+
+  Future<List<Privilege>> getPrivileges({required String token}) async {
+    late String baseUrl = '';
+    if (Platform.isAndroid) {
+      baseUrl = baseUrlAndroid;
+    } else if (Platform.isIOS) {
+      baseUrl = baseUrlIOS;
+    }
+    final response = await http.get(
+      Uri.parse(baseUrl + '/privileges'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer' + token
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> res = jsonDecode(response.body);
+      List<Privilege> privilegeList = [];
+      res.forEach((item) {
+        privilegeList.add(Privilege.fromJson(item));
+      });
+      return privilegeList;
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
+  }
+
+  Future<Role> getSpecificRole(
+      {required String token, required String roleId}) async {
+    late String baseUrl = '';
+    if (Platform.isAndroid) {
+      baseUrl = baseUrlAndroid;
+    } else if (Platform.isIOS) {
+      baseUrl = baseUrlIOS;
+    }
+    final response = await http.get(
+      Uri.parse(baseUrl + '/roles/' + roleId),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer' + token
+      },
+    );
+    if (response.statusCode == 200) {
+      return Role.fromJson(jsonDecode(response.body));
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
+  }
 }
