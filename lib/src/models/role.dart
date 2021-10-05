@@ -72,9 +72,11 @@ class Role {
         roleName: json['roleName'],
         status: json['status'],
         remark: json['remark'],
-        privileges: json['privileges'] != null
-            ? List<String>.from(json['privileges'])
-            : [],
+        privileges: json['privileges'] == null
+            ? []
+            : List<String>.from(json['privileges'])
+                .map((e) => e.split(' ')[0].toString())
+                .toList(),
       );
 }
 

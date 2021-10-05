@@ -41,9 +41,9 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
 
   @override
   void initState() {
+    super.initState();
     getSpecificRole();
     getPrivileges();
-    super.initState();
   }
 
   @override
@@ -52,21 +52,83 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
       return Center(
         child: Text('loading...'),
       );
+    } else {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.green[400],
+              title: Text('Edit role'),
+            ),
+            EditRoleForm(
+              role: role,
+            ),
+            RoleSearchForm(),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black38)),
+                    ),
+                    margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                              checkColor: Colors.white,
+                              activeColor: Colors.lightGreen,
+                              value: role.privileges
+                                  .contains(privileges[index].id),
+                              onChanged: (value) {},
+                            ),
+                            Text(
+                              privileges[index].name,
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 35),
+                          child: Column(
+                            children:
+                                List.generate(privileges[index].children.length,
+                                    (indexChildren) {
+                              return Row(
+                                children: [
+                                  Checkbox(
+                                    checkColor: Colors.white,
+                                    activeColor: Colors.lightGreen,
+                                    value: role.privileges.contains(
+                                        privileges[index]
+                                            .children[indexChildren]
+                                            .id),
+                                    onChanged: (value) {},
+                                  ),
+                                  Text(
+                                    privileges[index]
+                                        .children[indexChildren]
+                                        .name,
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              );
+                            }),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+                childCount: privileges.length > 0 ? privileges.length : 0,
+              ),
+            )
+          ],
+        ),
+      );
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.green[400],
-            title: Text('Edit role'),
-          ),
-          EditRoleForm(
-            role: role,
-          ),
-          RoleSearchForm(),
-        ],
-      ),
-    );
   }
 }
