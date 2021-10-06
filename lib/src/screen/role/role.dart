@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/auth.dart';
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/screen/editRole/edit_role.dart';
 import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';
-import 'package:flutter_admin/src/services/auth.dart';
+import 'package:flutter_admin/src/services/role.dart';
 
 class RoleScreen extends StatefulWidget {
   const RoleScreen({
     Key? key,
-    required this.authInfo,
   }) : super(key: key);
-  final AuthInfo authInfo;
 
   @override
   _RoleScreenState createState() => _RoleScreenState();
@@ -31,8 +28,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   getRole() async {
-    final res = await APIService.instance
-        .getRole(token: widget.authInfo.token, filters: roleFilter);
+    final res = await RoleService.instance.useSearch(filters: roleFilter);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -40,8 +36,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handleSearchFilter(RoleFilter formFilter) async {
-    final res = await APIService.instance
-        .getRole(token: widget.authInfo.token, filters: formFilter);
+    final res = await RoleService.instance.useSearch(filters: formFilter);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -50,8 +45,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handlePagination(RoleFilter formFilter) async {
-    final res = await APIService.instance
-        .getRole(token: widget.authInfo.token, filters: formFilter);
+    final res = await RoleService.instance.useSearch(filters: formFilter);
     setState(() {
       roles = res.list;
       roleFilter = formFilter;
@@ -81,7 +75,6 @@ class _RoleScreenState extends State<RoleScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => EditRoleScreen(
-                                    token: widget.authInfo.token,
                                     roleId: roles[index].roleId,
                                   )));
                     },

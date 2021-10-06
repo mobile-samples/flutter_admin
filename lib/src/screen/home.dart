@@ -67,9 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RoleScreen(
-                                        authInfo: authInfo,
-                                      )),
+                                  builder: (context) => RoleScreen()),
                             );
                           }
                         },

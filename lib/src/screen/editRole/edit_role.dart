@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/screen/editRole/edit_role_form.dart';
 import 'package:flutter_admin/src/screen/editRole/role_search_form.dart';
-import 'package:flutter_admin/src/services/auth.dart';
+import 'package:flutter_admin/src/services/role.dart';
 
 class EditRoleScreen extends StatefulWidget {
   const EditRoleScreen({
     Key? key,
-    required this.token,
     required this.roleId,
   }) : super(key: key);
-  final String token;
   final String roleId;
 
   @override
@@ -20,21 +18,22 @@ class EditRoleScreen extends StatefulWidget {
 class _EditRoleScreenState extends State<EditRoleScreen> {
   late List<Privilege> privileges = [];
   late Role role;
+  late List<String> privilegeListByRole;
   bool loading = true;
 
   getPrivileges() async {
-    final res = await APIService.instance.getPrivileges(token: widget.token);
+    final res = await RoleService.instance.getPrivileges();
     setState(() {
       privileges = res;
       loading = false;
     });
   }
 
-  getSpecificRole() async {
-    final res = await APIService.instance
-        .getSpecificRole(token: widget.token, roleId: widget.roleId);
+  getRoleById() async {
+    final res = await RoleService.instance.getRoleById(roleId: widget.roleId);
     setState(() {
       role = res;
+      privilegeListByRole = res.privileges;
       loading = false;
     });
   }
@@ -42,7 +41,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   @override
   void initState() {
     super.initState();
-    getSpecificRole();
+    getRoleById();
     getPrivileges();
   }
 
@@ -68,6 +67,8 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
+                  bool findPrivilege =
+                      privilegeListByRole.contains(privileges[index].id);
                   return Container(
                     decoration: BoxDecoration(
                       border: Border(bottom: BorderSide(color: Colors.black38)),
@@ -81,9 +82,18 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                             Checkbox(
                               checkColor: Colors.white,
                               activeColor: Colors.lightGreen,
-                              value: role.privileges
-                                  .contains(privileges[index].id),
-                              onChanged: (value) {},
+                              value: findPrivilege,
+                              onChanged: (value) {
+                                value == true
+                                    ? setState(() {
+                                        privilegeListByRole
+                                            .add(privileges[index].id);
+                                      })
+                                    : setState(() {
+                                        privilegeListByRole
+                                            .remove(privileges[index].id);
+                                      });
+                              },
                             ),
                             Text(
                               privileges[index].name,
@@ -97,16 +107,33 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                             children:
                                 List.generate(privileges[index].children.length,
                                     (indexChildren) {
+                              bool findPrivilege2 =
+                                  privilegeListByRole.contains(
+                                privileges[index].children[indexChildren].id,
+                              );
                               return Row(
                                 children: [
                                   Checkbox(
                                     checkColor: Colors.white,
                                     activeColor: Colors.lightGreen,
-                                    value: role.privileges.contains(
-                                        privileges[index]
-                                            .children[indexChildren]
-                                            .id),
-                                    onChanged: (value) {},
+                                    value: findPrivilege2,
+                                    onChanged: (value) {
+                                      if (value == true) {
+                                        setState(() {
+                                          privilegeListByRole.add(
+                                              privileges[index]
+                                                  .children[indexChildren]
+                                                  .id);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          privilegeListByRole.remove(
+                                              privileges[index]
+                                                  .children[indexChildren]
+                                                  .id);
+                                        });
+                                      }
+                                    },
                                   ),
                                   Text(
                                     privileges[index]
