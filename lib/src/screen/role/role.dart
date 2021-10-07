@@ -28,7 +28,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   getRole() async {
-    final res = await RoleService.instance.useSearch(filters: roleFilter);
+    final res = await RoleService.instance.useSearch(roleFilter);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -36,7 +36,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handleSearchFilter(RoleFilter formFilter) async {
-    final res = await RoleService.instance.useSearch(filters: formFilter);
+    final res = await RoleService.instance.useSearch(formFilter);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -45,7 +45,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handlePagination(RoleFilter formFilter) async {
-    final res = await RoleService.instance.useSearch(filters: formFilter);
+    final res = await RoleService.instance.useSearch(formFilter);
     setState(() {
       roles = res.list;
       roleFilter = formFilter;

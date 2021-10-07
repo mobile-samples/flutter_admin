@@ -13,14 +13,17 @@ class UserAPIService {
   final String baseUrlIOS = 'http://localhost:7070';
   final String baseUrlAndroid = 'http://10.0.2.2:7070';
 
+  getUrl() {
+    if (Platform.isAndroid) {
+      return baseUrlAndroid;
+    } else if (Platform.isIOS) {
+      return baseUrlIOS;
+    }
+  }
+
   Future<ListUsers> getUsers(
       {required String token, required UserFilter filters}) async {
-    late String baseUrl = '';
-    if (Platform.isAndroid) {
-      baseUrl = baseUrlAndroid;
-    } else if (Platform.isIOS) {
-      baseUrl = baseUrlIOS;
-    }
+    late String baseUrl = getUrl();
     return http
         .post(
       Uri.parse(baseUrl + '/users/search'),

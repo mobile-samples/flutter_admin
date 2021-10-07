@@ -12,13 +12,16 @@ class RoleService {
   final String baseUrlIOS = 'http://localhost:8080';
   final String baseUrlAndroid = 'http://10.0.2.2:8080';
 
-  Future<SearchResult> useSearch({required RoleFilter filters}) async {
-    late String baseUrl = '';
+  getUrl() {
     if (Platform.isAndroid) {
-      baseUrl = baseUrlAndroid;
+      return baseUrlAndroid;
     } else if (Platform.isIOS) {
-      baseUrl = baseUrlIOS;
+      return baseUrlIOS;
     }
+  }
+
+  Future<SearchResult> useSearch(RoleFilter filters) async {
+    late String baseUrl = getUrl();
     final response = await http.post(
       Uri.parse(baseUrl + '/roles/search'),
       headers: <String, String>{
@@ -39,12 +42,7 @@ class RoleService {
   }
 
   Future<List<Privilege>> getPrivileges() async {
-    late String baseUrl = '';
-    if (Platform.isAndroid) {
-      baseUrl = baseUrlAndroid;
-    } else if (Platform.isIOS) {
-      baseUrl = baseUrlIOS;
-    }
+    late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/privileges'),
       headers: <String, String>{
@@ -63,13 +61,8 @@ class RoleService {
     }
   }
 
-  Future<Role> getRoleById({required String roleId}) async {
-    late String baseUrl = '';
-    if (Platform.isAndroid) {
-      baseUrl = baseUrlAndroid;
-    } else if (Platform.isIOS) {
-      baseUrl = baseUrlIOS;
-    }
+  Future<Role> getRoleById(roleId) async {
+    late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/roles/' + roleId),
       headers: <String, String>{

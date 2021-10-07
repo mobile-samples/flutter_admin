@@ -1,14 +1,44 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/src/models/auth.dart';
 
 class RoleSearchForm extends StatefulWidget {
-  const RoleSearchForm({Key? key}) : super(key: key);
+  const RoleSearchForm({
+    Key? key,
+    required this.privilegesByRole,
+    required this.allPrivilege,
+    required this.handleCheckAll,
+  }) : super(key: key);
+  final List<String> privilegesByRole;
+  final List<String> allPrivilege;
+  final Function handleCheckAll;
+
   @override
   _RoleSearchFormState createState() => _RoleSearchFormState();
 }
 
 class _RoleSearchFormState extends State<RoleSearchForm> {
-  bool checkAll = true;
   TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  privilegesNotExistByRole(
+    List<String> allPrivilege,
+    List<String> privilegesByRole,
+  ) {
+    List<String> newList = [...allPrivilege];
+    privilegesByRole.forEach((e) {
+      allPrivilege.forEach((e1) {
+        if (e == e1) {
+          newList.remove(e);
+        }
+      });
+    });
+    return newList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +56,19 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
                   Checkbox(
                     checkColor: Colors.white,
                     activeColor: Colors.lightGreen,
-                    value: checkAll,
+                    value: widget.allPrivilege.length ==
+                            widget.privilegesByRole.length
+                        ? true
+                        : false,
                     onChanged: (value) {
-                      setState(() {
-                        checkAll = value!;
-                      });
+                      if (value == false) {
+                        final List<String> list = [];
+                        widget.handleCheckAll(value, list);
+                      } else if (value == true) {
+                        final List<String> list = privilegesNotExistByRole(
+                            widget.allPrivilege, widget.privilegesByRole);
+                        widget.handleCheckAll(value, list);
+                      }
                     },
                   ),
                   Text('All Privileges'),

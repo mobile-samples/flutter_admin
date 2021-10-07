@@ -17,12 +17,47 @@ class EditRoleScreen extends StatefulWidget {
 
 class _EditRoleScreenState extends State<EditRoleScreen> {
   late List<Privilege> privileges = [];
+  late List<String> formatPrivileges = [];
+  late List<String> privilegeListByRole = [];
   late Role role;
-  late List<String> privilegeListByRole;
   bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getRoleById();
+    getPrivileges();
+  }
+
+  formatPrivilege(List<Privilege> privi) {
+    List<String> newList = [];
+    privi.forEach((e) {
+      newList.add(e.id);
+      if (e.children.isNotEmpty) {
+        e.children.forEach((e1) {
+          newList.add(e1.id);
+        });
+      }
+    });
+    setState(() {
+      formatPrivileges = newList;
+    });
+  }
+
+  handleCheckAll(bool check, List<String> list) {
+    if (check == false) {
+      setState(() {
+        privilegeListByRole = list;
+      });
+    }
+    setState(() {
+      privilegeListByRole.addAll(list);
+    });
+  }
 
   getPrivileges() async {
     final res = await RoleService.instance.getPrivileges();
+    formatPrivilege(res);
     setState(() {
       privileges = res;
       loading = false;
@@ -30,19 +65,12 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   }
 
   getRoleById() async {
-    final res = await RoleService.instance.getRoleById(roleId: widget.roleId);
+    final res = await RoleService.instance.getRoleById(widget.roleId);
     setState(() {
       role = res;
       privilegeListByRole = res.privileges;
       loading = false;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getRoleById();
-    getPrivileges();
   }
 
   @override
@@ -63,7 +91,11 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
             EditRoleForm(
               role: role,
             ),
-            RoleSearchForm(),
+            RoleSearchForm(
+              privilegesByRole: privilegeListByRole,
+              allPrivilege: formatPrivileges,
+              handleCheckAll: handleCheckAll,
+            ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {

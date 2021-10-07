@@ -12,14 +12,17 @@ class APIService {
   final String baseUrlIOS = 'http://localhost:8080';
   final String baseUrlAndroid = 'http://10.0.2.2:8080';
 
+  getUrl() {
+    if (Platform.isAndroid) {
+      return baseUrlAndroid;
+    } else if (Platform.isIOS) {
+      return baseUrlIOS;
+    }
+  }
+
   Future<AuthInfo> authenticate(
       {required String username, required String password}) async {
-    late String baseUrl = '';
-    if (Platform.isAndroid) {
-      baseUrl = baseUrlAndroid;
-    } else if (Platform.isIOS) {
-      baseUrl = baseUrlIOS;
-    }
+    late String baseUrl = getUrl();
     return http
         .post(
       Uri.parse(baseUrl + '/authenticate'),
