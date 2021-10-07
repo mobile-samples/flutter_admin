@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/auth.dart';
 
 class RoleSearchForm extends StatefulWidget {
   const RoleSearchForm({
@@ -8,18 +7,19 @@ class RoleSearchForm extends StatefulWidget {
     required this.privilegesByRole,
     required this.allPrivilege,
     required this.handleCheckAll,
+    required this.searchController,
   }) : super(key: key);
+
   final List<String> privilegesByRole;
   final List<String> allPrivilege;
   final Function handleCheckAll;
+  final TextEditingController searchController;
 
   @override
   _RoleSearchFormState createState() => _RoleSearchFormState();
 }
 
 class _RoleSearchFormState extends State<RoleSearchForm> {
-  TextEditingController _searchController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -78,7 +78,7 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
             Expanded(
               child: Container(
                 child: TextField(
-                  controller: _searchController,
+                  controller: widget.searchController,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
