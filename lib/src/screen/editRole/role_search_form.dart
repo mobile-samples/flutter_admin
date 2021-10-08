@@ -8,12 +8,14 @@ class RoleSearchForm extends StatefulWidget {
     required this.allPrivilege,
     required this.handleCheckAll,
     required this.searchController,
+    required this.handleSearch,
   }) : super(key: key);
 
   final List<String> privilegesByRole;
   final List<String> allPrivilege;
   final Function handleCheckAll;
   final TextEditingController searchController;
+  final Function handleSearch;
 
   @override
   _RoleSearchFormState createState() => _RoleSearchFormState();
@@ -40,6 +42,17 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
     return newList;
   }
 
+  handleCheckedClick(bool value) {
+    if (value == false) {
+      final List<String> list = [];
+      widget.handleCheckAll(value, list);
+    } else if (value == true) {
+      final List<String> list = privilegesNotExistByRole(
+          widget.allPrivilege, widget.privilegesByRole);
+      widget.handleCheckAll(value, list);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -61,14 +74,7 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
                         ? true
                         : false,
                     onChanged: (value) {
-                      if (value == false) {
-                        final List<String> list = [];
-                        widget.handleCheckAll(value, list);
-                      } else if (value == true) {
-                        final List<String> list = privilegesNotExistByRole(
-                            widget.allPrivilege, widget.privilegesByRole);
-                        widget.handleCheckAll(value, list);
-                      }
+                      handleCheckedClick(value!);
                     },
                   ),
                   Text('All Privileges'),
@@ -81,6 +87,9 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
                   controller: widget.searchController,
                   enableSuggestions: false,
                   autocorrect: false,
+                  onSubmitted: (value) {
+                    widget.handleSearch(value);
+                  },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50.0),
