@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
-import 'package:flutter_admin/src/screen/editRole/edit_role.dart';
+import 'package:flutter_admin/src/screen/edit-role/edit_role.dart';
 import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';
@@ -17,7 +17,8 @@ class RoleScreen extends StatefulWidget {
 
 class _RoleScreenState extends State<RoleScreen> {
   late RoleFilter roleFilter =
-      RoleFilter(limit: 10, page: 1, roleName: '', status: []);
+      // RoleFilter(limit: 10, page: 1, roleName: '', status: []);
+      RoleFilter('', [], 5, 1);
   late List<RoleSM> roles = [];
   late int total = 0;
 
@@ -28,7 +29,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   getRole() async {
-    final res = await RoleService.instance.useSearch(roleFilter);
+    final res = await RoleService.instance.search(roleFilter);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -36,7 +37,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handleSearchFilter(RoleFilter formFilter) async {
-    final res = await RoleService.instance.useSearch(formFilter);
+    final res = await RoleService.instance.search(formFilter);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -45,7 +46,7 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handlePagination(RoleFilter formFilter) async {
-    final res = await RoleService.instance.useSearch(formFilter);
+    final res = await RoleService.instance.search(formFilter);
     setState(() {
       roles = res.list;
       roleFilter = formFilter;
@@ -63,7 +64,7 @@ class _RoleScreenState extends State<RoleScreen> {
               title: Text('Search Roles'),
             ),
             RoleForm(
-              initialRolel: roleFilter,
+              initialRole: roleFilter,
               handleSearchFilter: handleSearchFilter,
             ),
             SliverList(

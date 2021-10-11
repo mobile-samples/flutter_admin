@@ -3,7 +3,8 @@ import 'package:flutter_admin/src/models/user.dart';
 
 class UserCard extends StatelessWidget {
   const UserCard({Key? key, required this.user}) : super(key: key);
-  final UserSQL user;
+  // final UserSQL user;
+  final User user;
   @override
   Widget build(BuildContext context) {
     return Padding(

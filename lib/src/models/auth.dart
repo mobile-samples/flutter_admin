@@ -1,11 +1,12 @@
 class AuthInfo {
   AuthInfo(
-      {required this.username,
-      required this.displayName,
-      required this.id,
-      required this.privileges,
-      required this.token,
-      required this.tokenExpiredTime});
+    this.username,
+    this.displayName,
+    this.id,
+    this.privileges,
+    this.token,
+    this.tokenExpiredTime,
+  );
   String username;
   String displayName;
   String id;
@@ -14,26 +15,26 @@ class AuthInfo {
   String tokenExpiredTime;
 
   factory AuthInfo.fromJson(Map<String, dynamic> json) => AuthInfo(
-      username: json['username'],
-      displayName: json['displayName'],
-      id: json['id'],
-      privileges: List<Privileges>.from(json['privileges'] == null
+      json['username'],
+      json['displayName'],
+      json['id'],
+      List<Privileges>.from(json['privileges'] == null
           ? []
           : json['privileges'].map((x) => Privileges.fromJson(x))),
-      token: json['token'],
-      tokenExpiredTime: json['tokenExpiredTime']);
+      json['token'],
+      json['tokenExpiredTime']);
 }
 
 class Privileges {
-  Privileges({
-    required this.children,
-    required this.icon,
-    required this.id,
-    required this.name,
-    required this.path,
-    required this.permissions,
-    required this.resource,
-  });
+  Privileges(
+    this.children,
+    this.icon,
+    this.id,
+    this.name,
+    this.path,
+    this.permissions,
+    this.resource,
+  );
   List<Privileges> children;
   String icon;
   String id;
@@ -43,15 +44,14 @@ class Privileges {
   String resource;
 
   factory Privileges.fromJson(Map<String, dynamic> json) => Privileges(
-        children: List<Privileges>.from(json['children'] == null
+        List<Privileges>.from(json['children'] == null
             ? []
             : json['children'].map((x) => Privileges.fromJson(x))),
-        icon: json['icon'] != null ? json['icon'] : '',
-        id: json['id'],
-        name: json['name'],
-        path: json['path'],
-        permissions:
-            json['permission'].toString().length > 0 ? json['permissions'] : 0,
-        resource: json['resource'],
+        json['icon'] != null ? json['icon'] : '',
+        json['id'],
+        json['name'],
+        json['path'],
+        json['permission'].toString().length > 0 ? json['permissions'] : 0,
+        json['resource'],
       );
 }

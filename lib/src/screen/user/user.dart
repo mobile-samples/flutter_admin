@@ -4,7 +4,7 @@ import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:flutter_admin/src/screen/user/userCard.dart';
 import 'package:flutter_admin/src/screen/user/userForm.dart';
-import 'package:flutter_admin/src/services/sqlite.dart';
+import 'package:flutter_admin/src/services/user.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, required this.authInfo}) : super(key: key);
@@ -14,10 +14,11 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  late UserFilter filters =
-      UserFilter(username: '', displayName: '', status: [], limit: 20, page: 1);
-  late List<UserSQL> users = [];
+  late UserFilter filters = UserFilter('', '', [], 20, 1);
+  late List<User> users = [];
   late int total = 0;
+  // late List<UserSQL> users = [];
+
   @override
   void initState() {
     getUsers();
@@ -25,9 +26,8 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   getUsers() async {
-    // final ListUsers res = await UserAPIService.instance
-    //     .getUsers(token: widget.authInfo.token, filters: filters);
-    final res = await SqliteService.getUsers(filters);
+    final ListUsers res = await UserAPIService.instance.getUsers(filters);
+    // final res = await SqliteService.getUsers(filters);
     setState(() {
       users = res.list;
       total = res.total;
@@ -35,9 +35,8 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   handleFilters(UserFilter filter) async {
-    // final ListUsers res = await UserAPIService.instance
-    //     .getUsers(token: widget.authInfo.token, filters: filter);
-    final res = await SqliteService.getUsers(filter);
+    final ListUsers res = await UserAPIService.instance.getUsers(filter);
+    // final res = await SqliteService.getUsers(filter);
     setState(() {
       users = res.list;
       total = res.total;

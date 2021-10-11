@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_admin/src/models/role.dart';
+import 'package:flutter_admin/utils/global-data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
@@ -20,13 +21,18 @@ class RoleService {
     }
   }
 
-  Future<SearchResult> useSearch(RoleFilter filters) async {
+  Map<String, String> header() {
+    return {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer ' + GlobalData.token,
+    };
+  }
+
+  Future<SearchResult> search(RoleFilter filters) async {
     late String baseUrl = getUrl();
     final response = await http.post(
       Uri.parse(baseUrl + '/roles/search'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: header(),
       body: jsonEncode(<String, dynamic>{
         'roleName': filters.roleName.isNotEmpty ? filters.roleName : '',
         'status': filters.status.isNotEmpty ? filters.status : [],
@@ -42,12 +48,11 @@ class RoleService {
   }
 
   Future<List<Privilege>> getPrivileges() async {
+    print(header());
     late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/privileges'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: header(),
     );
     if (response.statusCode == 200) {
       List<dynamic> res = jsonDecode(response.body);
@@ -61,13 +66,11 @@ class RoleService {
     }
   }
 
-  Future<Role> getRoleById(roleId) async {
+  Future<Role> load(roleId) async {
     late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/roles/' + roleId),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: header(),
     );
     if (response.statusCode == 200) {
       return Role.fromJson(jsonDecode(response.body));

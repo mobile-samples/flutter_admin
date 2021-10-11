@@ -18,11 +18,12 @@ class _UserFormState extends State<UserForm> {
   int limit = 20;
   filter() {
     final UserFilter filters = UserFilter(
-        username: userNameController.value.text,
-        displayName: displayNameController.value.text,
-        status: status,
-        limit: limit,
-        page: page);
+      userNameController.value.text,
+      displayNameController.value.text,
+      status,
+      limit,
+      page,
+    );
     widget.handleFilters(filters);
   }
 

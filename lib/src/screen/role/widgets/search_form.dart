@@ -4,11 +4,11 @@ import 'package:flutter_admin/src/models/role.dart';
 class RoleForm extends StatefulWidget {
   const RoleForm({
     Key? key,
-    required this.initialRolel,
+    required this.initialRole,
     required this.handleSearchFilter,
   }) : super(key: key);
 
-  final RoleFilter initialRolel;
+  final RoleFilter initialRole;
   final Function handleSearchFilter;
 
   @override
@@ -16,19 +16,15 @@ class RoleForm extends StatefulWidget {
 }
 
 class _RoleFormState extends State<RoleForm> {
-  late int limit = widget.initialRolel.limit;
+  late int limit = widget.initialRole.limit;
   TextEditingController roleNameController = TextEditingController();
   bool checkActive = false;
   bool checkInactive = false;
   List<String> newStatus = [];
 
   handleSearchClick() {
-    final RoleFilter formFilter = RoleFilter(
-      limit: limit,
-      roleName: roleNameController.value.text,
-      status: newStatus,
-      page: 1,
-    );
+    final RoleFilter formFilter =
+        RoleFilter(roleNameController.value.text, newStatus, limit, 1);
     widget.handleSearchFilter(formFilter);
   }
 
@@ -140,6 +136,7 @@ class _RoleFormState extends State<RoleForm> {
                           setState(() {
                             limit = int.parse(newValue!);
                           });
+                          handleSearchClick();
                         },
                         items: <String>['5', '10', '20', '40']
                             .map<DropdownMenuItem<String>>((String value) {

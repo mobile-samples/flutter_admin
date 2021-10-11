@@ -18,10 +18,10 @@ class PaginationButton extends StatefulWidget {
 class _PaginationButtonState extends State<PaginationButton> {
   handleOnClick(int newPage) {
     final RoleFilter formFilter = RoleFilter(
-      roleName: widget.roleFilter.roleName,
-      status: widget.roleFilter.status,
-      limit: widget.roleFilter.limit,
-      page: newPage,
+      widget.roleFilter.roleName,
+      widget.roleFilter.status,
+      widget.roleFilter.limit,
+      newPage,
     );
     widget.handlePagination(formFilter);
   }

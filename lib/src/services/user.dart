@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
+import 'package:flutter_admin/utils/global-data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
@@ -10,8 +11,8 @@ class UserAPIService {
 
   static final UserAPIService instance = UserAPIService._instantiate();
 
-  final String baseUrlIOS = 'http://localhost:7070';
-  final String baseUrlAndroid = 'http://10.0.2.2:7070';
+  final String baseUrlIOS = 'http://localhost:8080';
+  final String baseUrlAndroid = 'http://10.0.2.2:8080';
 
   getUrl() {
     if (Platform.isAndroid) {
@@ -21,14 +22,14 @@ class UserAPIService {
     }
   }
 
-  Future<ListUsers> getUsers(
-      {required String token, required UserFilter filters}) async {
+  Future<ListUsers> getUsers(UserFilter filters) async {
     late String baseUrl = getUrl();
     return http
         .post(
       Uri.parse(baseUrl + '/users/search'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + GlobalData.token,
       },
       body: jsonEncode(<String, dynamic>{
         'username': filters.username != '' ? filters.username : '',

@@ -47,6 +47,6 @@ class SqliteService {
         ]);
     final list = queryResult.map((e) => UserSQL.fromJson(e)).toList();
     final total = list.length;
-    return ListUsersSQL(list: list, total: total);
+    return ListUsersSQL(list, total);
   }
 }
