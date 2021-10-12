@@ -28,11 +28,11 @@ class RoleService {
     };
   }
 
-  Future<SearchResult> search(RoleFilter filters) async {
+  Future<SearchResult<RoleSM>> search(RoleFilter filters) async {
     late String baseUrl = getUrl();
     final response = await http.post(
       Uri.parse(baseUrl + '/roles/search'),
-      headers: header(),
+      headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
         'roleName': filters.roleName.isNotEmpty ? filters.roleName : '',
         'status': filters.status.isNotEmpty ? filters.status : [],
@@ -48,11 +48,10 @@ class RoleService {
   }
 
   Future<List<Privilege>> getPrivileges() async {
-    print(header());
     late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/privileges'),
-      headers: header(),
+      headers: GlobalData.buildHeader(),
     );
     if (response.statusCode == 200) {
       List<dynamic> res = jsonDecode(response.body);
@@ -70,7 +69,7 @@ class RoleService {
     late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/roles/' + roleId),
-      headers: header(),
+      headers: GlobalData.buildHeader(),
     );
     if (response.statusCode == 200) {
       return Role.fromJson(jsonDecode(response.body));

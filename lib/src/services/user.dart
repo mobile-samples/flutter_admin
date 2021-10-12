@@ -27,10 +27,7 @@ class UserAPIService {
     return http
         .post(
       Uri.parse(baseUrl + '/users/search'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + GlobalData.token,
-      },
+      headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
         'username': filters.username != '' ? filters.username : '',
         'displayName': filters.displayName != '' ? filters.displayName : '',

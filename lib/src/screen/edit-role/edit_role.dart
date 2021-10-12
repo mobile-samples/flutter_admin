@@ -17,9 +17,14 @@ class EditRoleScreen extends StatefulWidget {
 
 class _EditRoleScreenState extends State<EditRoleScreen> {
   TextEditingController searchController = TextEditingController();
-  late List<String> privilegeListByRole = [];
-  late Role role;
 
+  late Role role;
+  late String roleId = '';
+  TextEditingController roleNameController = TextEditingController();
+  TextEditingController remarkController = TextEditingController();
+  late String status = '';
+
+  late List<String> privilegeListByRole = [];
   late List<Privilege> privileges = [];
   late List<String> formatPrivileges = [];
 
@@ -46,7 +51,11 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   getRoleById() async {
     final res = await RoleService.instance.load(widget.roleId);
     setState(() {
-      role = res;
+      roleId = res.roleId;
+      roleNameController.text = res.roleName;
+      remarkController.text = res.remark;
+      status = res.status;
+
       privilegeListByRole = res.privileges;
       loading = false;
     });
@@ -151,6 +160,12 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
     });
   }
 
+  handleStatus(String value) {
+    setState(() {
+      status = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (loading == true) {
@@ -167,22 +182,24 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
               title: Text('Edit role'),
             ),
             EditRoleForm(
-              role: role,
+              // role: role,
+              roleId: roleId,
+              roleNameController: roleNameController,
+              remarkController: remarkController,
+              status: status,
+              handleStatus: handleStatus,
             ),
             RoleSearchForm(
-              privilegesByRole: privilegeListByRole,
               allPrivilege: formatPrivileges,
-              handleCheckAll: handleCheckAll,
+              privilegesByRole: privilegeListByRole,
               searchController: searchController,
+              handleCheckAll: handleCheckAll,
               handleSearch: handleSearch,
             ),
             SliverList(
                 delegate: SliverChildBuilderDelegate(
               (context, index) {
-                // final List<Privilege> list =
-                //     // privilegeFilter.length > 0 ? privilegeFilter : privileges;
-                //     privilegeFilter.isNotEmpty ? privilegeFilter : privileges;
-                bool findPrivilege =
+                final bool findPrivilege =
                     privilegeListByRole.contains(searchPrivi[index].id);
                 return Container(
                   decoration: BoxDecoration(
@@ -214,7 +231,8 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                           children:
                               List.generate(searchPrivi[index].children.length,
                                   (indexChildren) {
-                            bool findPrivilege2 = privilegeListByRole.contains(
+                            final bool findPrivilege2 =
+                                privilegeListByRole.contains(
                               searchPrivi[index].children[indexChildren].id,
                             );
                             return Row(
@@ -244,7 +262,25 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                 );
               },
               childCount: searchPrivi.length > 0 ? searchPrivi.length : 0,
-            ))
+            )),
+            SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.green),
+                  ),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       );

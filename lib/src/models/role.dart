@@ -21,8 +21,8 @@ class RoleSM {
       );
 }
 
-class SearchResult {
-  List<RoleSM> list;
+class SearchResult<T> {
+  List<T> list;
   int total;
   bool? last;
   String? nextPageToken;
@@ -32,12 +32,20 @@ class SearchResult {
     this.total,
   );
 
-  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(
-        json['list'] != null
-            ? List<RoleSM>.from(json['list'].map((x) => RoleSM.fromJson(x)))
-            : [],
-        json['total'],
-      );
+  factory SearchResult.fromJson(Map<String, dynamic> json) {
+    final _build = () {
+      switch (T) {
+        case RoleSM:
+          return List<T>.from(json['list'].map((x) => RoleSM.fromJson(x)));
+        default:
+          return null;
+      }
+    };
+    return SearchResult(
+      json['list'] != null ? _build() ?? [] : [],
+      json['total'],
+    );
+  }
 }
 
 class RoleFilter {
