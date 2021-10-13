@@ -25,6 +25,14 @@ class _EditRoleFormState extends State<EditRoleForm> {
     super.initState();
   }
 
+  String? Function(String?)? validator = (String? value) {
+    if (value!.isEmpty) {
+      return 'This Field Can\'t Be Empty';
+    } else {
+      return null;
+    }
+  };
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -37,36 +45,41 @@ class _EditRoleFormState extends State<EditRoleForm> {
               enabled: false,
               decoration: InputDecoration(
                 labelText: '*Role Id',
-                hintText: widget.roleId,
                 labelStyle: TextStyle(color: Colors.black, fontSize: 22),
+                hintText: widget.roleId,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.green),
                 ),
               ),
             ),
-            TextField(
+            TextFormField(
               controller: widget.roleNameController,
               enableSuggestions: false,
+              autovalidateMode: AutovalidateMode.always,
               autocorrect: false,
+              validator: validator,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,
+                decoration: TextDecoration.none,
               ),
               decoration: InputDecoration(
                 labelText: 'Role Name',
-                hintText: 'Role Name',
                 labelStyle: TextStyle(color: Colors.black, fontSize: 22),
+                hintText: 'Role Name',
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.green, width: 2),
                 ),
               ),
             ),
-            TextField(
+            TextFormField(
               controller: widget.remarkController,
               enableSuggestions: false,
               autocorrect: false,
+              autovalidateMode: AutovalidateMode.always,
+              validator: validator,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -74,8 +87,9 @@ class _EditRoleFormState extends State<EditRoleForm> {
               ),
               decoration: InputDecoration(
                 labelText: 'Remark',
-                hintText: 'Remark',
                 labelStyle: TextStyle(color: Colors.black, fontSize: 22),
+                hintText: 'Remark',
+                errorStyle: TextStyle(color: Colors.red),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.green, width: 2),

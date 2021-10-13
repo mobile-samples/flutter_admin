@@ -26,7 +26,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   getUsers() async {
-    final ListUsers res = await UserAPIService.instance.getUsers(filters);
+    final ListUsers res = await UserAPIService.instance.load(filters);
     // final res = await SqliteService.getUsers(filters);
     setState(() {
       users = res.list;
@@ -35,7 +35,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   handleFilters(UserFilter filter) async {
-    final ListUsers res = await UserAPIService.instance.getUsers(filter);
+    final ListUsers res = await UserAPIService.instance.load(filter);
     // final res = await SqliteService.getUsers(filter);
     setState(() {
       users = res.list;

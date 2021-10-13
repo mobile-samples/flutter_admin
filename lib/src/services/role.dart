@@ -21,13 +21,6 @@ class RoleService {
     }
   }
 
-  Map<String, String> header() {
-    return {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer ' + GlobalData.token,
-    };
-  }
-
   Future<SearchResult<RoleSM>> search(RoleFilter filters) async {
     late String baseUrl = getUrl();
     final response = await http.post(

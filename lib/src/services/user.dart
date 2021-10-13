@@ -22,7 +22,7 @@ class UserAPIService {
     }
   }
 
-  Future<ListUsers> getUsers(UserFilter filters) async {
+  Future<ListUsers> load(UserFilter filters) async {
     late String baseUrl = getUrl();
     return http
         .post(

@@ -158,6 +158,7 @@ class _UserFormState extends State<UserForm> {
                 SizedBox(
                   child: ElevatedButton(
                     onPressed: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
                       filter();
                     },
                     style: ButtonStyle(

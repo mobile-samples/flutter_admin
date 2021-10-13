@@ -18,7 +18,6 @@ class EditRoleScreen extends StatefulWidget {
 class _EditRoleScreenState extends State<EditRoleScreen> {
   TextEditingController searchController = TextEditingController();
 
-  late Role role;
   late String roleId = '';
   TextEditingController roleNameController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
