@@ -91,20 +91,57 @@ class Role {
 }
 
 class Privilege {
+  String id;
+  String name;
+  List<Privilege> children;
+
   Privilege(
     this.id,
     this.name,
     this.children,
   );
-  String id;
-  String name;
-  List<Privilege> children;
 
   factory Privilege.fromJson(Map<String, dynamic> json) => Privilege(
         json['id'],
         json['name'],
         List<Privilege>.from(json['children'] == null
             ? []
-            : json['children'].map((x) => Privilege.fromJson(x))),
+            : json['children'].map((x) => Privilege.fromJson(json))),
       );
+}
+
+abstract class Tracking {
+  DateTime? createdAt;
+  String? createdBy;
+  DateTime? updatedAt;
+  String? updatedBy;
+
+  Tracking(this.createdAt, this.createdBy, this.updatedAt, this.updatedBy);
+}
+
+class ErrorMessage {
+  String field;
+  String code;
+  String? param; //string|number|Date;
+  String? message;
+
+  ErrorMessage(this.field, this.code, this.param, this.message);
+}
+
+class ResultInfo<T> extends Tracking {
+  int status; //number|string
+  List<ErrorMessage>? errors;
+  T? value;
+  String? message;
+
+  ResultInfo(
+    this.status,
+    this.errors,
+    this.value,
+    this.message,
+    DateTime createdAt,
+    String createdBy,
+    DateTime updatedAt,
+    String updatedBy,
+  ) : super(createdAt, createdBy, updatedAt, updatedBy);
 }

@@ -58,7 +58,7 @@ class RoleService {
     }
   }
 
-  Future<Role> load(roleId) async {
+  Future<Role> load(String roleId) async {
     late String baseUrl = getUrl();
     final response = await http.get(
       Uri.parse(baseUrl + '/roles/' + roleId),

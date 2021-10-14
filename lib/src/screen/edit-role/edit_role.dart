@@ -264,14 +264,16 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
             )),
             SliverToBoxAdapter(
               child: Container(
-                margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                margin: EdgeInsets.fromLTRB(75, 10, 75, 10),
                 child: ElevatedButton(
                   onPressed: () {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
                   ),
                   child: Text(
                     'Save',
@@ -279,7 +281,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       );

@@ -19,6 +19,7 @@ class User {
     this.position,
     this.gender,
     this.imageURL,
+    this.roles,
     this.createdAt,
     this.createdBy,
     this.lastLogin,
@@ -35,6 +36,7 @@ class User {
   String position;
   String gender;
   String imageURL;
+  List<String>? roles;
   String? createdAt;
   String? createdBy;
   String? lastLogin;
@@ -52,6 +54,7 @@ class User {
       json['position'],
       json['gender'],
       json['imageURL'],
+      List<String>.from(json['roles'] == null ? [] : json['roles']),
       json['createdAt'] != null ? json['createdAt'].toString() : '',
       json['createdBy'] != null ? json['createdBy'] : '',
       json['lastLogin'] != null ? json['lastLogin'] : '',

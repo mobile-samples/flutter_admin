@@ -22,7 +22,7 @@ class UserAPIService {
     }
   }
 
-  Future<ListUsers> load(UserFilter filters) async {
+  Future<ListUsers> search(UserFilter filters) async {
     late String baseUrl = getUrl();
     return http
         .post(
@@ -41,5 +41,18 @@ class UserAPIService {
       ListUsers users = ListUsers.fromJson(usersRes);
       return users;
     });
+  }
+
+  Future<User> load(String userId) async {
+    late String baseUrl = getUrl();
+    final response = await http.get(
+      Uri.parse(baseUrl + '/users/' + userId),
+      headers: GlobalData.buildHeader(),
+    );
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
   }
 }

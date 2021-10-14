@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/auth.dart';
 import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
+import 'package:flutter_admin/src/screen/edit-user/edit_user.dart';
 import 'package:flutter_admin/src/screen/user/userCard.dart';
 import 'package:flutter_admin/src/screen/user/userForm.dart';
 import 'package:flutter_admin/src/services/user.dart';
@@ -26,7 +27,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   getUsers() async {
-    final ListUsers res = await UserAPIService.instance.load(filters);
+    final ListUsers res = await UserAPIService.instance.search(filters);
     // final res = await SqliteService.getUsers(filters);
     setState(() {
       users = res.list;
@@ -35,7 +36,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   handleFilters(UserFilter filter) async {
-    final ListUsers res = await UserAPIService.instance.load(filter);
+    final ListUsers res = await UserAPIService.instance.search(filter);
     // final res = await SqliteService.getUsers(filter);
     setState(() {
       users = res.list;
@@ -63,9 +64,17 @@ class _UserScreenState extends State<UserScreen> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     if (users.length > 0) {
-                      return UserCard(
-                        user: users[index],
-                      );
+                      return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditUserScreen(user: users[index])));
+                          },
+                          child: UserCard(
+                            user: users[index],
+                          ));
                     }
                   },
                   childCount: users.length,
