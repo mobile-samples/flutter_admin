@@ -106,7 +106,7 @@ class Privilege {
         json['name'],
         List<Privilege>.from(json['children'] == null
             ? []
-            : json['children'].map((x) => Privilege.fromJson(json))),
+            : json['children'].map((x) => Privilege.fromJson(x))),
       );
 }
 
@@ -144,4 +144,9 @@ class ResultInfo<T> extends Tracking {
     DateTime updatedAt,
     String updatedBy,
   ) : super(createdAt, createdBy, updatedAt, updatedBy);
+}
+
+class Status {
+  static String active = 'A';
+  static String inactive = 'I';
 }

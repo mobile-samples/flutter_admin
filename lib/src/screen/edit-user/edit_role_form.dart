@@ -1,5 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/user.dart';
 
 class EditRoleFormScreen extends StatefulWidget {
@@ -12,33 +14,27 @@ class EditRoleFormScreen extends StatefulWidget {
 }
 
 class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
-  List<String> itemsTitle = [
-    'Please Select',
-    'Mr',
-    'Mrs',
-    'Ms',
-    'Dr',
-  ];
-
-  List<String> itemsPosition = [
-    'Please Select',
-    'Employee',
-    'Manager',
-    'Director'
-  ];
-
   final _formKey = new GlobalKey<FormState>();
+  List<String> itemsTitle = ['Mr', 'Mrs', 'Ms', 'Dr'];
+  List<String> itemsPosition = ['Employee', 'Manager', 'Director'];
 
   TextEditingController _displayNameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _emailAddressController = TextEditingController();
 
-  late String status = widget.userDetail.status;
+  // late String status = widget.userDetail.status;
   late String gender = widget.userDetail.gender;
+  late String _status =
+      widget.userDetail.status == 'A' ? Status.active : Status.inactive;
 
-  late String title = itemsTitle[itemsTitle.indexOf(widget.userDetail.title)];
-  late String position =
-      itemsPosition.firstWhere((e) => e.startsWith(widget.userDetail.position));
+  late String title = widget.userDetail.title.isNotEmpty
+      ? itemsTitle[itemsTitle.indexOf(widget.userDetail.title)]
+      : '';
+
+  late String position = widget.userDetail.position.isNotEmpty
+      ? itemsPosition
+          .firstWhere((e) => e.startsWith(widget.userDetail.position))
+      : '';
 
   @override
   void initState() {
@@ -47,6 +43,34 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
     _phoneNumberController.text = widget.userDetail.phone;
     _emailAddressController.text = widget.userDetail.email;
   }
+
+  handleTitleChange(String value) {
+    switch (value) {
+      case 'Please Select':
+        setState(() {});
+        break;
+      default:
+    }
+  }
+
+  String? Function(String?)? validator = (String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This Field Can\'t Be Empty';
+    } else {
+      return null;
+    }
+  };
+
+  String? Function(String? value) validatorForEmail = (String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This Field Can\'t Be Empty';
+    }
+    bool checkValidEmail = !EmailValidator.validate(value);
+    if (checkValidEmail) {
+      return 'Not a valid email.';
+    }
+    return null;
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +84,7 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    labelText: '*User Id',
+                    labelText: 'User Id*',
                     labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
                     hintText: widget.userDetail.userId,
                     hintStyle: TextStyle(height: 2.0),
@@ -73,7 +97,7 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: '*Display Name',
+                    labelText: 'Display Name*',
                     labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
                     hintText: 'Display Name',
                     hintStyle: TextStyle(height: 2.0),
@@ -83,18 +107,11 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                       borderSide: BorderSide(color: Colors.green, width: 2),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
                   controller: _displayNameController,
-                  autovalidateMode: AutovalidateMode.always,
                   enableSuggestions: false,
                   autocorrect: false,
-                  // autovalidateMode: AutovalidateMode.always,
-                  // validator: validator,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: validator,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -105,6 +122,7 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   dropdownSearchDecoration: InputDecoration(
                     labelText: 'Title',
                     labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
+                    hintText: 'Please Select',
                     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     focusedBorder: UnderlineInputBorder(
@@ -113,12 +131,17 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   ),
                   mode: Mode.MENU,
                   items: itemsTitle,
-                  onChanged: print,
                   selectedItem: title,
+                  onChanged: print,
+                  validator: validator,
+                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                  showClearButton: true,
+                  showSelectedItems: true,
                 ),
                 DropdownSearch<String>(
                   dropdownSearchDecoration: InputDecoration(
                     labelText: 'Position',
+                    hintText: 'Please Select',
                     labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
                     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -128,8 +151,12 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   ),
                   mode: Mode.MENU,
                   items: itemsPosition,
-                  onChanged: print,
                   selectedItem: position,
+                  onChanged: print,
+                  validator: validator,
+                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                  showClearButton: true,
+                  showSelectedItems: true,
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -145,8 +172,8 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   controller: _phoneNumberController,
                   enableSuggestions: false,
                   autocorrect: false,
-                  // autovalidateMode: AutovalidateMode.always,
-                  // validator: validator,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: validator,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -167,8 +194,8 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   controller: _emailAddressController,
                   enableSuggestions: false,
                   autocorrect: false,
-                  // autovalidateMode: AutovalidateMode.always,
-                  // validator: validator,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: validatorForEmail,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -186,23 +213,31 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                       ),
                       Row(
                         children: [
-                          Checkbox(
-                            checkColor: Colors.lightGreen,
-                            activeColor: Colors.lightGreen,
-                            shape: CircleBorder(),
-                            value: status == 'A' ? true : false,
-                            onChanged: (value) {},
-                          ),
-                          Text('Yes', style: TextStyle(fontSize: 16)),
-                          Checkbox(
-                              checkColor: Colors.lightGreen,
+                          Flexible(
+                            child: RadioListTile<String>(
+                              title: const Text('Yes'),
                               activeColor: Colors.lightGreen,
-                              shape: CircleBorder(),
-                              value: status == 'I' ? true : false,
-                              onChanged: (value) {}),
-                          Text(
-                            'No',
-                            style: TextStyle(fontSize: 16),
+                              value: Status.active,
+                              groupValue: _status,
+                              onChanged: (value) {
+                                setState(() {
+                                  _status = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          Flexible(
+                            child: RadioListTile<String>(
+                              title: const Text('No'),
+                              activeColor: Colors.lightGreen,
+                              value: Status.inactive,
+                              groupValue: _status,
+                              onChanged: (value) {
+                                setState(() {
+                                  _status = value!;
+                                });
+                              },
+                            ),
                           ),
                         ],
                       ),

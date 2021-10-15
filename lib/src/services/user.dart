@@ -24,23 +24,23 @@ class UserAPIService {
 
   Future<ListUsers> search(UserFilter filters) async {
     late String baseUrl = getUrl();
-    return http
-        .post(
+    final response = await http.post(
       Uri.parse(baseUrl + '/users/search'),
       headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
-        'username': filters.username != '' ? filters.username : '',
-        'displayName': filters.displayName != '' ? filters.displayName : '',
+        'username': filters.username.isNotEmpty ? filters.username : '',
+        'displayName':
+            filters.displayName.isNotEmpty ? filters.displayName : '',
         'status': filters.status.length == 0 ? [] : filters.status,
         'limit': filters.limit.isNaN ? 0 : filters.limit,
         'page': filters.page
       }),
-    )
-        .then((value) {
-      dynamic usersRes = jsonDecode(value.body);
-      ListUsers users = ListUsers.fromJson(usersRes);
-      return users;
-    });
+    );
+    if (response.statusCode == 200) {
+      return ListUsers.fromJson(jsonDecode(response.body));
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
   }
 
   Future<User> load(String userId) async {

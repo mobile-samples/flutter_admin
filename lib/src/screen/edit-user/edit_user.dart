@@ -49,26 +49,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
             title: Text('Edit user'),
           ),
           EditRoleFormScreen(userDetail: userDetail),
-          // SliverToBoxAdapter(
-          //   child: Container(
-          //     margin: EdgeInsets.fromLTRB(75, 10, 75, 10),
-          //     child: ElevatedButton(
-          //       onPressed: () {
-          //         FocusScope.of(context).requestFocus(FocusNode());
-          //       },
-          //       style: ElevatedButton.styleFrom(
-          //         primary: Colors.green,
-          //         shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.circular(30.0),
-          //         ),
-          //       ),
-          //       child: Text(
-          //         'Save',
-          //         style: TextStyle(color: Colors.white, fontSize: 16),
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
