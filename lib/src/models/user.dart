@@ -9,33 +9,34 @@ class Signin {
 
 class User {
   User(
-    this.username,
     this.userId,
-    this.displayName,
-    this.title,
-    this.status,
-    this.phone,
+    this.username,
     this.email,
-    this.position,
-    this.gender,
+    this.displayName,
     this.imageURL,
+    this.status,
+    this.gender,
+    this.phone,
+    this.title,
+    this.position,
     this.roles,
-    this.createdAt,
-    this.createdBy,
-    this.lastLogin,
-    this.updatedAt,
-    this.updatedBy,
+    // this.createdAt,
+    // this.createdBy,
+    // this.lastLogin,
+    // this.updatedAt,
+    // this.updatedBy,
   );
-  String username;
+
   String userId;
-  String displayName;
-  String title;
-  String status;
-  String phone;
+  String username;
   String email;
-  String position;
-  String gender;
+  String displayName;
   String imageURL;
+  String status;
+  String gender;
+  String phone;
+  String title;
+  String position;
   List<String>? roles;
   String? createdAt;
   String? createdBy;
@@ -44,22 +45,23 @@ class User {
   String? updatedBy;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-      json['username'],
-      json['userId'] != null ? json['userId'] : '',
-      json['displayName'],
-      json['title'],
-      json['status'],
-      json['phone'],
-      json['email'],
-      json['position'],
-      json['gender'],
-      json['imageURL'],
-      List<String>.from(json['roles'] == null ? [] : json['roles']),
-      json['createdAt'] != null ? json['createdAt'].toString() : '',
-      json['createdBy'] != null ? json['createdBy'] : '',
-      json['lastLogin'] != null ? json['lastLogin'] : '',
-      json['updatedAt'] != null ? json['updatedAt'] : '',
-      json['updatedBy'] != null ? json['updatedBy'] : '');
+        json['userId'],
+        json['username'],
+        json['email'],
+        json['displayName'],
+        json['imageURL'] != null ? json['imageURL'] : '',
+        json['status'],
+        json['gender'] != null ? json['gender'] : '',
+        json['phone'] != null ? json['phone'] : '',
+        json['title'] != null ? json['title'] : '',
+        json['position'] != null ? json['position'] : '',
+        List<String>.from(json['roles'] == null ? [] : json['roles']),
+        // json['createdAt'] != null ? json['createdAt'].toString() : '',
+        // json['createdBy'] != null ? json['createdBy'] : '',
+        // json['lastLogin'] != null ? json['lastLogin'] : '',
+        // json['updatedAt'] != null ? json['updatedAt'] : '',
+        // json['updatedBy'] != null ? json['updatedBy'] : '',
+      );
 }
 
 class ListUsers {

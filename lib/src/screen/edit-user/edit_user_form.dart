@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/user.dart';
 
-class EditRoleFormScreen extends StatefulWidget {
-  const EditRoleFormScreen({Key? key, required this.userDetail})
-      : super(key: key);
+class EditUserFormScreen extends StatefulWidget {
+  const EditUserFormScreen({
+    Key? key,
+    required this.userDetail,
+    required this.handleClickSave,
+  }) : super(key: key);
   final User userDetail;
+  final Function handleClickSave;
 
   @override
-  _EditRoleFormScreenState createState() => _EditRoleFormScreenState();
+  _EditUserFormScreenState createState() => _EditUserFormScreenState();
 }
 
-class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
+class _EditUserFormScreenState extends State<EditUserFormScreen> {
   final _formKey = new GlobalKey<FormState>();
   List<String> itemsTitle = ['Mr', 'Mrs', 'Ms', 'Dr'];
   List<String> itemsPosition = ['Employee', 'Manager', 'Director'];
@@ -22,19 +26,19 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _emailAddressController = TextEditingController();
 
-  // late String status = widget.userDetail.status;
+  late String title = widget.userDetail.title;
+  late String position = widget.userDetail.position;
   late String gender = widget.userDetail.gender;
-  late String _status =
+  late String status =
       widget.userDetail.status == 'A' ? Status.active : Status.inactive;
+  // late String status = widget.userDetail.status;
 
-  late String title = widget.userDetail.title.isNotEmpty
-      ? itemsTitle[itemsTitle.indexOf(widget.userDetail.title)]
-      : '';
+  late String? selectedTitle =
+      title.isNotEmpty ? itemsTitle[itemsTitle.indexOf(title)] : null;
 
-  late String position = widget.userDetail.position.isNotEmpty
-      ? itemsPosition
-          .firstWhere((e) => e.startsWith(widget.userDetail.position))
-      : '';
+  late String? selectedPosition = position.isNotEmpty
+      ? itemsPosition.firstWhere((e) => e.startsWith(position))
+      : null;
 
   @override
   void initState() {
@@ -44,24 +48,66 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
     _emailAddressController.text = widget.userDetail.email;
   }
 
-  handleTitleChange(String value) {
+  void handleChangeTitle(String? value) {
     switch (value) {
-      case 'Please Select':
-        setState(() {});
+      case 'Mr':
+        setState(() {
+          gender = 'M';
+          title = value!;
+        });
         break;
       default:
+        setState(() {
+          gender = 'F';
+          value != null ? title = value : title = '';
+        });
+        break;
     }
   }
 
-  String? Function(String?)? validator = (String? value) {
+  void handleChangePosition(String? value) {
+    // ['Employee', 'Manager', 'Director']
+    switch (value) {
+      case 'Employee':
+        setState(() {
+          position = 'E';
+        });
+        break;
+      case 'Manager':
+        setState(() {
+          position = 'M';
+        });
+        break;
+      case 'Director':
+        setState(() {
+          position = 'D';
+        });
+        break;
+      default:
+        setState(() {
+          position = '';
+        });
+        break;
+    }
+  }
+
+  void handleChangeGender(bool? value, String text) {
+    if (title == 'Dr' && value == true) {
+      setState(() {
+        gender = text;
+      });
+    }
+  }
+
+  String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This Field Can\'t Be Empty';
     } else {
       return null;
     }
-  };
+  }
 
-  String? Function(String? value) validatorForEmail = (String? value) {
+  String? validatorForEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'This Field Can\'t Be Empty';
     }
@@ -70,7 +116,18 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
       return 'Not a valid email.';
     }
     return null;
-  };
+  }
+
+  String? validatePhoneNumber(String? value) {
+    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp regExp = new RegExp(patttern);
+    if (value == null || value.isEmpty) {
+      return 'Please enter phone number';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Please enter valid phone number';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +188,8 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   ),
                   mode: Mode.MENU,
                   items: itemsTitle,
-                  selectedItem: title,
-                  onChanged: print,
+                  selectedItem: selectedTitle,
+                  onChanged: handleChangeTitle,
                   validator: validator,
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   showClearButton: true,
@@ -151,8 +208,8 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   ),
                   mode: Mode.MENU,
                   items: itemsPosition,
-                  selectedItem: position,
-                  onChanged: print,
+                  selectedItem: selectedPosition,
+                  onChanged: handleChangePosition,
                   validator: validator,
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   showClearButton: true,
@@ -173,7 +230,7 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                   enableSuggestions: false,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: validator,
+                  validator: validatePhoneNumber,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -218,10 +275,10 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                               title: const Text('Yes'),
                               activeColor: Colors.lightGreen,
                               value: Status.active,
-                              groupValue: _status,
+                              groupValue: status,
                               onChanged: (value) {
                                 setState(() {
-                                  _status = value!;
+                                  status = value!;
                                 });
                               },
                             ),
@@ -231,10 +288,10 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                               title: const Text('No'),
                               activeColor: Colors.lightGreen,
                               value: Status.inactive,
-                              groupValue: _status,
+                              groupValue: status,
                               onChanged: (value) {
                                 setState(() {
-                                  _status = value!;
+                                  status = value!;
                                 });
                               },
                             ),
@@ -260,7 +317,9 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                             activeColor: Colors.lightGreen,
                             shape: CircleBorder(),
                             value: gender == 'F' ? true : false,
-                            onChanged: (value) {},
+                            onChanged: (bool? value) {
+                              handleChangeGender(value, 'F');
+                            },
                           ),
                           Text('Female', style: TextStyle(fontSize: 16)),
                           Checkbox(
@@ -268,7 +327,9 @@ class _EditRoleFormScreenState extends State<EditRoleFormScreen> {
                               activeColor: Colors.lightGreen,
                               shape: CircleBorder(),
                               value: gender == 'M' ? true : false,
-                              onChanged: (value) {}),
+                              onChanged: (bool? value) {
+                                handleChangeGender(value, 'M');
+                              }),
                           Text(
                             'Male',
                             style: TextStyle(fontSize: 16),

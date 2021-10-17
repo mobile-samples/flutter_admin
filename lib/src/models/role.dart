@@ -128,7 +128,7 @@ class ErrorMessage {
   ErrorMessage(this.field, this.code, this.param, this.message);
 }
 
-class ResultInfo<T> extends Tracking {
+class ResultInfo<T> {
   int status; //number|string
   List<ErrorMessage>? errors;
   T? value;
@@ -136,14 +136,23 @@ class ResultInfo<T> extends Tracking {
 
   ResultInfo(
     this.status,
-    this.errors,
     this.value,
-    this.message,
-    DateTime createdAt,
-    String createdBy,
-    DateTime updatedAt,
-    String updatedBy,
-  ) : super(createdAt, createdBy, updatedAt, updatedBy);
+  );
+
+  factory ResultInfo.fromJson(Map<String, dynamic> json) {
+    final _build = () {
+      switch (T) {
+        case User:
+          return User.fromJson(json['value']) as T;
+        default:
+          return null;
+      }
+    };
+    return ResultInfo(
+      json['status'],
+      _build(),
+    );
+  }
 }
 
 class Status {

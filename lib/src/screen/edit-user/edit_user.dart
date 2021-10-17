@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/user.dart';
-import 'package:flutter_admin/src/screen/edit-user/edit_role_form.dart';
+import 'package:flutter_admin/src/screen/edit-user/edit_user_form.dart';
 import 'package:flutter_admin/src/services/user.dart';
 
 class EditUserScreen extends StatefulWidget {
@@ -27,6 +27,10 @@ class _EditUserScreenState extends State<EditUserScreen> {
     });
   }
 
+  handleClickSave(User user) async {
+    await UserAPIService.instance.patch(user);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +52,8 @@ class _EditUserScreenState extends State<EditUserScreen> {
             backgroundColor: Colors.green[400],
             title: Text('Edit user'),
           ),
-          EditRoleFormScreen(userDetail: userDetail),
+          EditUserFormScreen(
+              userDetail: userDetail, handleClickSave: handleClickSave),
         ],
       ),
     );
