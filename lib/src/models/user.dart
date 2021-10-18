@@ -73,7 +73,9 @@ class ListUsers {
   int total;
 
   factory ListUsers.fromJson(Map<String, dynamic> json) => ListUsers(
-      List<User>.from(json['list'].map((x) => User.fromJson(x))),
+      List<User>.from(json['list'] != null
+          ? json['list'].map((x) => User.fromJson(x))
+          : []),
       json['total']);
 }
 

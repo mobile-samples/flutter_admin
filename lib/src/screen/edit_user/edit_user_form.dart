@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/user.dart';
+import 'package:flutter_admin/utils/general_method.dart';
 
 class EditUserFormScreen extends StatefulWidget {
   const EditUserFormScreen({
@@ -125,36 +126,6 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
     }
   }
 
-  String? validator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This Field Can\'t Be Empty';
-    } else {
-      return null;
-    }
-  }
-
-  String? validatorForEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This Field Can\'t Be Empty';
-    }
-    bool checkValidEmail = !EmailValidator.validate(value);
-    if (checkValidEmail) {
-      return 'Not a valid email.';
-    }
-    return null;
-  }
-
-  String? validatePhoneNumber(String? value) {
-    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp regExp = new RegExp(patttern);
-    if (value == null || value.isEmpty) {
-      return 'Please enter phone number';
-    } else if (!regExp.hasMatch(value)) {
-      return 'Please enter valid phone number';
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -194,7 +165,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                   enableSuggestions: false,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: validator,
+                  validator: ValidateForm.validator,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -216,7 +187,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                   items: itemsTitle,
                   selectedItem: selectedTitle,
                   onChanged: handleChangeTitle,
-                  validator: validator,
+                  validator: ValidateForm.validator,
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   showClearButton: true,
                   showSelectedItems: true,
@@ -236,7 +207,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                   items: itemsPosition,
                   selectedItem: selectedPosition,
                   onChanged: handleChangePosition,
-                  validator: validator,
+                  validator: ValidateForm.validator,
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   showClearButton: true,
                   showSelectedItems: true,
@@ -256,7 +227,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                   enableSuggestions: false,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: validatePhoneNumber,
+                  validator: ValidateForm.validatorForPhoneNumber,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -278,7 +249,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                   enableSuggestions: false,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: validatorForEmail,
+                  validator: ValidateForm.validatorForEmail,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,

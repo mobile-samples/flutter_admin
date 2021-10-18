@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_admin/src/models/auth.dart';
-import 'package:flutter_admin/utils/global-data.dart';
+import 'package:flutter_admin/utils/global_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 

@@ -5,6 +5,7 @@ import 'package:flutter_admin/src/screen/edit_user/edit_user.dart';
 import 'package:flutter_admin/src/screen/user/userCard.dart';
 import 'package:flutter_admin/src/screen/user/userForm.dart';
 import 'package:flutter_admin/src/services/user.dart';
+import 'package:flutter_admin/utils/general_method.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  final UserFilter initialValue = UserFilter('', '', [], 20, 1);
   ScrollController _scrollController = new ScrollController();
   late UserFilter filters = UserFilter('', '', [], 20, 1);
   late List<User> users = [];
@@ -27,7 +29,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   getUsers() async {
-    final ListUsers res = await UserAPIService.instance.search(filters);
+    final ListUsers res = await UserAPIService.instance.search(initialValue);
     // final res = await SqliteService.getUsers(filters);
     setState(() {
       users = res.list;
@@ -79,8 +81,10 @@ class _UserScreenState extends State<UserScreen> {
                                     builder: (context) =>
                                         EditUserScreen(user: users[index])),
                               );
-                              if (reLoadPage) {
-                                getUsers();
+                              if (reLoadPage == null || reLoadPage == true) {
+                                handleFilters(initialValue);
+                                GeneralMethod.autoScrollOnTop(
+                                    _scrollController);
                               }
                             },
                             child: UserCard(
@@ -103,10 +107,20 @@ class _UserScreenState extends State<UserScreen> {
                                   (total / filters.limit).ceil(),
                                   (index) => GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            filters.page = index + 1;
-                                          });
-                                          handleFilters(filters);
+                                          // setState(() {
+                                          //   filters.page = index + 1;
+                                          // });
+                                          final UserFilter newFilter =
+                                              UserFilter(
+                                            filters.username,
+                                            filters.username,
+                                            filters.status,
+                                            filters.limit,
+                                            index + 1,
+                                          );
+                                          handleFilters(newFilter);
+                                          GeneralMethod.autoScrollOnTop(
+                                              _scrollController);
                                         },
                                         child: Container(
                                           child: Center(

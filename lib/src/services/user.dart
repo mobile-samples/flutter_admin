@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
-import 'package:flutter_admin/utils/global-data.dart';
+import 'package:flutter_admin/utils/global_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
