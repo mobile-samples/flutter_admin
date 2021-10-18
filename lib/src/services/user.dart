@@ -60,7 +60,7 @@ class UserAPIService {
   Future<ResultInfo<User>> patch(User user) async {
     late String baseUrl = getUrl();
     final response = await http.patch(
-      Uri.parse(baseUrl + '/users/search'),
+      Uri.parse(baseUrl + '/users/' + user.userId),
       headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
         'userId': user.userId,

@@ -59,9 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UserScreen(
-                                        authInfo: authInfo,
-                                      )),
+                                  builder: (context) => UserScreen()),
                             );
                           } else if (item.id == 'role') {
                             Navigator.push(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/user.dart';
-import 'package:flutter_admin/src/screen/edit-user/edit_user_form.dart';
+import 'package:flutter_admin/src/screen/edit_user/edit_user_form.dart';
 import 'package:flutter_admin/src/services/user.dart';
 
 class EditUserScreen extends StatefulWidget {
@@ -19,8 +19,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
   getUserById() async {
     final res = await UserAPIService.instance.load(widget.user.userId);
-    print(res.position);
-    print(res.title);
     setState(() {
       userDetail = res;
       _loading = false;

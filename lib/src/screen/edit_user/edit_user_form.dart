@@ -48,6 +48,32 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
     _emailAddressController.text = widget.userDetail.email;
   }
 
+  void handlePressSave() async {
+    late User postForm = User(
+      widget.userDetail.userId,
+      widget.userDetail.username,
+      _emailAddressController.text,
+      _displayNameController.text,
+      '',
+      status,
+      gender,
+      _phoneNumberController.text,
+      title,
+      position,
+    );
+    FocusScope.of(context).requestFocus(FocusNode());
+    if (_formKey.currentState!.validate()) {
+      await widget.handleClickSave(postForm);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Successfully updated')));
+      Navigator.pop(context, true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in the fields above')),
+      );
+    }
+  }
+
   void handleChangeTitle(String? value) {
     switch (value) {
       case 'Mr':
@@ -343,16 +369,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                   margin: EdgeInsets.fromLTRB(60, 10, 60, 10),
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-                      }
-                    },
+                    onPressed: handlePressSave,
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
                       shape: RoundedRectangleBorder(

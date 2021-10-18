@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
-import 'package:flutter_admin/src/screen/edit-role/edit_role.dart';
+import 'package:flutter_admin/src/screen/edit_role/edit_role.dart';
 import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';

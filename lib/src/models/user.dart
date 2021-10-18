@@ -19,7 +19,7 @@ class User {
     this.phone,
     this.title,
     this.position,
-    this.roles,
+    // this.roles,
     // this.createdAt,
     // this.createdBy,
     // this.lastLogin,
@@ -46,7 +46,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         json['userId'],
-        json['username'],
+        json['username'] != null ? json['username'] : '',
         json['email'],
         json['displayName'],
         json['imageURL'] != null ? json['imageURL'] : '',
@@ -55,7 +55,7 @@ class User {
         json['phone'] != null ? json['phone'] : '',
         json['title'] != null ? json['title'] : '',
         json['position'] != null ? json['position'] : '',
-        List<String>.from(json['roles'] == null ? [] : json['roles']),
+        // List<String>.from(json['roles'] == null ? [] : json['roles']),
         // json['createdAt'] != null ? json['createdAt'].toString() : '',
         // json['createdBy'] != null ? json['createdBy'] : '',
         // json['lastLogin'] != null ? json['lastLogin'] : '',
