@@ -27,7 +27,7 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
     super.initState();
   }
 
-  privilegesNotExistByRole(
+  List<String> privilegesNotExistByRole(
     List<String> allPrivilege,
     List<String> privilegesByRole,
   ) {
@@ -42,15 +42,14 @@ class _RoleSearchFormState extends State<RoleSearchForm> {
     return newList;
   }
 
-  handleCheckedClick(bool value) {
-    if (value == false) {
-      final List<String> list = [];
-      widget.handleCheckAll(value, list);
-    } else if (value == true) {
-      final List<String> list = privilegesNotExistByRole(
+  handleCheckedClick(bool check) {
+    final List<String> list = [];
+    if (check == true) {
+      final List<String> newList = privilegesNotExistByRole(
           widget.allPrivilege, widget.privilegesByRole);
-      widget.handleCheckAll(value, list);
+      list.addAll(newList);
     }
+    widget.handleCheckAll(check, list);
   }
 
   @override

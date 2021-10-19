@@ -5,6 +5,7 @@ import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';
 import 'package:flutter_admin/src/services/role.dart';
+import 'package:flutter_admin/utils/general_method.dart';
 
 class RoleScreen extends StatefulWidget {
   const RoleScreen({
@@ -16,6 +17,8 @@ class RoleScreen extends StatefulWidget {
 }
 
 class _RoleScreenState extends State<RoleScreen> {
+  final RoleFilter initialValue = RoleFilter('', [], 5, 1);
+  ScrollController _scrollController = new ScrollController();
   late RoleFilter roleFilter =
       // RoleFilter(limit: 10, page: 1, roleName: '', status: []);
       RoleFilter('', [], 5, 1);
@@ -58,6 +61,7 @@ class _RoleScreenState extends State<RoleScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverAppBar(
               backgroundColor: Colors.green[400],
@@ -71,13 +75,17 @@ class _RoleScreenState extends State<RoleScreen> {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditRoleScreen(
-                                    roleId: roles[index].roleId,
-                                  )));
+                    onTap: () async {
+                      final reLoadPage = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EditRoleScreen(roleId: roles[index].roleId)),
+                      );
+                      if (reLoadPage == null || reLoadPage == true) {
+                        handleSearchFilter(initialValue);
+                        GeneralMethod.autoScrollOnTop(_scrollController);
+                      }
                     },
                     child: RoleCard(
                       role: roles[index],

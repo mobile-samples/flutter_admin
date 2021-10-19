@@ -16,15 +16,18 @@ class RoleForm extends StatefulWidget {
 }
 
 class _RoleFormState extends State<RoleForm> {
-  late int limit = widget.initialRole.limit;
   TextEditingController roleNameController = TextEditingController();
   bool checkActive = false;
   bool checkInactive = false;
   List<String> newStatus = [];
 
-  handleSearchClick() {
-    final RoleFilter formFilter =
-        RoleFilter(roleNameController.value.text, newStatus, limit, 1);
+  handleSearchClick(int? newLimit) {
+    final RoleFilter formFilter = RoleFilter(
+      roleNameController.value.text,
+      newStatus,
+      newLimit!,
+      1,
+    );
     widget.handleSearchFilter(formFilter);
   }
 
@@ -130,13 +133,10 @@ class _RoleFormState extends State<RoleForm> {
                     children: [
                       Text('Page Size: ', style: TextStyle(fontSize: 16.0)),
                       DropdownButton<String>(
-                        value: limit.toString(),
+                        value: widget.initialRole.limit.toString(),
                         iconSize: 0.0,
                         onChanged: (String? newValue) {
-                          setState(() {
-                            limit = int.parse(newValue!);
-                          });
-                          handleSearchClick();
+                          handleSearchClick(int.parse(newValue!));
                         },
                         items: <String>['5', '10', '20', '40']
                             .map<DropdownMenuItem<String>>((String value) {
@@ -152,7 +152,7 @@ class _RoleFormState extends State<RoleForm> {
                 ElevatedButton(
                   onPressed: () {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    handleSearchClick();
+                    handleSearchClick(widget.initialRole.limit);
                   },
                   style: ButtonStyle(
                     backgroundColor:

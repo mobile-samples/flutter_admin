@@ -70,4 +70,25 @@ class RoleService {
       throw json.decode(response.body)['error']['message'];
     }
   }
+
+  Future<ResultInfo<Role>> put(Role role) async {
+    late String baseUrl = getUrl();
+    final response = await http.put(
+      Uri.parse(baseUrl + '/roles/' + role.roleId),
+      headers: GlobalData.buildHeader(),
+      body: jsonEncode(<String, dynamic>{
+        'createdBy': role.createdAt ?? "",
+        'privileges': role.privileges,
+        'remark': role.remark,
+        'roleId': role.roleId,
+        'roleName': role.roleName,
+        'status': role.status,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return ResultInfo.fromJson(jsonDecode(response.body));
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
+  }
 }

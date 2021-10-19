@@ -16,6 +16,7 @@ class EditRoleScreen extends StatefulWidget {
 }
 
 class _EditRoleScreenState extends State<EditRoleScreen> {
+  final _formKey = new GlobalKey<FormState>();
   TextEditingController searchController = TextEditingController();
 
   late String roleId = '';
@@ -78,10 +79,11 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
       setState(() {
         privilegeListByRole = list;
       });
+    } else {
+      setState(() {
+        privilegeListByRole.addAll(list);
+      });
     }
-    setState(() {
-      privilegeListByRole.addAll(list);
-    });
   }
 
   handleCheckedByParent(bool value, int index) {
@@ -165,6 +167,31 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
     });
   }
 
+  void handlePressedSave() async {
+    final Role newRole = Role(
+      roleId,
+      roleNameController.text,
+      status,
+      remarkController.text,
+      privilegeListByRole,
+      null,
+      null,
+      null,
+      null,
+    );
+    FocusScope.of(context).requestFocus(FocusNode());
+    if (_formKey.currentState!.validate()) {
+      await RoleService.instance.put(newRole);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Successfully updated')));
+      Navigator.pop(context, true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in the fields above')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (loading == true) {
@@ -180,13 +207,24 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
               backgroundColor: Colors.green[400],
               title: Text('Edit role'),
             ),
-            EditRoleForm(
-              // role: role,
-              roleId: roleId,
-              roleNameController: roleNameController,
-              remarkController: remarkController,
-              status: status,
-              handleStatus: handleStatus,
+            SliverToBoxAdapter(
+              child: Container(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      EditRoleForm(
+                        // role: role,
+                        roleId: roleId,
+                        roleNameController: roleNameController,
+                        remarkController: remarkController,
+                        status: status,
+                        handleStatus: handleStatus,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             RoleSearchForm(
               allPrivilege: formatPrivileges,
@@ -266,9 +304,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
               child: Container(
                 margin: EdgeInsets.fromLTRB(75, 10, 75, 10),
                 child: ElevatedButton(
-                  onPressed: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
+                  onPressed: handlePressedSave,
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green,
                     shape: RoundedRectangleBorder(

@@ -51,8 +51,8 @@ class SearchResult<T> {
 class RoleFilter {
   String roleName;
   List<String> status;
-  int page;
   int limit;
+  int page;
 
   RoleFilter(
     this.roleName,
@@ -69,6 +69,10 @@ class Role {
   String remark;
   List<String> privileges;
   List<User>? users;
+  DateTime? createdAt;
+  String? createdBy;
+  DateTime? updatedAt;
+  String? updatedBy;
 
   Role(
     this.roleId,
@@ -76,18 +80,27 @@ class Role {
     this.status,
     this.remark,
     this.privileges,
+    this.createdAt,
+    this.createdBy,
+    this.updatedAt,
+    this.updatedBy,
   );
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
-      json['roleId'],
-      json['roleName'],
-      json['status'],
-      json['remark'],
-      json['privileges'] == null
-          ? []
-          : List<String>.from(json['privileges'])
-              .map((e) => e.split(' ')[0].toString())
-              .toList());
+        json['roleId'],
+        json['roleName'],
+        json['status'],
+        json['remark'],
+        json['privileges'] == null
+            ? []
+            : List<String>.from(json['privileges']
+                .map((e) => e.split(' ')[0].toString())
+                .toList()),
+        json['createdAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+        json['createdBy'] != null ? json['createdBy'] : '',
+        json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+        json['updatedBy'] != null ? json['updatedBy'] : '',
+      );
 }
 
 class Privilege {
@@ -144,6 +157,8 @@ class ResultInfo<T> {
       switch (T) {
         case User:
           return User.fromJson(json['value']) as T;
+        case Role:
+          return Role.fromJson(json['value']) as T;
         default:
           return null;
       }

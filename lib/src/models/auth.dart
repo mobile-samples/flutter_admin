@@ -51,7 +51,7 @@ class Privileges {
         json['id'],
         json['name'],
         json['path'],
-        json['permission'].toString().length > 0 ? json['permissions'] : 0,
+        json['permission'] != null ? json['permissions'] : 0,
         json['resource'],
       );
 }
