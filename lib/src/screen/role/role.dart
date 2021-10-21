@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
+import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/screen/edit_role/edit_role.dart';
 import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
@@ -17,13 +18,13 @@ class RoleScreen extends StatefulWidget {
 }
 
 class _RoleScreenState extends State<RoleScreen> {
-  final RoleFilter initialValue = RoleFilter('', [], 5, 1);
-  ScrollController _scrollController = new ScrollController();
-  late RoleFilter roleFilter =
-      // RoleFilter(limit: 10, page: 1, roleName: '', status: []);
-      RoleFilter('', [], 5, 1);
-  late List<RoleSM> roles = [];
-  late int total = 0;
+  ScrollController _scrollController = ScrollController();
+  late RoleFilter roleFilter;
+  late TextEditingController roleNameController = TextEditingController();
+  late List<String> status;
+  late List<Role> roles;
+  late int total;
+  late bool _loading = true;
 
   @override
   void initState() {
@@ -32,10 +33,15 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   getRole() async {
-    final res = await RoleService.instance.search(roleFilter);
+    final RoleFilter initialValue = RoleFilter(null, [], 5, 1);
+    final res = await RoleService.instance.search(initialValue);
     setState(() {
       roles = res.list;
       total = res.total;
+      roleFilter = initialValue;
+      roleNameController.text = initialValue.roleName ?? '';
+      status = initialValue.status ?? [];
+      _loading = false;
     });
   }
 
@@ -48,16 +54,25 @@ class _RoleScreenState extends State<RoleScreen> {
     });
   }
 
-  handlePagination(RoleFilter formFilter) async {
-    final res = await RoleService.instance.search(formFilter);
-    setState(() {
-      roles = res.list;
-      roleFilter = formFilter;
-    });
+  hanleChangeStatus(String type, bool isChecked) {
+    if (type == 'A') {
+      setState(() {
+        isChecked == true ? status.add('A') : status.remove('A');
+      });
+    } else {
+      setState(() {
+        isChecked == true ? status.add('I') : status.remove('I');
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading == true) {
+      return Center(
+        child: Text('Loading....'),
+      );
+    }
     return Scaffold(
         backgroundColor: Colors.white,
         body: CustomScrollView(
@@ -68,7 +83,10 @@ class _RoleScreenState extends State<RoleScreen> {
               title: Text('Search Roles'),
             ),
             RoleForm(
-              initialRole: roleFilter,
+              roleNameController: roleNameController,
+              status: status,
+              roleFilter: roleFilter,
+              hanleChangeStatus: hanleChangeStatus,
               handleSearchFilter: handleSearchFilter,
             ),
             SliverList(
@@ -83,7 +101,8 @@ class _RoleScreenState extends State<RoleScreen> {
                                 EditRoleScreen(roleId: roles[index].roleId)),
                       );
                       if (reLoadPage == null || reLoadPage == true) {
-                        handleSearchFilter(initialValue);
+                        getRole();
+                        FocusScope.of(context).requestFocus(FocusNode());
                         GeneralMethod.autoScrollOnTop(_scrollController);
                       }
                     },
@@ -95,9 +114,9 @@ class _RoleScreenState extends State<RoleScreen> {
                 childCount: roles.length > 0 ? roles.length : 0,
               ),
             ),
-            (total != 0 && total > roleFilter.limit)
+            (total != 0 && total > roleFilter.limit!)
                 ? PaginationButton(
-                    handlePagination: handlePagination,
+                    handlePagination: handleSearchFilter,
                     roleFilter: roleFilter,
                     total: total,
                   )

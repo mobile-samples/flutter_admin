@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/role.dart';
+import 'package:flutter_admin/src/models/search.dart';
 
 class PaginationButton extends StatefulWidget {
   const PaginationButton({
@@ -20,7 +20,7 @@ class _PaginationButtonState extends State<PaginationButton> {
     final RoleFilter formFilter = RoleFilter(
       widget.roleFilter.roleName,
       widget.roleFilter.status,
-      widget.roleFilter.limit,
+      widget.roleFilter.limit!,
       newPage,
     );
     widget.handlePagination(formFilter);
@@ -35,7 +35,7 @@ class _PaginationButtonState extends State<PaginationButton> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: List<Widget>.generate(
-            (widget.total / widget.roleFilter.limit).ceil(),
+            (widget.total / widget.roleFilter.limit!).ceil(),
             (index) => GestureDetector(
               onTap: () {
                 handleOnClick(index + 1);

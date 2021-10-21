@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/role.dart';
+import 'package:flutter_admin/src/models/search.dart';
 
 class RoleForm extends StatefulWidget {
   const RoleForm({
     Key? key,
-    required this.initialRole,
+    required this.roleNameController,
+    required this.roleFilter,
     required this.handleSearchFilter,
+    required this.hanleChangeStatus,
+    required this.status,
   }) : super(key: key);
 
-  final RoleFilter initialRole;
+  final TextEditingController roleNameController;
+  final RoleFilter roleFilter;
   final Function handleSearchFilter;
+  final void Function(String, bool) hanleChangeStatus;
+  final List<String> status;
 
   @override
   _RoleFormState createState() => _RoleFormState();
 }
 
 class _RoleFormState extends State<RoleForm> {
-  TextEditingController roleNameController = TextEditingController();
-  bool checkActive = false;
-  bool checkInactive = false;
-  List<String> newStatus = [];
-
   handleSearchClick(int? newLimit) {
     final RoleFilter formFilter = RoleFilter(
-      roleNameController.value.text,
-      newStatus,
+      widget.roleNameController.value.text,
+      widget.status,
       newLimit!,
       1,
     );
@@ -51,7 +52,7 @@ class _RoleFormState extends State<RoleForm> {
                   flex: 4,
                   child: TextField(
                     style: TextStyle(fontSize: 16, color: Colors.black),
-                    controller: roleNameController,
+                    controller: widget.roleNameController,
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -81,14 +82,9 @@ class _RoleFormState extends State<RoleForm> {
                         Checkbox(
                           checkColor: Colors.white,
                           activeColor: Colors.lightGreen,
-                          value: checkActive,
+                          value: widget.status.contains('A'),
                           onChanged: (value) {
-                            setState(() {
-                              checkActive = value!;
-                              checkActive == true
-                                  ? newStatus.add("A")
-                                  : newStatus.remove("A");
-                            });
+                            widget.hanleChangeStatus('A', value!);
                           },
                         ),
                         Text('Active')
@@ -102,14 +98,9 @@ class _RoleFormState extends State<RoleForm> {
                         Checkbox(
                           checkColor: Colors.white,
                           activeColor: Colors.lightGreen,
-                          value: checkInactive,
+                          value: widget.status.contains('I'),
                           onChanged: (value) {
-                            setState(() {
-                              checkInactive = value!;
-                              checkInactive == true
-                                  ? newStatus.add("I")
-                                  : newStatus.remove("I");
-                            });
+                            widget.hanleChangeStatus('I', value!);
                           },
                         ),
                         Text('Inactive')
@@ -133,7 +124,7 @@ class _RoleFormState extends State<RoleForm> {
                     children: [
                       Text('Page Size: ', style: TextStyle(fontSize: 16.0)),
                       DropdownButton<String>(
-                        value: widget.initialRole.limit.toString(),
+                        value: widget.roleFilter.limit.toString(),
                         iconSize: 0.0,
                         onChanged: (String? newValue) {
                           handleSearchClick(int.parse(newValue!));
@@ -152,7 +143,7 @@ class _RoleFormState extends State<RoleForm> {
                 ElevatedButton(
                   onPressed: () {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    handleSearchClick(widget.initialRole.limit);
+                    handleSearchClick(widget.roleFilter.limit);
                   },
                   style: ButtonStyle(
                     backgroundColor:

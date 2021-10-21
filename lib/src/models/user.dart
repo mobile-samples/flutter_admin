@@ -38,11 +38,11 @@ class User {
   String title;
   String position;
   List<String>? roles;
-  String? createdAt;
-  String? createdBy;
-  String? lastLogin;
-  String? updatedAt;
-  String? updatedBy;
+  // String? createdAt;
+  // String? createdBy;
+  // String? lastLogin;
+  // String? updatedAt;
+  // String? updatedBy;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         json['userId'],
@@ -91,11 +91,11 @@ class UserSQL {
     this.position,
     this.gender,
     this.imageURL,
-    this.createdAt,
-    this.createdBy,
-    this.lastLogin,
-    this.updatedAt,
-    this.updatedBy,
+    // this.createdAt,
+    // this.createdBy,
+    // this.lastLogin,
+    // this.updatedAt,
+    // this.updatedBy,
   );
   String username;
   String userId;
@@ -107,28 +107,29 @@ class UserSQL {
   String position;
   String gender;
   String imageURL;
-  String? createdAt;
-  String? createdBy;
-  String? lastLogin;
-  String? updatedAt;
-  String? updatedBy;
+  // String? createdAt;
+  // String? createdBy;
+  // String? lastLogin;
+  // String? updatedAt;
+  // String? updatedBy;
 
   factory UserSQL.fromJson(Map<String, dynamic> json) => UserSQL(
-      json['username'],
-      json['userid'] != null ? json['userid'] : '',
-      json['displayname'],
-      json['title'],
-      json['status'],
-      json['phone'],
-      json['email'],
-      json['position'],
-      json['gender'],
-      json['imageurl'],
-      json['createdat'] != null ? json['createdat'].toString() : '',
-      json['createdby'] != null ? json['createdby'] : '',
-      json['lastlogin'] != null ? json['lastlogin'] : '',
-      json['updatedat'] != null ? json['updatedat'] : '',
-      json['updatedby'] != null ? json['updatedby'] : '');
+        json['username'],
+        json['userid'] != null ? json['userid'] : '',
+        json['displayname'],
+        json['title'],
+        json['status'],
+        json['phone'],
+        json['email'],
+        json['position'],
+        json['gender'],
+        json['imageurl'],
+        // json['createdat'] != null ? json['createdat'].toString() : '',
+        // json['createdby'] != null ? json['createdby'] : '',
+        // json['lastlogin'] != null ? json['lastlogin'] : '',
+        // json['updatedat'] != null ? json['updatedat'] : '',
+        // json['updatedby'] != null ? json['updatedby'] : '',
+      );
 }
 
 class ListUsersSQL {

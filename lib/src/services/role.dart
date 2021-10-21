@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_admin/src/models/role.dart';
+import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/utils/global_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
@@ -21,16 +22,16 @@ class RoleService {
     }
   }
 
-  Future<SearchResult<RoleSM>> search(RoleFilter filters) async {
+  Future<SearchResult<Role>> search(RoleFilter filters) async {
     late String baseUrl = getUrl();
     final response = await http.post(
       Uri.parse(baseUrl + '/roles/search'),
       headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
-        'roleName': filters.roleName.isNotEmpty ? filters.roleName : '',
-        'status': filters.status.isNotEmpty ? filters.status : [],
-        'limit': filters.limit.isNaN ? 0 : filters.limit,
-        'page': filters.page.isNaN ? 0 : filters.page,
+        'roleName': filters.roleName ?? '',
+        'status': filters.status ?? [],
+        'limit': filters.limit ?? 0,
+        'page': filters.page ?? 0,
       }),
     );
     if (response.statusCode == 200) {
@@ -71,13 +72,12 @@ class RoleService {
     }
   }
 
-  Future<ResultInfo<Role>> put(Role role) async {
+  Future<ResultInfo<Role>> update(Role role) async {
     late String baseUrl = getUrl();
     final response = await http.put(
       Uri.parse(baseUrl + '/roles/' + role.roleId),
       headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
-        'createdBy': role.createdAt ?? "",
         'privileges': role.privileges,
         'remark': role.remark,
         'roleId': role.roleId,

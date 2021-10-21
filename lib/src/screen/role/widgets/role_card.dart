@@ -4,7 +4,7 @@ import 'package:flutter_admin/src/models/role.dart';
 class RoleCard extends StatefulWidget {
   const RoleCard({Key? key, required this.role}) : super(key: key);
 
-  final RoleSM role;
+  final Role role;
   @override
   _RoleCardState createState() => _RoleCardState();
 }

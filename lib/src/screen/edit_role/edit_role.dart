@@ -56,7 +56,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
       remarkController.text = res.remark;
       status = res.status;
 
-      privilegeListByRole = res.privileges;
+      privilegeListByRole = res.privileges!;
       loading = false;
     });
   }
@@ -98,7 +98,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
       });
     }
     setState(() {
-      privilegeListByRole = clone;
+      privilegeListByRole = clone.toSet().toList();
     });
   }
 
@@ -174,14 +174,10 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
       status,
       remarkController.text,
       privilegeListByRole,
-      null,
-      null,
-      null,
-      null,
     );
     FocusScope.of(context).requestFocus(FocusNode());
     if (_formKey.currentState!.validate()) {
-      await RoleService.instance.put(newRole);
+      await RoleService.instance.update(newRole);
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Successfully updated')));
       Navigator.pop(context, true);
