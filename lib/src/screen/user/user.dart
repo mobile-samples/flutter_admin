@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:flutter_admin/src/screen/edit_user/edit_user.dart';
+import 'package:flutter_admin/src/screen/user/pagination.dart';
 import 'package:flutter_admin/src/screen/user/userCard.dart';
 import 'package:flutter_admin/src/screen/user/userForm.dart';
 import 'package:flutter_admin/src/services/user.dart';
@@ -18,6 +19,9 @@ class _UserScreenState extends State<UserScreen> {
   late UserFilter filters;
   late List<User> users;
   late int total;
+  late TextEditingController userNameController = TextEditingController();
+  late TextEditingController displayNameController = TextEditingController();
+  late List<String> status;
   // late List<UserSQL> users = [];
   bool _loading = true;
 
@@ -25,6 +29,18 @@ class _UserScreenState extends State<UserScreen> {
   void initState() {
     getUsers();
     super.initState();
+  }
+
+  hanleChangeStatus(String type, bool isChecked) {
+    if (type == 'A') {
+      setState(() {
+        isChecked == true ? status.add('A') : status.remove('A');
+      });
+    } else {
+      setState(() {
+        isChecked == true ? status.add('I') : status.remove('I');
+      });
+    }
   }
 
   getUsers() async {
@@ -35,8 +51,12 @@ class _UserScreenState extends State<UserScreen> {
       users = res.list;
       total = res.total;
       filters = initialValue;
+      userNameController.text = initialValue.username ?? '';
+      displayNameController.text = initialValue.displayName ?? '';
+      status = initialValue.status ?? [];
       _loading = false;
     });
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 
   handleFilters(UserFilter filter) async {
@@ -67,7 +87,12 @@ class _UserScreenState extends State<UserScreen> {
                   title: Text('User'),
                 ),
                 UserForm(
+                  userFilter: filters,
+                  userName: userNameController,
+                  displayName: displayNameController,
+                  status: status,
                   handleFilters: handleFilters,
+                  hanleChangeStatus: hanleChangeStatus,
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
@@ -95,58 +120,11 @@ class _UserScreenState extends State<UserScreen> {
                     childCount: users.length,
                   ),
                 ),
-                (total != 0 && total >= users.length)
-                    ? SliverToBoxAdapter(
-                        child: Center(
-                          heightFactor: 2.0,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: List<Widget>.generate(
-                                  (total / filters.limit!).ceil(),
-                                  (index) => GestureDetector(
-                                        onTap: () {
-                                          // setState(() {
-                                          //   filters.page = index + 1;
-                                          // });
-                                          final UserFilter newFilter =
-                                              UserFilter(
-                                            filters.userId,
-                                            filters.username,
-                                            filters.email,
-                                            filters.displayName,
-                                            filters.status,
-                                            filters.limit,
-                                            index + 1,
-                                          );
-                                          handleFilters(newFilter);
-                                          GeneralMethod.autoScrollOnTop(
-                                              _scrollController);
-                                        },
-                                        child: Container(
-                                          child: Center(
-                                            child: Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Text(
-                                                  (index + 1).toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                )),
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  ((index + 1) == filters.page)
-                                                      ? Colors.teal
-                                                      : Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.teal,
-                                                  width: 2)),
-                                        ),
-                                      )),
-                            ),
-                          ),
-                        ),
+                (total != 0 && total > filters.limit!)
+                    ? PaginationButtonForUser(
+                        handlePagination: handleFilters,
+                        total: total,
+                        userFilter: filters,
                       )
                     : SliverToBoxAdapter(
                         child: SizedBox(

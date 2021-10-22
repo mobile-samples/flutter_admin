@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/search.dart';
 
-class PaginationButtonForRole extends StatefulWidget {
-  const PaginationButtonForRole({
+class PaginationButtonForUser extends StatefulWidget {
+  const PaginationButtonForUser({
     Key? key,
     required this.handlePagination,
-    required this.roleFilter,
+    required this.userFilter,
     required this.total,
   }) : super(key: key);
-  final Function(RoleFilter) handlePagination;
-  final RoleFilter roleFilter;
+
   final int total;
+  final UserFilter userFilter;
+  final Function(UserFilter) handlePagination;
+
   @override
-  _PaginationButtonForRoleState createState() =>
-      _PaginationButtonForRoleState();
+  _PaginationButtonForUserState createState() =>
+      _PaginationButtonForUserState();
 }
 
-class _PaginationButtonForRoleState extends State<PaginationButtonForRole> {
+class _PaginationButtonForUserState extends State<PaginationButtonForUser> {
   handleOnClick(int newPage) {
-    final RoleFilter formFilter = RoleFilter(
+    final UserFilter filters = UserFilter(
       null,
-      widget.roleFilter.roleName,
-      widget.roleFilter.status,
+      widget.userFilter.username,
       null,
-      null,
-      widget.roleFilter.limit!,
+      widget.userFilter.displayName,
+      widget.userFilter.status,
+      widget.userFilter.limit,
       newPage,
     );
-    widget.handlePagination(formFilter);
+    widget.handlePagination(filters);
   }
 
   @override
@@ -39,7 +41,7 @@ class _PaginationButtonForRoleState extends State<PaginationButtonForRole> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: List<Widget>.generate(
-            (widget.total / widget.roleFilter.limit!).ceil(),
+            (widget.total / widget.userFilter.limit!).ceil(),
             (index) => GestureDetector(
               onTap: () {
                 handleOnClick(index + 1);
@@ -48,14 +50,14 @@ class _PaginationButtonForRoleState extends State<PaginationButtonForRole> {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  color: index + 1 == widget.roleFilter.page
+                  color: index + 1 == widget.userFilter.page
                       ? Colors.blue
                       : Colors.white,
                 ),
                 child: Text(
                   (index + 1).toString(),
                   style: TextStyle(
-                    color: index + 1 == widget.roleFilter.page
+                    color: index + 1 == widget.userFilter.page
                         ? Colors.white
                         : Colors.black,
                   ),

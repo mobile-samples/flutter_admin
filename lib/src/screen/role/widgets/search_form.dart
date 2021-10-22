@@ -29,7 +29,7 @@ class _RoleFormState extends State<RoleForm> {
       widget.status,
       null,
       null,
-      newLimit!,
+      newLimit ?? widget.roleFilter.limit,
       1,
     );
     widget.handleSearchFilter(formFilter);
@@ -146,7 +146,7 @@ class _RoleFormState extends State<RoleForm> {
                 ElevatedButton(
                   onPressed: () {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    handleSearchClick(widget.roleFilter.limit);
+                    handleSearchClick(null);
                   },
                   style: ButtonStyle(
                     backgroundColor:

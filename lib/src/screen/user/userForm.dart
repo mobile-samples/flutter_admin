@@ -2,29 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/search.dart';
 
 class UserForm extends StatefulWidget {
-  const UserForm({Key? key, required this.handleFilters}) : super(key: key);
-  final Function handleFilters;
+  const UserForm({
+    Key? key,
+    required this.userFilter,
+    required this.userName,
+    required this.displayName,
+    required this.status,
+    required this.handleFilters,
+    required this.hanleChangeStatus,
+  }) : super(key: key);
+
+  final UserFilter userFilter;
+  final TextEditingController userName;
+  final TextEditingController displayName;
+  final List<String> status;
+  final void Function(String, bool) hanleChangeStatus;
+  final void Function(UserFilter) handleFilters;
   @override
   _UserFormState createState() => _UserFormState();
 }
 
 class _UserFormState extends State<UserForm> {
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController displayNameController = TextEditingController();
-  bool checkActive = false;
-  bool checkInactive = false;
-  List<String> status = [];
-  int page = 1;
-  int limit = 20;
-  filter() {
+  void filter(int? newValue) {
     final UserFilter filters = UserFilter(
       null,
-      userNameController.value.text,
+      widget.userName.text,
       null,
-      displayNameController.value.text,
-      status,
-      limit,
-      page,
+      widget.displayName.text,
+      widget.status,
+      newValue ?? widget.userFilter.limit,
+      1,
     );
     widget.handleFilters(filters);
   }
@@ -47,7 +54,7 @@ class _UserFormState extends State<UserForm> {
                     padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
                       style: TextStyle(fontSize: 16, color: Colors.black),
-                      controller: userNameController,
+                      controller: widget.userName,
                       decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.green),
@@ -73,7 +80,7 @@ class _UserFormState extends State<UserForm> {
                     padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
                       style: TextStyle(fontSize: 16, color: Colors.black),
-                      controller: displayNameController,
+                      controller: widget.displayName,
                       decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.green),
@@ -97,16 +104,9 @@ class _UserFormState extends State<UserForm> {
                 Checkbox(
                   checkColor: Colors.white,
                   activeColor: Colors.lightGreen,
-                  value: this.checkActive,
+                  value: widget.status.contains('A'),
                   onChanged: (value) {
-                    setState(() {
-                      this.checkActive = value!;
-                      if (checkActive == true) {
-                        status.add('A');
-                      } else {
-                        status.remove('A');
-                      }
-                    });
+                    widget.hanleChangeStatus('A', value!);
                   },
                 ),
                 Text(
@@ -116,16 +116,9 @@ class _UserFormState extends State<UserForm> {
                 Checkbox(
                   checkColor: Colors.white,
                   activeColor: Colors.lightGreen,
-                  value: this.checkInactive,
+                  value: widget.status.contains('I'),
                   onChanged: (value) {
-                    setState(() {
-                      this.checkInactive = value!;
-                      if (checkInactive == true) {
-                        status.add('I');
-                      } else {
-                        status.remove('I');
-                      }
-                    });
+                    widget.hanleChangeStatus('I', value!);
                   },
                 ),
                 Text(
@@ -142,12 +135,9 @@ class _UserFormState extends State<UserForm> {
               children: [
                 SizedBox(
                     child: DropdownButton(
-                  value: limit.toString(),
+                  value: widget.userFilter.limit.toString(),
                   onChanged: (String? newValue) {
-                    setState(() {
-                      limit = int.parse(newValue!);
-                    });
-                    filter();
+                    filter(int.parse(newValue!));
                   },
                   items: <String>['5', '10', '20', '40']
                       .map<DropdownMenuItem<String>>((String value) {
@@ -161,7 +151,7 @@ class _UserFormState extends State<UserForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      filter();
+                      filter(null);
                     },
                     style: ButtonStyle(
                       backgroundColor:

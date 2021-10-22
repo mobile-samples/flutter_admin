@@ -45,6 +45,7 @@ class _RoleScreenState extends State<RoleScreen> {
       status = initialValue.status ?? [];
       _loading = false;
     });
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 
   hanleChangeStatus(String type, bool isChecked) {
@@ -104,7 +105,6 @@ class _RoleScreenState extends State<RoleScreen> {
                       );
                       if (reLoadPage == null || reLoadPage == true) {
                         getRole();
-                        FocusScope.of(context).requestFocus(FocusNode());
                         GeneralMethod.autoScrollOnTop(_scrollController);
                       }
                     },
@@ -117,7 +117,7 @@ class _RoleScreenState extends State<RoleScreen> {
               ),
             ),
             (total != 0 && total > roleFilter.limit!)
-                ? PaginationButton(
+                ? PaginationButtonForRole(
                     handlePagination: handleSearchFilter,
                     roleFilter: roleFilter,
                     total: total,

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/user.dart';
 
 class UserCard extends StatelessWidget {
-  const UserCard({Key? key, required this.user}) : super(key: key);
+  const UserCard({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
   // final UserSQL user;
   final User user;
   @override
@@ -14,9 +17,9 @@ class UserCard extends StatelessWidget {
           Expanded(
             flex: 1,
             child: CircleAvatar(
-              foregroundImage: user.imageURL!.isNotEmpty
-                  ? NetworkImage(user.imageURL!)
-                  : null,
+              backgroundImage: user.imageURL!.isEmpty
+                  ? null
+                  : NetworkImage(user.imageURL.toString()),
             ),
           ),
           Expanded(
