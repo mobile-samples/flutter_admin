@@ -26,7 +26,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
   }
 
   handleClickSave(User user) async {
-    await UserAPIService.instance.patch(user);
+    await UserAPIService.instance.update(user);
   }
 
   @override

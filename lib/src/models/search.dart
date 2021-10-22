@@ -1,21 +1,6 @@
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/user.dart';
 
-class UserFilter {
-  UserFilter(
-    this.username,
-    this.displayName,
-    this.status,
-    this.limit,
-    this.page,
-  );
-  String username;
-  String displayName;
-  List<String> status;
-  int limit;
-  int page;
-}
-
 abstract class Filter {
   int? page;
   int? limit;
@@ -51,6 +36,8 @@ class SearchResult<T> {
       switch (T) {
         case Role:
           return List<T>.from(json['list'].map((x) => Role.fromJson(x)));
+        case User:
+          return List<T>.from(json['list'].map((x) => User.fromJson(x)));
         default:
           return null;
       }
@@ -100,13 +87,37 @@ class ResultInfo<T> {
   }
 }
 
+class UserFilter extends Filter {
+  UserFilter(
+    this.userId,
+    this.username,
+    this.email,
+    this.displayName,
+    this.status,
+    int? limit,
+    int? page,
+  ) : super(limit, page);
+
+  String? userId;
+  String? username;
+  String? email;
+  String? displayName;
+  List<String>? status;
+}
+
 class RoleFilter extends Filter {
+  String? roleId;
   String? roleName;
   List<String>? status;
+  String? remark;
+  String? description;
 
   RoleFilter(
+    this.roleId,
     this.roleName,
     this.status,
+    this.remark,
+    this.description,
     int? limit,
     int? page,
   ) : super(limit, page);

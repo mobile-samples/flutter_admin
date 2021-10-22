@@ -22,6 +22,24 @@ class RoleService {
     }
   }
 
+  Future<List<Privilege>> getPrivileges() async {
+    late String baseUrl = getUrl();
+    final response = await http.get(
+      Uri.parse(baseUrl + '/privileges'),
+      headers: GlobalData.buildHeader(),
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> res = jsonDecode(response.body);
+      List<Privilege> privilegeList = [];
+      res.forEach((item) {
+        privilegeList.add(Privilege.fromJson(item));
+      });
+      return privilegeList;
+    } else {
+      throw json.decode(response.body)['error']['message'];
+    }
+  }
+
   Future<SearchResult<Role>> search(RoleFilter filters) async {
     late String baseUrl = getUrl();
     final response = await http.post(
@@ -36,24 +54,6 @@ class RoleService {
     );
     if (response.statusCode == 200) {
       return SearchResult.fromJson(jsonDecode(response.body));
-    } else {
-      throw json.decode(response.body)['error']['message'];
-    }
-  }
-
-  Future<List<Privilege>> getPrivileges() async {
-    late String baseUrl = getUrl();
-    final response = await http.get(
-      Uri.parse(baseUrl + '/privileges'),
-      headers: GlobalData.buildHeader(),
-    );
-    if (response.statusCode == 200) {
-      List<dynamic> res = jsonDecode(response.body);
-      List<Privilege> privilegeList = [];
-      res.forEach((item) {
-        privilegeList.add(Privilege.fromJson(item));
-      });
-      return privilegeList;
     } else {
       throw json.decode(response.body)['error']['message'];
     }

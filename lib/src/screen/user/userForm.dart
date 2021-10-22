@@ -18,7 +18,9 @@ class _UserFormState extends State<UserForm> {
   int limit = 20;
   filter() {
     final UserFilter filters = UserFilter(
+      null,
       userNameController.value.text,
+      null,
       displayNameController.value.text,
       status,
       limit,

@@ -14,11 +14,10 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  final UserFilter initialValue = UserFilter('', '', [], 20, 1);
   ScrollController _scrollController = new ScrollController();
-  late UserFilter filters = UserFilter('', '', [], 20, 1);
-  late List<User> users = [];
-  late int total = 0;
+  late UserFilter filters;
+  late List<User> users;
+  late int total;
   // late List<UserSQL> users = [];
   bool _loading = true;
 
@@ -29,18 +28,19 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   getUsers() async {
-    final ListUsers res = await UserAPIService.instance.search(initialValue);
-    // final res = await SqliteService.getUsers(filters);
+    final UserFilter initialValue = UserFilter(null, '', null, '', [], 20, 1);
+    final SearchResult<User> res =
+        await UserAPIService.instance.search(initialValue);
     setState(() {
       users = res.list;
       total = res.total;
+      filters = initialValue;
       _loading = false;
     });
   }
 
   handleFilters(UserFilter filter) async {
-    final ListUsers res = await UserAPIService.instance.search(filter);
-    // final res = await SqliteService.getUsers(filter);
+    final SearchResult<User> res = await UserAPIService.instance.search(filter);
     setState(() {
       users = res.list;
       total = res.total;
@@ -82,7 +82,7 @@ class _UserScreenState extends State<UserScreen> {
                                         EditUserScreen(user: users[index])),
                               );
                               if (reLoadPage == null || reLoadPage == true) {
-                                handleFilters(initialValue);
+                                getUsers();
                                 GeneralMethod.autoScrollOnTop(
                                     _scrollController);
                               }
@@ -104,7 +104,7 @@ class _UserScreenState extends State<UserScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: List<Widget>.generate(
-                                  (total / filters.limit).ceil(),
+                                  (total / filters.limit!).ceil(),
                                   (index) => GestureDetector(
                                         onTap: () {
                                           // setState(() {
@@ -112,8 +112,10 @@ class _UserScreenState extends State<UserScreen> {
                                           // });
                                           final UserFilter newFilter =
                                               UserFilter(
+                                            filters.userId,
                                             filters.username,
-                                            filters.username,
+                                            filters.email,
+                                            filters.displayName,
                                             filters.status,
                                             filters.limit,
                                             index + 1,

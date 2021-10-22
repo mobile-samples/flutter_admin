@@ -4,18 +4,18 @@ import 'package:flutter_admin/src/models/search.dart';
 class RoleForm extends StatefulWidget {
   const RoleForm({
     Key? key,
-    required this.roleNameController,
     required this.roleFilter,
+    required this.roleNameController,
+    required this.status,
     required this.handleSearchFilter,
     required this.hanleChangeStatus,
-    required this.status,
   }) : super(key: key);
 
-  final TextEditingController roleNameController;
   final RoleFilter roleFilter;
+  final TextEditingController roleNameController;
   final Function handleSearchFilter;
-  final void Function(String, bool) hanleChangeStatus;
   final List<String> status;
+  final void Function(String, bool) hanleChangeStatus;
 
   @override
   _RoleFormState createState() => _RoleFormState();
@@ -24,8 +24,11 @@ class RoleForm extends StatefulWidget {
 class _RoleFormState extends State<RoleForm> {
   handleSearchClick(int? newLimit) {
     final RoleFilter formFilter = RoleFilter(
+      null,
       widget.roleNameController.value.text,
       widget.status,
+      null,
+      null,
       newLimit!,
       1,
     );

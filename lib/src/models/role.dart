@@ -7,10 +7,6 @@ class Role {
   String remark;
   List<String>? privileges;
   List<User>? users;
-  // DateTime? createdAt;
-  // String? createdBy;
-  // DateTime? updatedAt;
-  // String? updatedBy;
 
   Role(
     this.roleId,
@@ -18,10 +14,6 @@ class Role {
     this.status,
     this.remark,
     this.privileges,
-    // this.createdAt,
-    // this.createdBy,
-    // this.updatedAt,
-    // this.updatedBy,
   );
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
@@ -34,10 +26,6 @@ class Role {
             : List<String>.from(json['privileges']
                 .map((e) => e.split(' ')[0].toString())
                 .toList()),
-        // json['createdAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-        // json['createdBy'] != null ? json['createdBy'] : '',
-        // json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-        // json['updatedBy'] != null ? json['updatedBy'] : '',
       );
 }
 

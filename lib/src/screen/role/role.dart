@@ -33,8 +33,10 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   getRole() async {
-    final RoleFilter initialValue = RoleFilter(null, [], 5, 1);
-    final res = await RoleService.instance.search(initialValue);
+    final RoleFilter initialValue =
+        RoleFilter(null, null, [], null, null, 5, 1);
+    final SearchResult<Role> res =
+        await RoleService.instance.search(initialValue);
     setState(() {
       roles = res.list;
       total = res.total;
@@ -42,15 +44,6 @@ class _RoleScreenState extends State<RoleScreen> {
       roleNameController.text = initialValue.roleName ?? '';
       status = initialValue.status ?? [];
       _loading = false;
-    });
-  }
-
-  handleSearchFilter(RoleFilter formFilter) async {
-    final res = await RoleService.instance.search(formFilter);
-    setState(() {
-      roles = res.list;
-      total = res.total;
-      roleFilter = formFilter;
     });
   }
 
@@ -64,6 +57,15 @@ class _RoleScreenState extends State<RoleScreen> {
         isChecked == true ? status.add('I') : status.remove('I');
       });
     }
+  }
+
+  handleSearchFilter(RoleFilter formFilter) async {
+    final res = await RoleService.instance.search(formFilter);
+    setState(() {
+      roles = res.list;
+      total = res.total;
+      roleFilter = formFilter;
+    });
   }
 
   @override

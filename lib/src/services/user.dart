@@ -23,22 +23,21 @@ class UserAPIService {
     }
   }
 
-  Future<ListUsers> search(UserFilter filters) async {
+  Future<SearchResult<User>> search(UserFilter filters) async {
     late String baseUrl = getUrl();
     final response = await http.post(
       Uri.parse(baseUrl + '/users/search'),
       headers: GlobalData.buildHeader(),
       body: jsonEncode(<String, dynamic>{
-        'username': filters.username.isNotEmpty ? filters.username : '',
-        'displayName':
-            filters.displayName.isNotEmpty ? filters.displayName : '',
-        'status': filters.status.length == 0 ? [] : filters.status,
-        'limit': filters.limit.isNaN ? 0 : filters.limit,
-        'page': filters.page
+        'username': filters.username ?? '',
+        'displayName': filters.displayName ?? '',
+        'status': filters.status ?? [],
+        'limit': filters.limit ?? 0,
+        'page': filters.page ?? 0,
       }),
     );
     if (response.statusCode == 200) {
-      return ListUsers.fromJson(jsonDecode(response.body));
+      return SearchResult.fromJson(jsonDecode(response.body));
     } else {
       throw json.decode(response.body)['error']['message'];
     }
@@ -57,7 +56,7 @@ class UserAPIService {
     }
   }
 
-  Future<ResultInfo<User>> patch(User user) async {
+  Future<ResultInfo<User>> update(User user) async {
     late String baseUrl = getUrl();
     final response = await http.patch(
       Uri.parse(baseUrl + '/users/' + user.userId),

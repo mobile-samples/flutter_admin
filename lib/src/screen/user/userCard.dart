@@ -14,8 +14,9 @@ class UserCard extends StatelessWidget {
           Expanded(
             flex: 1,
             child: CircleAvatar(
-              foregroundImage:
-                  user.imageURL.isNotEmpty ? NetworkImage(user.imageURL) : null,
+              foregroundImage: user.imageURL!.isNotEmpty
+                  ? NetworkImage(user.imageURL!)
+                  : null,
             ),
           ),
           Expanded(

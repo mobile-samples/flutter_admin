@@ -35,15 +35,15 @@ class SqliteService {
 
   static Future<ListUsersSQL> getUsers(UserFilter filters) async {
     final Database db = await SqliteService.db();
-    final String displayname = '%' + filters.displayName + '%';
-    final String username = '%' + filters.username + '%';
+    final String displayname = '%' + filters.displayName! + '%';
+    final String username = '%' + filters.username! + '%';
     final List<Map<String, dynamic>> queryResult = await db.rawQuery(
         'SELECT * FROM users WHERE username LIKE ? AND displayname LIKE ? LIMIT ? OFFSET ?',
         [
           displayname,
           username,
           filters.limit,
-          ((filters.page - 1) * filters.limit)
+          ((filters.page! - 1) * filters.limit!)
         ]);
     final list = queryResult.map((e) => UserSQL.fromJson(e)).toList();
     final total = list.length;

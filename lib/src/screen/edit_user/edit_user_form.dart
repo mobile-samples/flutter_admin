@@ -1,5 +1,4 @@
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/user.dart';
@@ -27,9 +26,9 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _emailAddressController = TextEditingController();
 
-  late String title = widget.userDetail.title;
-  late String position = widget.userDetail.position;
-  late String gender = widget.userDetail.gender;
+  late String title = widget.userDetail.title!;
+  late String position = widget.userDetail.position!;
+  late String gender = widget.userDetail.gender!;
   late String status =
       widget.userDetail.status == 'A' ? Status.active : Status.inactive;
   // late String status = widget.userDetail.status;
@@ -45,7 +44,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
   void initState() {
     super.initState();
     _displayNameController.text = widget.userDetail.displayName;
-    _phoneNumberController.text = widget.userDetail.phone;
+    _phoneNumberController.text = widget.userDetail.phone!;
     _emailAddressController.text = widget.userDetail.email;
   }
 
@@ -55,7 +54,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
       widget.userDetail.username,
       _emailAddressController.text,
       _displayNameController.text,
-      '',
+      null,
       status,
       gender,
       _phoneNumberController.text,

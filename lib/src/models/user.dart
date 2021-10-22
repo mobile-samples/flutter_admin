@@ -20,29 +20,19 @@ class User {
     this.title,
     this.position,
     // this.roles,
-    // this.createdAt,
-    // this.createdBy,
-    // this.lastLogin,
-    // this.updatedAt,
-    // this.updatedBy,
   );
 
   String userId;
   String username;
   String email;
   String displayName;
-  String imageURL;
+  String? imageURL;
   String status;
-  String gender;
-  String phone;
-  String title;
-  String position;
-  List<String>? roles;
-  // String? createdAt;
-  // String? createdBy;
-  // String? lastLogin;
-  // String? updatedAt;
-  // String? updatedBy;
+  String? gender;
+  String? phone;
+  String? title;
+  String? position;
+  // List<String>? roles;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         json['userId'],
@@ -55,28 +45,20 @@ class User {
         json['phone'] != null ? json['phone'] : '',
         json['title'] != null ? json['title'] : '',
         json['position'] != null ? json['position'] : '',
-        // List<String>.from(json['roles'] == null ? [] : json['roles']),
-        // json['createdAt'] != null ? json['createdAt'].toString() : '',
-        // json['createdBy'] != null ? json['createdBy'] : '',
-        // json['lastLogin'] != null ? json['lastLogin'] : '',
-        // json['updatedAt'] != null ? json['updatedAt'] : '',
-        // json['updatedBy'] != null ? json['updatedBy'] : '',
+        // List<String>.from(json['roles'] == null ? null : json['roles']),
       );
-}
-
-class ListUsers {
-  ListUsers(
-    this.list,
-    this.total,
-  );
-  List<User> list;
-  int total;
-
-  factory ListUsers.fromJson(Map<String, dynamic> json) => ListUsers(
-      List<User>.from(json['list'] != null
-          ? json['list'].map((x) => User.fromJson(x))
-          : []),
-      json['total']);
+  // factory User.fromSQLJson(Map<String, dynamic> json) => User(
+  //   json['userid'] != null ? json['userid'] : '',
+  //   json['username'],
+  //   json['email'],
+  //   json['displayname'],
+  //   json['imageurl'],
+  //   json['status'],
+  //   json['gender'],
+  //   json['phone'],
+  //   json['title'],
+  //   json['position'],
+  // );
 }
 
 class UserSQL {
@@ -124,11 +106,6 @@ class UserSQL {
         json['position'],
         json['gender'],
         json['imageurl'],
-        // json['createdat'] != null ? json['createdat'].toString() : '',
-        // json['createdby'] != null ? json['createdby'] : '',
-        // json['lastlogin'] != null ? json['lastlogin'] : '',
-        // json['updatedat'] != null ? json['updatedat'] : '',
-        // json['updatedby'] != null ? json['updatedby'] : '',
       );
 }
 
