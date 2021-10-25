@@ -5,6 +5,7 @@ import 'package:flutter_admin/src/screen/edit_user/edit_user.dart';
 import 'package:flutter_admin/src/screen/user/pagination.dart';
 import 'package:flutter_admin/src/screen/user/userCard.dart';
 import 'package:flutter_admin/src/screen/user/userForm.dart';
+import 'package:flutter_admin/src/services/sqlite.dart';
 import 'package:flutter_admin/src/services/user.dart';
 import 'package:flutter_admin/utils/general_method.dart';
 
@@ -45,8 +46,10 @@ class _UserScreenState extends State<UserScreen> {
 
   getUsers() async {
     final UserFilter initialValue = UserFilter(null, '', null, '', [], 20, 1);
-    final SearchResult<User> res =
-        await UserAPIService.instance.search(initialValue);
+    final SearchResult<User> res = await SqliteService.searchUser(initialValue);
+    final res1 = await SqliteService.loadUser('00012');
+    // final SearchResult<User> res =
+    //     await UserAPIService.instance.search(initialValue);
     setState(() {
       users = res.list;
       total = res.total;
@@ -60,7 +63,8 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   handleFilters(UserFilter filter) async {
-    final SearchResult<User> res = await UserAPIService.instance.search(filter);
+    final SearchResult<User> res = await SqliteService.searchUser(filter);
+    // final SearchResult<User> res = await UserAPIService.instance.search(filter);
     setState(() {
       users = res.list;
       total = res.total;

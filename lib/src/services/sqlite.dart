@@ -33,20 +33,57 @@ class SqliteService {
     return database;
   }
 
-  static Future<ListUsersSQL> getUsers(UserFilter filters) async {
+  static Future<SearchResult<User>> searchUser(UserFilter filters) async {
     final Database db = await SqliteService.db();
     final String displayname = '%' + filters.displayName! + '%';
     final String username = '%' + filters.username! + '%';
-    final List<Map<String, dynamic>> queryResult = await db.rawQuery(
-        'SELECT * FROM users WHERE username LIKE ? AND displayname LIKE ? LIMIT ? OFFSET ?',
-        [
-          displayname,
-          username,
-          filters.limit,
-          ((filters.page! - 1) * filters.limit!)
-        ]);
-    final list = queryResult.map((e) => UserSQL.fromJson(e)).toList();
-    final total = list.length;
-    return ListUsersSQL(list, total);
+    final String status = filters.status!.map((e) => "'$e'").join(',');
+
+    final String builtQueryStatus = () {
+      if (filters.status != null && filters.status!.isNotEmpty) {
+        print(filters.status!.map((e) => "'$e'"));
+        return ' and status in ($status)';
+      }
+      return '';
+    }();
+
+    final List<Map<String, dynamic>> countTotal = await db.rawQuery(
+        'select count(*) from users where username like ? and displayname like ? $builtQueryStatus',
+        [displayname, username]);
+
+    final List<Map<String, dynamic>> res = await db.rawQuery(
+      'select * from users where username like ? and displayname like ? $builtQueryStatus limit ? offset ?',
+      [
+        displayname,
+        username,
+        filters.limit,
+        ((filters.page! - 1) * filters.limit!)
+      ],
+    );
+
+    return SearchResult<User>.fromJson({
+      'list': res,
+      'total': countTotal[0]['count(*)'],
+    });
+  }
+
+  static Future<User> loadUser(String userId) async {
+    final Database db = await SqliteService.db();
+
+    final List<Map<String, dynamic>> userRoles = await db
+        .rawQuery('select roleid from userroles where userid = ?', [userId]);
+    final List<Map<String, dynamic>> user =
+        await db.rawQuery('select * from users where userid = ?', [userId]);
+
+    final Map<String, dynamic> newUser = {...user[0]};
+    List<String> roles = [];
+    if (userRoles.isNotEmpty) {
+      userRoles.forEach((e) {
+        roles.add(e['roleid']);
+      });
+      newUser['roles'] = roles;
+    }
+
+    return User.fromJson(newUser);
   }
 }
