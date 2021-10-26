@@ -7,7 +7,10 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteService {
-  static get displayname => null;
+  // static get displayname => null;
+
+  SqliteService._instantiate();
+  static final SqliteService instance = SqliteService._instantiate();
 
   static Future<Database> db() async {
     var databasesPath = await getDatabasesPath();
@@ -28,62 +31,94 @@ class SqliteService {
       print('Opening existing database');
     }
 
-    var database = await openDatabase(path, readOnly: true);
+    var database = await openDatabase(path);
 
     return database;
   }
 
-  static Future<SearchResult<User>> searchUser(UserFilter filters) async {
+  Future<SearchResult<User>> searchUser(UserFilter filters) async {
     final Database db = await SqliteService.db();
+
     final String displayname = '%' + filters.displayName! + '%';
     final String username = '%' + filters.username! + '%';
-    final String status = filters.status!.map((e) => "'$e'").join(',');
 
     final String builtQueryStatus = () {
       if (filters.status != null && filters.status!.isNotEmpty) {
-        print(filters.status!.map((e) => "'$e'"));
+        final String status = filters.status!.map((e) => "'$e'").join(',');
         return ' and status in ($status)';
       }
       return '';
     }();
 
-    final List<Map<String, dynamic>> countTotal = await db.rawQuery(
+    final int? total = Sqflite.firstIntValue(
+      await db.rawQuery(
         'select count(*) from users where username like ? and displayname like ? $builtQueryStatus',
-        [displayname, username]);
-
-    final List<Map<String, dynamic>> res = await db.rawQuery(
-      'select * from users where username like ? and displayname like ? $builtQueryStatus limit ? offset ?',
-      [
-        displayname,
-        username,
-        filters.limit,
-        ((filters.page! - 1) * filters.limit!)
-      ],
+        [displayname, username],
+      ),
     );
 
-    return SearchResult<User>.fromJson({
-      'list': res,
-      'total': countTotal[0]['count(*)'],
-    });
+    if (total != null && total != 0) {
+      final List<Map<String, dynamic>> res = await db.rawQuery(
+        'select * from users where username like ? and displayname like ? $builtQueryStatus limit ? offset ?',
+        [
+          displayname,
+          username,
+          filters.limit,
+          ((filters.page! - 1) * filters.limit!)
+        ],
+      );
+      return SearchResult<User>.fromJson({
+        'list': res,
+        'total': total,
+      });
+    } else {
+      return SearchResult<User>.fromJson({
+        'list': null,
+        'total': total,
+      });
+    }
   }
 
-  static Future<User> loadUser(String userId) async {
+  Future<User> loadUser(String userId) async {
     final Database db = await SqliteService.db();
+
+    final List<Map<String, dynamic>> user =
+        await db.rawQuery('select * from users where userid = ?', [userId]);
+    final Map<String, dynamic> newUser = {...user[0]};
 
     final List<Map<String, dynamic>> userRoles = await db
         .rawQuery('select roleid from userroles where userid = ?', [userId]);
-    final List<Map<String, dynamic>> user =
-        await db.rawQuery('select * from users where userid = ?', [userId]);
 
-    final Map<String, dynamic> newUser = {...user[0]};
-    List<String> roles = [];
     if (userRoles.isNotEmpty) {
+      final List<String> roles = [];
       userRoles.forEach((e) {
         roles.add(e['roleid']);
       });
       newUser['roles'] = roles;
     }
-
     return User.fromJson(newUser);
+  }
+
+  Future<ResultInfo<User>> updateUser(User user) async {
+    final Database db = await SqliteService.db();
+
+    Map<String, dynamic> data = {
+      // 'userid': user.userId,
+      'displayname': user.displayName,
+      'title': user.title,
+      'position': user.position,
+      'phone': user.phone,
+      'email': user.email,
+      'gender': user.gender,
+      'status': user.status,
+    };
+    final int resStatus = await db
+        .update('users', data, where: 'userid = ?', whereArgs: [user.userId]);
+    if (resStatus == 1) {
+      final User resVales = await loadUser(user.userId);
+      return ResultInfo<User>(resStatus, resVales);
+    } else {
+      return ResultInfo<User>(resStatus, null);
+    }
   }
 }

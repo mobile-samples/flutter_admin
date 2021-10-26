@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:flutter_admin/src/screen/edit_user/edit_user_form.dart';
+import 'package:flutter_admin/src/services/sqlite.dart';
 import 'package:flutter_admin/src/services/user.dart';
 
 class EditUserScreen extends StatefulWidget {
@@ -18,7 +19,8 @@ class _EditUserScreenState extends State<EditUserScreen> {
   bool _loading = true;
 
   getUserById() async {
-    final res = await UserAPIService.instance.load(widget.user.userId);
+    // final res = await UserAPIService.instance.load(widget.user.userId);
+    final res = await SqliteService.instance.loadUser(widget.user.userId);
     setState(() {
       userDetail = res;
       _loading = false;
@@ -26,7 +28,8 @@ class _EditUserScreenState extends State<EditUserScreen> {
   }
 
   handleClickSave(User user) async {
-    await UserAPIService.instance.update(user);
+    // await UserAPIService.instance.update(user);
+    await SqliteService.instance.updateUser(user);
   }
 
   @override

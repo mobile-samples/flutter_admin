@@ -45,19 +45,6 @@ class User {
         json['phone'] != null ? json['phone'] : '',
         json['title'] != null ? json['title'] : '',
         json['position'] != null ? json['position'] : '',
-        json['roles'],
+        json['roles']?.cast<String>(),
       );
-
-  // factory User.fromJsonSQL(Map<String, dynamic> json) => User(
-  //       json['userid'] != null ? json['userid'] : '',
-  //       json['username'],
-  //       json['email'],
-  //       json['displayname'],
-  //       json['imageurl'],
-  //       json['status'],
-  //       json['gender'],
-  //       json['phone'],
-  //       json['title'],
-  //       json['position'],
-  //     );
 }
