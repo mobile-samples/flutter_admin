@@ -6,6 +6,7 @@ import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
 import 'package:flutter_admin/src/screen/role/widgets/search_form.dart';
 import 'package:flutter_admin/src/services/role.dart';
+import 'package:flutter_admin/src/services/sqlite.dart';
 import 'package:flutter_admin/utils/general_method.dart';
 
 class RoleScreen extends StatefulWidget {
@@ -36,7 +37,9 @@ class _RoleScreenState extends State<RoleScreen> {
     final RoleFilter initialValue =
         RoleFilter(null, null, [], null, null, 5, 1);
     final SearchResult<Role> res =
-        await RoleService.instance.search(initialValue);
+        // await RoleService.instance.search(initialValue);
+        await SqliteService.instance.searchRole(initialValue);
+    // final test = await SqliteService.instance.getPrivileges();
     setState(() {
       roles = res.list;
       total = res.total;
@@ -61,7 +64,9 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handleSearchFilter(RoleFilter formFilter) async {
-    final res = await RoleService.instance.search(formFilter);
+    final res =
+        //await RoleService.instance.search(formFilter);
+        await SqliteService.instance.searchRole(formFilter);
     setState(() {
       roles = res.list;
       total = res.total;

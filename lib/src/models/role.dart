@@ -17,8 +17,8 @@ class Role {
   );
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
-        json['roleId'],
-        json['roleName'],
+        json['roleId'] ?? json['roleid'],
+        json['roleName'] ?? json['rolename'],
         json['status'],
         json['remark'],
         json['privileges'] == null

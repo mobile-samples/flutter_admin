@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:path/path.dart';
@@ -120,5 +121,74 @@ class SqliteService {
     } else {
       return ResultInfo<User>(resStatus, null);
     }
+  }
+
+  Future<SearchResult<Role>> searchRole(RoleFilter filters) async {
+    final Database db = await SqliteService.db();
+    final String roleName =
+        filters.roleName != null ? '%' + filters.roleName! + '%' : '%%';
+
+    final String builtQueryStatus = () {
+      if (filters.status != null && filters.status!.isNotEmpty) {
+        final String status = filters.status!.map((e) => "'$e'").join(',');
+        return ' and status in ($status)';
+      }
+      return '';
+    }();
+
+    final int? total = Sqflite.firstIntValue(
+      await db.rawQuery(
+        'select count(*) from roles where rolename like ? $builtQueryStatus',
+        [roleName],
+      ),
+    );
+
+    if (total != null && total != 0) {
+      final List<Map<String, dynamic>> res = await db.rawQuery(
+        'select * from roles where rolename like ? $builtQueryStatus limit ? offset ?',
+        [roleName, filters.limit, ((filters.page! - 1) * filters.limit!)],
+      );
+      return SearchResult<Role>.fromJson({
+        'list': res,
+        'total': total,
+      });
+    } else {
+      return SearchResult<Role>.fromJson({
+        'list': null,
+        'total': total,
+      });
+    }
+  }
+
+  Future<List<Privilege>> getPrivileges() async {
+    final Database db = await SqliteService.db();
+
+    final List<Map<String, dynamic>> res =
+        await db.rawQuery('select * from modules');
+
+    final List<Map<String, dynamic>> newRes = [];
+    // get parent
+    res.forEach((e) {
+      if (e['parent'] == '') {
+        newRes.add({...e, 'id': e['moduleid'], 'name': e['modulename']});
+      }
+    });
+
+    // get children
+    newRes.forEach((parent) {
+      List<Map<String, dynamic>> childList = [];
+      res.forEach((child) {
+        if (parent['id'] == child['parent']) {
+          childList.add(
+              {...child, 'id': child['moduleid'], 'name': child['modulename']});
+        }
+      });
+      parent['children'] = childList;
+    });
+    List<Privilege> priviList = [];
+    newRes.forEach((e) {
+      priviList.add(Privilege.fromJson(e));
+    });
+    return priviList;
   }
 }

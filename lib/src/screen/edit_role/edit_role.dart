@@ -3,6 +3,7 @@ import 'package:flutter_admin/src/models/role.dart';
 import 'package:flutter_admin/src/screen/edit_role/edit_role_form.dart';
 import 'package:flutter_admin/src/screen/edit_role/role_search_form.dart';
 import 'package:flutter_admin/src/services/role.dart';
+import 'package:flutter_admin/src/services/sqlite.dart';
 
 class EditRoleScreen extends StatefulWidget {
   const EditRoleScreen({
@@ -39,7 +40,9 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   }
 
   getPrivileges() async {
-    final res = await RoleService.instance.getPrivileges();
+    final res =
+        // await RoleService.instance.getPrivileges();
+        await SqliteService.instance.getPrivileges();
     formatPrivilege(res);
     setState(() {
       privileges = res;
