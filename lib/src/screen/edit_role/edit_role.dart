@@ -52,7 +52,10 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   }
 
   getRoleById() async {
-    final res = await RoleService.instance.load(widget.roleId);
+    final res =
+        // await RoleService.instance.load(widget.roleId);
+        await SqliteService.instance.loadRole(widget.roleId);
+
     setState(() {
       roleId = res.roleId;
       roleNameController.text = res.roleName;
@@ -180,7 +183,9 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
     );
     FocusScope.of(context).requestFocus(FocusNode());
     if (_formKey.currentState!.validate()) {
-      await RoleService.instance.update(newRole);
+      // Update data
+      // await RoleService.instance.update(newRole);
+      await SqliteService.instance.updateRole(newRole);
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Successfully updated')));
       Navigator.pop(context, true);

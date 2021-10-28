@@ -16,6 +16,7 @@ class SqliteService {
   static Future<Database> db() async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, 'database.db');
+    // await deleteDatabase(path);
 
     var exists = await databaseExists(path);
 
@@ -24,7 +25,7 @@ class SqliteService {
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
-      ByteData data = await rootBundle.load(join('assets', 'sqlite.db'));
+      ByteData data = await rootBundle.load(join('assets', 'sqlite3.db'));
       List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
       await File(path).writeAsBytes(bytes, flush: true);
@@ -85,7 +86,7 @@ class SqliteService {
 
     final List<Map<String, dynamic>> user =
         await db.rawQuery('select * from users where userid = ?', [userId]);
-    final Map<String, dynamic> newUser = {...user[0]};
+    final Map<String, dynamic> newUser = {...user.first};
 
     final List<Map<String, dynamic>> userRoles = await db
         .rawQuery('select roleid from userroles where userid = ?', [userId]);
@@ -102,22 +103,12 @@ class SqliteService {
 
   Future<ResultInfo<User>> updateUser(User user) async {
     final Database db = await SqliteService.db();
-
-    Map<String, dynamic> data = {
-      // 'userid': user.userId,
-      'displayname': user.displayName,
-      'title': user.title,
-      'position': user.position,
-      'phone': user.phone,
-      'email': user.email,
-      'gender': user.gender,
-      'status': user.status,
-    };
-    final int resStatus = await db
-        .update('users', data, where: 'userid = ?', whereArgs: [user.userId]);
+    final userMap = user.toMap();
+    final int resStatus = await db.update('users', userMap,
+        where: 'userid = ?', whereArgs: [user.userId]);
     if (resStatus == 1) {
-      final User resVales = await loadUser(user.userId);
-      return ResultInfo<User>(resStatus, resVales);
+      final User resValue = await loadUser(user.userId);
+      return ResultInfo<User>(resStatus, resValue);
     } else {
       return ResultInfo<User>(resStatus, null);
     }
@@ -190,5 +181,67 @@ class SqliteService {
       priviList.add(Privilege.fromJson(e));
     });
     return priviList;
+  }
+
+  Future<Role> loadRole(String roleId) async {
+    final Database db = await SqliteService.db();
+
+    final List<Map<String, dynamic>> role =
+        await db.rawQuery('select * from roles where roleid = ?', [roleId]);
+    final Map<String, dynamic> newRole = {...role.first};
+
+    final List<Map<String, dynamic>> roleModules = await db.rawQuery(
+        'select moduleid from rolemodules where roleid = ?', [roleId]);
+
+    if (roleModules.length > 0) {
+      final List<String> priviList = [];
+      roleModules.forEach((e) {
+        priviList.add(e['moduleid']);
+      });
+      newRole['privileges'] = priviList;
+    }
+    return Role.fromJson(newRole);
+  }
+
+  Future<ResultInfo<Role>> updateRole(Role role) async {
+    final Database db = await SqliteService.db();
+    final Map<String, dynamic> roleMap = role.toMap();
+
+    final int resStatus = await db.update('roles', roleMap,
+        where: 'roleid = ?', whereArgs: [role.roleId]);
+
+    final List<Map<String, dynamic>> roleModules = await db.rawQuery(
+        'select moduleid from rolemodules where roleid = ?', [role.roleId]);
+
+    final List<String> moduleIdsByDb =
+        roleModules.map((e) => e['moduleid'] as String).toList();
+
+    final List<String> deleteListByDB =
+        moduleIdsByDb.where((e) => !role.privileges!.contains(e)).toList();
+
+    final List<String> filterPrivileges =
+        role.privileges!.where((e) => !moduleIdsByDb.contains(e)).toList();
+
+    deleteListByDB.forEach((e) async {
+      await db.rawDelete(
+          'DELETE FROM rolemodules WHERE roleid = ? AND moduleid = ?',
+          [role.roleId, e]);
+    });
+
+    filterPrivileges.forEach((e) async {
+      final Map<String, dynamic> map = {
+        'roleid': role.roleId,
+        'moduleid': e,
+        'permissions': 0,
+      };
+      await db.insert('rolemodules', map);
+    });
+
+    if (resStatus == 1) {
+      final Role resValue = await loadRole(role.roleId);
+      return ResultInfo<Role>(resStatus, resValue);
+    } else {
+      return ResultInfo<Role>(resStatus, null);
+    }
   }
 }

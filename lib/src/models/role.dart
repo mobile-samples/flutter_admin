@@ -16,6 +16,15 @@ class Role {
     this.privileges,
   );
 
+  Map<String, dynamic> toMap() {
+    final map = {
+      'roleName': roleName,
+      'status': status,
+      'remark': remark,
+    };
+    return map;
+  }
+
   factory Role.fromJson(Map<String, dynamic> json) => Role(
         json['roleId'] ?? json['roleid'],
         json['roleName'] ?? json['rolename'],

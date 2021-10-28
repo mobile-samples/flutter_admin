@@ -34,6 +34,17 @@ class User {
   String? position;
   List<String>? roles;
 
+  Map<String, dynamic> toMap() => {
+        // 'userid': user.userId,
+        'displayname': displayName,
+        'title': title,
+        'position': position,
+        'phone': phone,
+        'email': email,
+        'gender': gender,
+        'status': status,
+      };
+
   factory User.fromJson(Map<String, dynamic> json) => User(
         json['userId'] ?? json['userid'],
         json['username'] != null ? json['username'] : '',
