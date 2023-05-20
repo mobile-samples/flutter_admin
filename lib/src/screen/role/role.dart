@@ -36,13 +36,13 @@ class _RoleScreenState extends State<RoleScreen> {
   getRole() async {
     final RoleFilter initialValue =
         RoleFilter(null, null, [], null, null, 5, 1);
-    final SearchResult<Role> res =
-        // await RoleService.instance.search(initialValue);
-        await SqliteService.instance.searchRole(initialValue);
+    // final SearchResult<Role> res =
+    // await RoleService.instance.search(initialValue);
+    // await SqliteService.instance.searchRole(initialValue);
     // final test = await SqliteService.instance.getPrivileges();
     setState(() {
-      roles = res.list;
-      total = res.total;
+      // roles = res.list;
+      // total = res.total;
       roleFilter = initialValue;
       roleNameController.text = initialValue.roleName ?? '';
       status = initialValue.status ?? [];
@@ -66,10 +66,10 @@ class _RoleScreenState extends State<RoleScreen> {
   handleSearchFilter(RoleFilter formFilter) async {
     final res =
         //await RoleService.instance.search(formFilter);
-        await SqliteService.instance.searchRole(formFilter);
-    setState(() {
-      roles = res.list;
-      total = res.total;
+        // await SqliteService.instance.searchRole(formFilter);
+        setState(() {
+      // roles = res.list;
+      // total = res.total;
       roleFilter = formFilter;
     });
   }

@@ -40,24 +40,24 @@ class RoleService {
     }
   }
 
-  Future<SearchResult<Role>> search(RoleFilter filters) async {
-    late String baseUrl = getUrl();
-    final response = await http.post(
-      Uri.parse(baseUrl + '/roles/search'),
-      headers: GlobalData.buildHeader(),
-      body: jsonEncode(<String, dynamic>{
-        'roleName': filters.roleName ?? '',
-        'status': filters.status ?? [],
-        'limit': filters.limit ?? 0,
-        'page': filters.page ?? 0,
-      }),
-    );
-    if (response.statusCode == 200) {
-      return SearchResult.fromJson(jsonDecode(response.body));
-    } else {
-      throw json.decode(response.body)['error']['message'];
-    }
-  }
+  // Future<SearchResult<Role>> search(RoleFilter filters) async {
+  //   late String baseUrl = getUrl();
+  //   final response = await http.post(
+  //     Uri.parse(baseUrl + '/roles/search'),
+  //     headers: GlobalData.buildHeader(),
+  //     body: jsonEncode(<String, dynamic>{
+  //       'roleName': filters.roleName ?? '',
+  //       'status': filters.status ?? [],
+  //       'limit': filters.limit ?? 0,
+  //       'page': filters.page ?? 0,
+  //     }),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return SearchResult.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw json.decode(response.body)['error']['message'];
+  //   }
+  // }
 
   Future<Role> load(String roleId) async {
     late String baseUrl = getUrl();
@@ -72,23 +72,23 @@ class RoleService {
     }
   }
 
-  Future<ResultInfo<Role>> update(Role role) async {
-    late String baseUrl = getUrl();
-    final response = await http.put(
-      Uri.parse(baseUrl + '/roles/' + role.roleId),
-      headers: GlobalData.buildHeader(),
-      body: jsonEncode(<String, dynamic>{
-        'privileges': role.privileges,
-        'remark': role.remark,
-        'roleId': role.roleId,
-        'roleName': role.roleName,
-        'status': role.status,
-      }),
-    );
-    if (response.statusCode == 200) {
-      return ResultInfo.fromJson(jsonDecode(response.body));
-    } else {
-      throw json.decode(response.body)['error']['message'];
-    }
-  }
+  // Future<ResultInfo<Role>> update(Role role) async {
+  //   late String baseUrl = getUrl();
+  //   final response = await http.put(
+  //     Uri.parse(baseUrl + '/roles/' + role.roleId),
+  //     headers: GlobalData.buildHeader(),
+  //     body: jsonEncode(<String, dynamic>{
+  //       'privileges': role.privileges,
+  //       'remark': role.remark,
+  //       'roleId': role.roleId,
+  //       'roleName': role.roleName,
+  //       'status': role.status,
+  //     }),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return ResultInfo.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw json.decode(response.body)['error']['message'];
+  //   }
+  // }
 }

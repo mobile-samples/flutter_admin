@@ -29,7 +29,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
   handleClickSave(User user) async {
     // await UserAPIService.instance.update(user);
-    await SqliteService.instance.updateUser(user);
+    // await SqliteService.instance.updateUser(user);
   }
 
   @override

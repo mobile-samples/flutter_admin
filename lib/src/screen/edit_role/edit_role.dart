@@ -185,7 +185,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
     if (_formKey.currentState!.validate()) {
       // Update data
       // await RoleService.instance.update(newRole);
-      await SqliteService.instance.updateRole(newRole);
+      // await SqliteService.instance.updateRole(newRole);
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Successfully updated')));
       Navigator.pop(context, true);

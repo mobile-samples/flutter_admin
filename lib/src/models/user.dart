@@ -43,6 +43,7 @@ class User {
         'email': email,
         'gender': gender,
         'status': status,
+        'username': username,
       };
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -58,4 +59,6 @@ class User {
         json['position'] != null ? json['position'] : '',
         json['roles']?.cast<String>(),
       );
+
+  static String getId(User user) => user.userId;
 }

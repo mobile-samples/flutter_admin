@@ -103,11 +103,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   height: 52,
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       handleLogin();
                     },
-                    color: Colors.green,
                     child: Text(
                       'Sign in',
                       style: TextStyle(color: Colors.white, fontSize: 18),

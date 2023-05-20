@@ -38,48 +38,48 @@ class SqliteService {
     return database;
   }
 
-  Future<SearchResult<User>> searchUser(UserFilter filters) async {
-    final Database db = await SqliteService.db();
+  // Future<SearchResult<User>> searchUser(UserFilter filters) async {
+  //   final Database db = await SqliteService.db();
 
-    final String displayname = '%' + filters.displayName! + '%';
-    final String username = '%' + filters.username! + '%';
+  //   final String displayname = '%' + filters.displayName! + '%';
+  //   final String username = '%' + filters.username! + '%';
 
-    final String builtQueryStatus = () {
-      if (filters.status != null && filters.status!.isNotEmpty) {
-        final String status = filters.status!.map((e) => "'$e'").join(',');
-        return ' and status in ($status)';
-      }
-      return '';
-    }();
+  //   final String builtQueryStatus = () {
+  //     if (filters.status != null && filters.status!.isNotEmpty) {
+  //       final String status = filters.status!.map((e) => "'$e'").join(',');
+  //       return ' and status in ($status)';
+  //     }
+  //     return '';
+  //   }();
 
-    final int? total = Sqflite.firstIntValue(
-      await db.rawQuery(
-        'select count(*) from users where username like ? and displayname like ? $builtQueryStatus',
-        [displayname, username],
-      ),
-    );
+  //   final int? total = Sqflite.firstIntValue(
+  //     await db.rawQuery(
+  //       'select count(*) from users where username like ? and displayname like ? $builtQueryStatus',
+  //       [displayname, username],
+  //     ),
+  //   );
 
-    if (total != null && total != 0) {
-      final List<Map<String, dynamic>> res = await db.rawQuery(
-        'select * from users where username like ? and displayname like ? $builtQueryStatus limit ? offset ?',
-        [
-          displayname,
-          username,
-          filters.limit,
-          ((filters.page! - 1) * filters.limit!)
-        ],
-      );
-      return SearchResult<User>.fromJson({
-        'list': res,
-        'total': total,
-      });
-    } else {
-      return SearchResult<User>.fromJson({
-        'list': null,
-        'total': total,
-      });
-    }
-  }
+  //   if (total != null && total != 0) {
+  //     final List<Map<String, dynamic>> res = await db.rawQuery(
+  //       'select * from users where username like ? and displayname like ? $builtQueryStatus limit ? offset ?',
+  //       [
+  //         displayname,
+  //         username,
+  //         filters.limit,
+  //         ((filters.page! - 1) * filters.limit!)
+  //       ],
+  //     );
+  //     return SearchResult<User>.fromJson({
+  //       'list': res,
+  //       'total': total,
+  //     });
+  //   } else {
+  //     return SearchResult<User>.fromJson({
+  //       'list': null,
+  //       'total': total,
+  //     });
+  //   }
+  // }
 
   Future<User> loadUser(String userId) async {
     final Database db = await SqliteService.db();
@@ -101,55 +101,55 @@ class SqliteService {
     return User.fromJson(newUser);
   }
 
-  Future<ResultInfo<User>> updateUser(User user) async {
-    final Database db = await SqliteService.db();
-    final userMap = user.toMap();
-    final int resStatus = await db.update('users', userMap,
-        where: 'userid = ?', whereArgs: [user.userId]);
-    if (resStatus == 1) {
-      final User resValue = await loadUser(user.userId);
-      return ResultInfo<User>(resStatus, resValue);
-    } else {
-      return ResultInfo<User>(resStatus, null);
-    }
-  }
+  // Future<ResultInfo<User>> updateUser(User user) async {
+  //   final Database db = await SqliteService.db();
+  //   final userMap = user.toMap();
+  //   final int resStatus = await db.update('users', userMap,
+  //       where: 'userid = ?', whereArgs: [user.userId]);
+  //   if (resStatus == 1) {
+  //     final User resValue = await loadUser(user.userId);
+  //     return ResultInfo<User>(resStatus, resValue);
+  //   } else {
+  //     return ResultInfo<User>(resStatus, null);
+  //   }
+  // }
 
-  Future<SearchResult<Role>> searchRole(RoleFilter filters) async {
-    final Database db = await SqliteService.db();
-    final String roleName =
-        filters.roleName != null ? '%' + filters.roleName! + '%' : '%%';
+  // Future<SearchResult<Role>> searchRole(RoleFilter filters) async {
+  //   final Database db = await SqliteService.db();
+  //   final String roleName =
+  //       filters.roleName != null ? '%' + filters.roleName! + '%' : '%%';
 
-    final String builtQueryStatus = () {
-      if (filters.status != null && filters.status!.isNotEmpty) {
-        final String status = filters.status!.map((e) => "'$e'").join(',');
-        return ' and status in ($status)';
-      }
-      return '';
-    }();
+  //   final String builtQueryStatus = () {
+  //     if (filters.status != null && filters.status!.isNotEmpty) {
+  //       final String status = filters.status!.map((e) => "'$e'").join(',');
+  //       return ' and status in ($status)';
+  //     }
+  //     return '';
+  //   }();
 
-    final int? total = Sqflite.firstIntValue(
-      await db.rawQuery(
-        'select count(*) from roles where rolename like ? $builtQueryStatus',
-        [roleName],
-      ),
-    );
+  //   final int? total = Sqflite.firstIntValue(
+  //     await db.rawQuery(
+  //       'select count(*) from roles where rolename like ? $builtQueryStatus',
+  //       [roleName],
+  //     ),
+  //   );
 
-    if (total != null && total != 0) {
-      final List<Map<String, dynamic>> res = await db.rawQuery(
-        'select * from roles where rolename like ? $builtQueryStatus limit ? offset ?',
-        [roleName, filters.limit, ((filters.page! - 1) * filters.limit!)],
-      );
-      return SearchResult<Role>.fromJson({
-        'list': res,
-        'total': total,
-      });
-    } else {
-      return SearchResult<Role>.fromJson({
-        'list': null,
-        'total': total,
-      });
-    }
-  }
+  //   if (total != null && total != 0) {
+  //     final List<Map<String, dynamic>> res = await db.rawQuery(
+  //       'select * from roles where rolename like ? $builtQueryStatus limit ? offset ?',
+  //       [roleName, filters.limit, ((filters.page! - 1) * filters.limit!)],
+  //     );
+  //     return SearchResult<Role>.fromJson({
+  //       'list': res,
+  //       'total': total,
+  //     });
+  //   } else {
+  //     return SearchResult<Role>.fromJson({
+  //       'list': null,
+  //       'total': total,
+  //     });
+  //   }
+  // }
 
   Future<List<Privilege>> getPrivileges() async {
     final Database db = await SqliteService.db();
@@ -203,45 +203,45 @@ class SqliteService {
     return Role.fromJson(newRole);
   }
 
-  Future<ResultInfo<Role>> updateRole(Role role) async {
-    final Database db = await SqliteService.db();
-    final Map<String, dynamic> roleMap = role.toMap();
+  // Future<ResultInfo<Role>> updateRole(Role role) async {
+  //   final Database db = await SqliteService.db();
+  //   final Map<String, dynamic> roleMap = role.toMap();
 
-    final int resStatus = await db.update('roles', roleMap,
-        where: 'roleid = ?', whereArgs: [role.roleId]);
+  //   final int resStatus = await db.update('roles', roleMap,
+  //       where: 'roleid = ?', whereArgs: [role.roleId]);
 
-    final List<Map<String, dynamic>> roleModules = await db.rawQuery(
-        'select moduleid from rolemodules where roleid = ?', [role.roleId]);
+  //   final List<Map<String, dynamic>> roleModules = await db.rawQuery(
+  //       'select moduleid from rolemodules where roleid = ?', [role.roleId]);
 
-    final List<String> moduleIdsByDb =
-        roleModules.map((e) => e['moduleid'] as String).toList();
+  //   final List<String> moduleIdsByDb =
+  //       roleModules.map((e) => e['moduleid'] as String).toList();
 
-    final List<String> deleteListByDB =
-        moduleIdsByDb.where((e) => !role.privileges!.contains(e)).toList();
+  //   final List<String> deleteListByDB =
+  //       moduleIdsByDb.where((e) => !role.privileges!.contains(e)).toList();
 
-    final List<String> filterPrivileges =
-        role.privileges!.where((e) => !moduleIdsByDb.contains(e)).toList();
+  //   final List<String> filterPrivileges =
+  //       role.privileges!.where((e) => !moduleIdsByDb.contains(e)).toList();
 
-    deleteListByDB.forEach((e) async {
-      await db.rawDelete(
-          'DELETE FROM rolemodules WHERE roleid = ? AND moduleid = ?',
-          [role.roleId, e]);
-    });
+  //   deleteListByDB.forEach((e) async {
+  //     await db.rawDelete(
+  //         'DELETE FROM rolemodules WHERE roleid = ? AND moduleid = ?',
+  //         [role.roleId, e]);
+  //   });
 
-    filterPrivileges.forEach((e) async {
-      final Map<String, dynamic> map = {
-        'roleid': role.roleId,
-        'moduleid': e,
-        'permissions': 0,
-      };
-      await db.insert('rolemodules', map);
-    });
+  //   filterPrivileges.forEach((e) async {
+  //     final Map<String, dynamic> map = {
+  //       'roleid': role.roleId,
+  //       'moduleid': e,
+  //       'permissions': 0,
+  //     };
+  //     await db.insert('rolemodules', map);
+  //   });
 
-    if (resStatus == 1) {
-      final Role resValue = await loadRole(role.roleId);
-      return ResultInfo<Role>(resStatus, resValue);
-    } else {
-      return ResultInfo<Role>(resStatus, null);
-    }
-  }
+  //   if (resStatus == 1) {
+  //     final Role resValue = await loadRole(role.roleId);
+  //     return ResultInfo<Role>(resStatus, resValue);
+  //   } else {
+  //     return ResultInfo<Role>(resStatus, null);
+  //   }
+  // }
 }
