@@ -10,8 +10,8 @@ class APIService {
 
   static final APIService instance = APIService._instantiate();
 
-  final String baseUrlIOS = 'http://localhost:8080';
-  final String baseUrlAndroid = 'http://10.0.2.2:8080';
+  final String baseUrlIOS = 'http://localhost:8083';
+  final String baseUrlAndroid = 'http://10.0.2.2:8083';
 
   getUrl() {
     if (Platform.isAndroid) {

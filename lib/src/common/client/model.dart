@@ -2,14 +2,14 @@ abstract class Filter {
   int? page;
   int? limit;
   int? firstLimit;
-  List<String>? fields; //string[];
+  List<String>? fields;
   String? sort;
   String? currentUserId;
 
   String? q;
   String? keyword;
-  List<String>? excluding; //string[]|number[];
-  String? refId; //string|number;
+  List<String>? excluding;
+  String? refId;
 
   int? pageIndex;
   int? pageSize;

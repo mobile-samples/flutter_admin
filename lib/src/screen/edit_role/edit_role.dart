@@ -157,7 +157,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
               -1)
           .toList();
       if (checkParent != -1 || newChilds.length > 0) {
-        final Privilege newPrivi = new Privilege(e.id, e.name, newChilds);
+        final Privilege newPrivi = Privilege(e.id, e.name, '', '', newChilds);
         deepClone.add(newPrivi);
       }
     });

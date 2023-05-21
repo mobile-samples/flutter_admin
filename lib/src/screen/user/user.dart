@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/common/client/client.dart';
 import 'package:flutter_admin/src/common/client/model.dart';
-import 'package:flutter_admin/src/common/search_state.dart';
+import 'package:flutter_admin/src/common/state/generic_state.dart';
 import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:flutter_admin/src/screen/edit_user/edit_user.dart';
@@ -14,27 +14,19 @@ import 'package:flutter_admin/utils/general_method.dart';
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
   @override
-  _UserScreenState createState() => _UserScreenState();
+  State<UserScreen> createState() => _UserScreenState();
 }
 
-class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
-  ScrollController _scrollController = new ScrollController();
-  late UserFilter filter;
-  // late List<User> users;
-  late int total;
+class _UserScreenState extends GenericState<UserScreen, User, UserFilter> {
+  final ScrollController _scrollController = ScrollController();
   late TextEditingController userNameController = TextEditingController();
   late TextEditingController displayNameController = TextEditingController();
+  late UserFilter filter;
   late List<String> status;
 
   @override
-  void initState() {
-    this.search();
-    super.initState();
-  }
-
-  @override
   UserFilter getFilter() {
-    return this.filter;
+    return filter;
   }
 
   @override
@@ -44,7 +36,10 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
 
   @override
   void setFilter() {
-    this.filter = UserFilter(null, '', null, '', [], 20, 1);
+    setState(() {
+      filter = UserFilter(null, '', null, '', [], 20, 1);
+      status = filter.status ?? [];
+    });
   }
 
   hanleChangeStatus(String type, bool isChecked) {
@@ -59,30 +54,13 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
     }
   }
 
-  // getUsers() async {
-  //   final UserFilter initialValue = UserFilter(null, '', null, '', [], 20, 1);
-  //   // final SearchResult<User> res =
-  //   //     await SqliteService.instance.searchUser(initialValue);
-  //   // final SearchResult<User> res =
-  //   //     await UserAPIService.instance.search(initialValue);
-  //   setState(() {
-  //     // users = res.list;
-  //     // total = res.total;
-  //     filter = initialValue;
-  //     userNameController.text = initialValue.username ?? '';
-  //     displayNameController.text = initialValue.displayName ?? '';
-  //     status = initialValue.status ?? [];
-  //   });
-  //   FocusScope.of(context).requestFocus(FocusNode());
-  // }
-
   handleFilters(UserFilter filter) async {
     this.filter = filter;
-    this.search();
+    search();
   }
 
   @override
-  Widget buildChild(BuildContext context) {
+  Widget buildChild(BuildContext context, SearchResult<User> searchResult) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -92,7 +70,7 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
             slivers: [
               SliverAppBar(
                 backgroundColor: Colors.green[400],
-                title: Text('User'),
+                title: const Text('User'),
               ),
               UserForm(
                 userFilter: filter,
@@ -105,42 +83,42 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    if (this.dataList.list.length > 0) {
+                    if (searchResult.list.isNotEmpty) {
                       return GestureDetector(
                           onTap: () async {
                             final reLoadPage = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => EditUserScreen(
-                                      user: this.dataList.list[index])),
+                                      user: searchResult.list[index])),
                             );
                             if (reLoadPage == null || reLoadPage == true) {
-                              this.search();
+                              search();
                               GeneralMethod.autoScrollOnTop(_scrollController);
                             }
                           },
                           child: UserCard(
-                            user: this.dataList.list[index],
+                            user: searchResult.list[index],
                           ));
                     } else {
                       return Container();
                     }
                   },
-                  childCount: this.dataList.list.length,
+                  childCount: searchResult.list.length,
                 ),
               ),
-              (total != 0 && total > filter.limit!)
+              (searchResult.total != 0 && searchResult.total > filter.limit!)
                   ? PaginationButtonForUser(
                       handlePagination: handleFilters,
-                      total: total,
+                      total: searchResult.total,
                       userFilter: filter,
                     )
-                  : SliverToBoxAdapter(
+                  : const SliverToBoxAdapter(
                       child: SizedBox(
                         width: 0,
                         height: 0,
                       ),
-                    )
+                    ),
             ],
           ),
         ),

@@ -33,7 +33,7 @@ abstract class ViewClient<T, ID> {
   }
 
   Future<T> load(ID id) async {
-    final uri = Uri.parse(this.serviceUrl + '/' + (id as String));
+    final uri = Uri.parse('$serviceUrl/$id');
     return http.get(uri).then((res) {
       if (res.statusCode == 200) {
         return compute(parseGetResult, res.body);
@@ -64,7 +64,7 @@ class GenericClient<T, ID, R> extends ViewClient<T, ID> {
   }
 
   Future<R> insert(T object) async {
-    final uri = Uri.parse(this.serviceUrl + '/' + this.getId(object));
+    final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
     return http.post(uri, body: jsonEncode(object)).then((value) {
       if (value.statusCode == 404 || value.statusCode == 410) {
         throw Exception('Not found');
@@ -79,7 +79,7 @@ class GenericClient<T, ID, R> extends ViewClient<T, ID> {
   }
 
   Future<R> update(T object) async {
-    final uri = Uri.parse(this.serviceUrl + '/' + this.getId(object));
+    final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
     return http.put(uri, body: jsonEncode(object)).then((value) {
       if (value.statusCode == 404 || value.statusCode == 410) {
         throw Exception('Not found');
@@ -94,7 +94,7 @@ class GenericClient<T, ID, R> extends ViewClient<T, ID> {
   }
 
   Future<R> patch(T object) async {
-    final uri = Uri.parse(this.serviceUrl + '/' + this.getId(object));
+    final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
     return http.patch(uri, body: jsonEncode(object)).then((value) {
       if (value.statusCode == 404 || value.statusCode == 410) {
         throw Exception('Not found');
@@ -109,7 +109,7 @@ class GenericClient<T, ID, R> extends ViewClient<T, ID> {
   }
 
   Future<num> delete(ID id) async {
-    final uri = Uri.parse(this.serviceUrl + '/' + id.toString());
+    final uri = Uri.parse('$serviceUrl/$id');
     return http.delete(uri).then((value) {
       if (value.statusCode == 404 || value.statusCode == 410) {
         throw Exception('Not found');
@@ -152,7 +152,7 @@ class SearchClient<T, S extends Filter> {
   String makeUrlParameters(Map<String, dynamic> filter) {
     List<String> params = [];
     filter.forEach((key, value) {
-      params.add(Uri.encodeComponent(key) + '=' + Uri.encodeComponent(value));
+      params.add('${Uri.encodeComponent(key)}=${Uri.encodeComponent(value)}');
     });
     return params.join(',');
   }
@@ -172,7 +172,7 @@ class SearchClient<T, S extends Filter> {
   Future<SearchResult<T>> search(
       bool isPostRequest, bool isSearchGet, S filter) {
     if (isPostRequest) {
-      String postSearchUrl = this.serviceUrl + '/search';
+      String postSearchUrl = '${this.serviceUrl}/search';
       return http
           .post(Uri.parse(postSearchUrl), body: jsonEncode(filter))
           .then((res) {
@@ -186,9 +186,7 @@ class SearchClient<T, S extends Filter> {
       });
     } else {
       String searchUrl =
-          (isSearchGet ? this.serviceUrl + '/search' : this.serviceUrl) +
-              '?' +
-              makeUrlParameters(filter.toJson());
+          '${isSearchGet ? '${this.serviceUrl}/search' : this.serviceUrl}?${makeUrlParameters(filter.toJson())}';
       return http.get(Uri.parse(searchUrl)).then((res) {
         if (res.statusCode == 200) {
           return buildSearchResult(res.body);

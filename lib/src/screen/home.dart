@@ -1,99 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/models/auth.dart';
-import 'package:flutter_admin/src/providers/HomeProvider.dart';
 import 'package:flutter_admin/src/screen/user/user.dart';
 import 'package:flutter_admin/src/screen/role/role.dart';
+
+import '../common/appbar.dart';
+import '../models/role.dart';
+import '../services/sqlite.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   late AuthInfo authInfo;
+  List<Privilege> data = [];
+
   @override
-  Widget build(BuildContext context) {
-    authInfo = AuthInheritedWidget.of(context)!.authData;
-    return Scaffold(
-      body: CustomScrollView(slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                children: _generateChildren(
-                    authInfo.privileges.length, authInfo.privileges),
-              )),
-        ),
-      ]),
-    );
+  void initState() {
+    getData();
+    super.initState();
   }
 
-  Widget _generateItem(int index, Privileges menuItem, double level) {
-    return SizedBox(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                menuItem.name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-              ListTile(
-                leading: Icon(getIconForName(menuItem.icon)),
-                title: Text(menuItem.name),
-              ),
-              SizedBox(
-                height: 65 * (menuItem.children.length.toDouble() / 2),
-                child: GridView.count(
-                    physics: const ClampingScrollPhysics(),
-                    crossAxisCount: 2,
-                    childAspectRatio: 4,
-                    children: menuItem.children.map((Privileges item) {
-                      return GestureDetector(
-                        onTap: () {
-                          if (item.id == 'user') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UserScreen()),
-                            );
-                          } else if (item.id == 'role') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RoleScreen()),
-                            );
-                          }
-                        },
-                        child: ListTile(
-                          leading: Icon(getIconForName(item.icon)),
-                          title: Text(item.name),
-                        ),
-                      );
-                    }).toList()),
-              ),
-            ],
-          ),
-        ),
+  getData() async {
+    // authInfo = AuthInheritedWidget.of(context)!.authData;
+    final res = await SqliteService.instance.getPrivileges();
+    setState(() {
+      data = res;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: getAppBarWithArrowBack(context, "Person"),
+      body: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (BuildContext context, int index) =>
+            _buildList(data[index]),
       ),
     );
   }
 
-  List<Widget> _generateChildren(int count, List<Privileges> menusList) {
-    List<Widget> items = [];
-    if (count == 0) {
-      items.add(Center(child: Text("Errors")));
-      return items;
-    } else {
-      for (int i = 0; i < count; i++) {
-        items.add(_generateItem(i, menusList[i], 0));
-      }
-      return items;
+  Widget _buildList(Privilege item) {
+    if (item.children.isEmpty) {
+      return Builder(builder: (context) {
+        return ListTile(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => item.id == 'user'
+                        ? const UserScreen()
+                        : const RoleScreen())),
+            leading: const SizedBox(),
+            title: Text(
+              item.name,
+              style: Theme.of(context).textTheme.titleSmall,
+            ));
+      });
     }
+    return ExpansionTile(
+      leading: Icon(getIconForName(item.icon)),
+      title: Text(
+        item.name,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      children: item.children.map(_buildList).toList(),
+    );
   }
 
   IconData getIconForName(String iconName) {

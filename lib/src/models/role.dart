@@ -41,17 +41,29 @@ class Role {
 class Privilege {
   String id;
   String name;
+  String icon;
+  String path;
+  // int permissions;
+  // String resource;
   List<Privilege> children;
 
   Privilege(
     this.id,
     this.name,
+    this.icon,
+    this.path,
+    // this.permissions,
+    // this.resource,
     this.children,
   );
 
   factory Privilege.fromJson(Map<String, dynamic> json) => Privilege(
         json['id'],
         json['name'],
+        json['icon'] as String,
+        json['path'] as String,
+        // json['permissions'] as int,
+        // json['resource'] as String,
         List<Privilege>.from(json['children'] == null
             ? []
             : json['children'].map((x) => Privilege.fromJson(x))),
