@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_admin/src/models/role.dart';
-import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';

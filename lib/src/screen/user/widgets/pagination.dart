@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/search.dart';
+import 'package:flutter_admin/src/models/user.dart';
 
 class PaginationButtonForUser extends StatefulWidget {
   const PaginationButtonForUser({
@@ -14,7 +14,7 @@ class PaginationButtonForUser extends StatefulWidget {
   final Function(UserFilter) handlePagination;
 
   @override
-  _PaginationButtonForUserState createState() =>
+  State<PaginationButtonForUser> createState() =>
       _PaginationButtonForUserState();
 }
 

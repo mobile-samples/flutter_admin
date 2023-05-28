@@ -1,3 +1,4 @@
+import 'package:flutter_admin/src/common/client/model.dart';
 import 'package:flutter_admin/src/models/user.dart';
 
 class Role {
@@ -36,6 +37,8 @@ class Role {
                 .map((e) => e.split(' ')[0].toString())
                 .toList()),
       );
+
+  static String getId(Role role) => role.roleId;
 }
 
 class Privilege {
@@ -73,4 +76,25 @@ class Privilege {
 class Status {
   static String active = 'A';
   static String inactive = 'I';
+}
+
+class RoleFilter extends Filter {
+  String? roleId;
+  String? roleName;
+  List<String>? status;
+  String? remark;
+  String? description;
+
+  RoleFilter(
+    this.roleId,
+    this.roleName,
+    this.status,
+    this.remark,
+    this.description,
+    int? limit,
+    int? page,
+  ) : super(limit, page);
+
+  @override
+  Map<String, dynamic> toJson() => {};
 }

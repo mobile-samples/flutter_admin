@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/search.dart';
+import 'package:flutter_admin/src/models/user.dart';
 
 class UserForm extends StatefulWidget {
   const UserForm({
@@ -19,7 +19,7 @@ class UserForm extends StatefulWidget {
   final void Function(String, bool) hanleChangeStatus;
   final void Function(UserFilter) handleFilters;
   @override
-  _UserFormState createState() => _UserFormState();
+  State<UserForm> createState() => _UserFormState();
 }
 
 class _UserFormState extends State<UserForm> {

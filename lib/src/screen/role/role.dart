@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/src/common/client/client.dart';
+import 'package:flutter_admin/src/common/client/model.dart';
+import 'package:flutter_admin/src/common/state/generic_state.dart';
 import 'package:flutter_admin/src/models/role.dart';
-import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/screen/edit_role/edit_role.dart';
 import 'package:flutter_admin/src/screen/role/widgets/pagination.dart';
 import 'package:flutter_admin/src/screen/role/widgets/role_card.dart';
@@ -15,22 +17,39 @@ class RoleScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RoleScreenState createState() => _RoleScreenState();
+  State<RoleScreen> createState() => _RoleScreenState();
 }
 
-class _RoleScreenState extends State<RoleScreen> {
-  ScrollController _scrollController = ScrollController();
-  late RoleFilter roleFilter;
+class _RoleScreenState extends GenericState<RoleScreen, Role, RoleFilter> {
+  final ScrollController _scrollController = ScrollController();
+  late RoleFilter filter;
   late TextEditingController roleNameController = TextEditingController();
   late List<String> status;
   late List<Role> roles;
   late int total;
-  late bool _loading = true;
 
   @override
   void initState() {
     getRole();
     super.initState();
+  }
+
+  @override
+  RoleFilter getFilter() {
+    return filter;
+  }
+
+  @override
+  Client<Role, String, ResultInfo<Role>, RoleFilter> getService() {
+    return RoleService.instance;
+  }
+
+  @override
+  void setFilter() {
+    setState(() {
+      filter = RoleFilter(null, null, [], null, null, 5, 1);
+      status = filter.status ?? [];
+    });
   }
 
   getRole() async {
@@ -43,10 +62,9 @@ class _RoleScreenState extends State<RoleScreen> {
     setState(() {
       // roles = res.list;
       // total = res.total;
-      roleFilter = initialValue;
+      // roleFilter = initialValue;
       roleNameController.text = initialValue.roleName ?? '';
       status = initialValue.status ?? [];
-      _loading = false;
     });
     FocusScope.of(context).requestFocus(FocusNode());
   }
@@ -64,23 +82,12 @@ class _RoleScreenState extends State<RoleScreen> {
   }
 
   handleSearchFilter(RoleFilter formFilter) async {
-    final res =
-        //await RoleService.instance.search(formFilter);
-        // await SqliteService.instance.searchRole(formFilter);
-        setState(() {
-      // roles = res.list;
-      // total = res.total;
-      roleFilter = formFilter;
-    });
+    filter = formFilter;
+    search();
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (_loading == true) {
-      return Center(
-        child: Text('Loading....'),
-      );
-    }
+  Widget buildChild(BuildContext context, SearchResult<Role> searchResult) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: CustomScrollView(
@@ -93,7 +100,7 @@ class _RoleScreenState extends State<RoleScreen> {
             RoleForm(
               roleNameController: roleNameController,
               status: status,
-              roleFilter: roleFilter,
+              roleFilter: filter,
               hanleChangeStatus: hanleChangeStatus,
               handleSearchFilter: handleSearchFilter,
             ),
@@ -121,10 +128,10 @@ class _RoleScreenState extends State<RoleScreen> {
                 childCount: roles.length > 0 ? roles.length : 0,
               ),
             ),
-            (total != 0 && total > roleFilter.limit!)
+            (total != 0 && total > filter.limit!)
                 ? PaginationButtonForRole(
                     handlePagination: handleSearchFilter,
-                    roleFilter: roleFilter,
+                    roleFilter: filter,
                     total: total,
                   )
                 : SliverToBoxAdapter(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/search.dart';
+import 'package:flutter_admin/src/models/role.dart';
 
 class PaginationButtonForRole extends StatefulWidget {
   const PaginationButtonForRole({
@@ -12,7 +12,7 @@ class PaginationButtonForRole extends StatefulWidget {
   final RoleFilter roleFilter;
   final int total;
   @override
-  _PaginationButtonForRoleState createState() =>
+  State<PaginationButtonForRole> createState() =>
       _PaginationButtonForRoleState();
 }
 

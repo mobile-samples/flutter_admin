@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/src/models/search.dart';
+import 'package:flutter_admin/src/models/role.dart';
 
 class RoleForm extends StatefulWidget {
   const RoleForm({
@@ -18,7 +18,7 @@ class RoleForm extends StatefulWidget {
   final void Function(String, bool) hanleChangeStatus;
 
   @override
-  _RoleFormState createState() => _RoleFormState();
+  State<RoleForm> createState() => _RoleFormState();
 }
 
 class _RoleFormState extends State<RoleForm> {

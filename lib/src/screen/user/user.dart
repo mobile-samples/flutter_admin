@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/src/common/client/client.dart';
 import 'package:flutter_admin/src/common/client/model.dart';
 import 'package:flutter_admin/src/common/state/generic_state.dart';
-import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:flutter_admin/src/screen/edit_user/edit_user.dart';
-import 'package:flutter_admin/src/screen/user/pagination.dart';
-import 'package:flutter_admin/src/screen/user/userCard.dart';
-import 'package:flutter_admin/src/screen/user/userForm.dart';
+import 'package:flutter_admin/src/screen/user/widgets/pagination.dart';
+import 'package:flutter_admin/src/screen/user/widgets/user_card.dart';
+import 'package:flutter_admin/src/screen/user/widgets/user_form.dart';
 import 'package:flutter_admin/src/services/user.dart';
 import 'package:flutter_admin/utils/general_method.dart';
 
@@ -54,7 +53,7 @@ class _UserScreenState extends GenericState<UserScreen, User, UserFilter> {
     }
   }
 
-  handleFilters(UserFilter filter) async {
+  void handleFilters(UserFilter filter) async {
     this.filter = filter;
     search();
   }

@@ -4,7 +4,6 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_admin/src/common/client/client.dart';
 import 'package:flutter_admin/src/common/client/model.dart';
-import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/src/models/user.dart';
 import 'package:flutter_admin/utils/global_data.dart';
 import 'package:http/http.dart' as http;

@@ -1,18 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_admin/src/common/client/client.dart';
+import 'package:flutter_admin/src/common/client/model.dart';
 import 'package:flutter_admin/src/models/role.dart';
-import 'package:flutter_admin/src/models/search.dart';
 import 'package:flutter_admin/utils/global_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
-class RoleService {
-  RoleService._instantiate();
-
+class RoleService extends Client<Role, String, ResultInfo<Role>, RoleFilter> {
   static final RoleService instance = RoleService._instantiate();
 
   final String baseUrlIOS = 'http://localhost:8080';
   final String baseUrlAndroid = 'http://10.0.2.2:8080';
+
+  RoleService._instantiate()
+      : super(
+          serviceUrl: 'http://localhost:8083/users',
+          createObjectFromJson: Role.fromJson,
+          getId: Role.getId,
+        );
 
   getUrl() {
     if (Platform.isAndroid) {
@@ -59,18 +65,18 @@ class RoleService {
   //   }
   // }
 
-  Future<Role> load(String roleId) async {
-    late String baseUrl = getUrl();
-    final response = await http.get(
-      Uri.parse(baseUrl + '/roles/' + roleId),
-      headers: GlobalData.buildHeader(),
-    );
-    if (response.statusCode == 200) {
-      return Role.fromJson(jsonDecode(response.body));
-    } else {
-      throw json.decode(response.body)['error']['message'];
-    }
-  }
+  // Future<Role> load(String roleId) async {
+  //   late String baseUrl = getUrl();
+  //   final response = await http.get(
+  //     Uri.parse(baseUrl + '/roles/' + roleId),
+  //     headers: GlobalData.buildHeader(),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return Role.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw json.decode(response.body)['error']['message'];
+  //   }
+  // }
 
   // Future<ResultInfo<Role>> update(Role role) async {
   //   late String baseUrl = getUrl();
