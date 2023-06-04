@@ -87,59 +87,53 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
   Widget buildChild(BuildContext context, SearchResult<Role> searchResult) {
     final roles = searchResult.list;
     final total = searchResult.total;
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.green[400],
-              title: Text('Search Roles'),
-            ),
-            RoleForm(
-              roleNameController: roleNameController,
-              status: status,
-              roleFilter: filter,
-              hanleChangeStatus: hanleChangeStatus,
-              handleSearchFilter: handleSearchFilter,
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      final reLoadPage = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                EditRoleScreen(roleId: roles[index].roleId)),
-                      );
-                      if (reLoadPage == null || reLoadPage == true) {
-                        getRole();
-                        GeneralMethod.autoScrollOnTop(_scrollController);
-                      }
-                    },
-                    child: RoleCard(
-                      role: roles[index],
-                    ),
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        RoleForm(
+          roleNameController: roleNameController,
+          status: status,
+          roleFilter: filter,
+          hanleChangeStatus: hanleChangeStatus,
+          handleSearchFilter: handleSearchFilter,
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return GestureDetector(
+                onTap: () async {
+                  final reLoadPage = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditRoleScreen(roleId: roles[index].roleId)),
                   );
+                  if (reLoadPage == null || reLoadPage == true) {
+                    getRole();
+                    GeneralMethod.autoScrollOnTop(_scrollController);
+                  }
                 },
-                childCount: roles.length > 0 ? roles.length : 0,
-              ),
-            ),
-            (total != 0 && total > filter.limit!)
-                ? PaginationButtonForRole(
-                    handlePagination: handleSearchFilter,
-                    roleFilter: filter,
-                    total: total,
-                  )
-                : SliverToBoxAdapter(
-                    child: SizedBox(
-                      width: 0,
-                      height: 0,
-                    ),
-                  )
-          ],
-        ));
+                child: RoleCard(
+                  role: roles[index],
+                ),
+              );
+            },
+            childCount: roles.length > 0 ? roles.length : 0,
+          ),
+        ),
+        (total != 0 && total > filter.limit!)
+            ? PaginationButtonForRole(
+                handlePagination: handleSearchFilter,
+                roleFilter: filter,
+                total: total,
+              )
+            : SliverToBoxAdapter(
+                child: SizedBox(
+                  width: 0,
+                  height: 0,
+                ),
+              )
+      ],
+    );
   }
 }
