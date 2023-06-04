@@ -16,6 +16,9 @@ abstract class SearchState<W extends StatefulWidget, T, S extends Filter>
   Client<T, String, ResultInfo<T>, S> getService();
 
   @protected
+  PreferredSizeWidget buildAppbar(BuildContext context);
+
+  @protected
   Widget buildChild(BuildContext context, SearchResult<T> searchResult);
 
   @override
@@ -36,8 +39,9 @@ abstract class SearchState<W extends StatefulWidget, T, S extends Filter>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: FutureBuilder<SearchResult<T>>(
+    return Scaffold(
+      appBar: buildAppbar(context),
+      body: FutureBuilder<SearchResult<T>>(
           future: searchResult,
           builder: (context, snapshot) {
             if (snapshot.hasData) {

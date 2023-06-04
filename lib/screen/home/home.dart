@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/common/appbar.dart';
 import 'package:flutter_admin/screen/home/home_provider.dart';
 import 'package:flutter_admin/screen/login/auth_model.dart';
 import 'package:flutter_admin/screen/user/user.dart';
@@ -30,13 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: getAppBarWithArrowBack(context, "Person"),
-      body: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (BuildContext context, int index) =>
-            _buildList(data[index]),
-      ),
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (BuildContext context, int index) => _buildList(data[index]),
     );
   }
 

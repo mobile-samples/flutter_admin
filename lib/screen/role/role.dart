@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/common/appbar.dart';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
-import 'package:flutter_admin/common/state/generic_state.dart';
+import 'package:flutter_admin/common/state/search_state.dart';
 import 'package:flutter_admin/screen/role/role_model.dart';
 import 'package:flutter_admin/screen/role/widgets/edit_role.dart';
 import 'package:flutter_admin/screen/role/widgets/pagination.dart';
@@ -77,6 +78,11 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
   handleSearchFilter(RoleFilter formFilter) async {
     filter = formFilter;
     search();
+  }
+
+  @override
+  PreferredSizeWidget buildAppbar(BuildContext context) {
+    return getAppBarWithArrowBack(context, "Role");
   }
 
   @override

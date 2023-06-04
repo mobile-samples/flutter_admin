@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/common/appbar.dart';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
-import 'package:flutter_admin/common/state/generic_state.dart';
+import 'package:flutter_admin/common/state/search_state.dart';
 import 'package:flutter_admin/screen/user/user_model.dart';
 import 'package:flutter_admin/screen/user/widgets/edit_user.dart';
 import 'package:flutter_admin/screen/user/widgets/pagination.dart';
@@ -56,6 +57,11 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
   void handleFilters(UserFilter filter) async {
     this.filter = filter;
     search();
+  }
+
+  @override
+  PreferredSizeWidget buildAppbar(BuildContext context) {
+    return getAppBarWithArrowBack(context, "User");
   }
 
   @override
