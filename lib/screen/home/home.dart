@@ -16,8 +16,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    getData();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getData();
   }
 
   getData() async {

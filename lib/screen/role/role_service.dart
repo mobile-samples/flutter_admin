@@ -10,14 +10,14 @@ import 'dart:io' show Platform;
 class RoleService extends Client<Role, String, ResultInfo<Role>, RoleFilter> {
   static final RoleService instance = RoleService._instantiate();
 
-  final String baseUrlIOS = 'http://localhost:8080';
-  final String baseUrlAndroid = 'http://10.0.2.2:8080';
+  final String baseUrlIOS = 'http://localhost:8083';
+  final String baseUrlAndroid = 'http://10.0.2.2:8083';
 
   RoleService._instantiate()
       : super(
           serviceUrl: Platform.isIOS
-              ? 'http://localhost:8083/users'
-              : 'http://10.0.2.2:8083/users',
+              ? 'http://localhost:8083/roles'
+              : 'http://10.0.2.2:8083/roles',
           createObjectFromJson: Role.fromJson,
           getId: Role.getId,
         );

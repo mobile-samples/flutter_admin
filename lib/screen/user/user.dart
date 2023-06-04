@@ -66,68 +66,57 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
 
   @override
   Widget buildChild(BuildContext context, SearchResult<User> searchResult) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(mainAxisSize: MainAxisSize.min, children: [
-        Expanded(
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverAppBar(
-                backgroundColor: Colors.green[400],
-                title: const Text('User'),
-              ),
-              UserForm(
-                userFilter: filter,
-                userName: userNameController,
-                displayName: displayNameController,
-                status: status,
-                handleFilters: handleFilters,
-                hanleChangeStatus: hanleChangeStatus,
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (searchResult.list.isNotEmpty) {
-                      return GestureDetector(
-                          onTap: () async {
-                            final reLoadPage = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditUserScreen(
-                                      user: searchResult.list[index])),
-                            );
-                            if (reLoadPage == null || reLoadPage == true) {
-                              search();
-                              GeneralMethod.autoScrollOnTop(_scrollController);
-                            }
-                          },
-                          child: UserCard(
-                            user: searchResult.list[index],
-                          ));
-                    } else {
-                      return Container();
-                    }
-                  },
-                  childCount: searchResult.list.length,
-                ),
-              ),
-              (searchResult.total != 0 && searchResult.total > filter.limit!)
-                  ? PaginationButtonForUser(
-                      handlePagination: handleFilters,
-                      total: searchResult.total,
-                      userFilter: filter,
-                    )
-                  : const SliverToBoxAdapter(
-                      child: SizedBox(
-                        width: 0,
-                        height: 0,
-                      ),
-                    ),
-            ],
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        UserForm(
+          userFilter: filter,
+          userName: userNameController,
+          displayName: displayNameController,
+          status: status,
+          handleFilters: handleFilters,
+          hanleChangeStatus: hanleChangeStatus,
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              if (searchResult.list.isNotEmpty) {
+                return GestureDetector(
+                    onTap: () async {
+                      final reLoadPage = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EditUserScreen(user: searchResult.list[index])),
+                      );
+                      if (reLoadPage == null || reLoadPage == true) {
+                        search();
+                        GeneralMethod.autoScrollOnTop(_scrollController);
+                      }
+                    },
+                    child: UserCard(
+                      user: searchResult.list[index],
+                    ));
+              } else {
+                return Container();
+              }
+            },
+            childCount: searchResult.list.length,
           ),
         ),
-      ]),
+        (searchResult.total != 0 && searchResult.total > filter.limit!)
+            ? PaginationButtonForUser(
+                handlePagination: handleFilters,
+                total: searchResult.total,
+                userFilter: filter,
+              )
+            : const SliverToBoxAdapter(
+                child: SizedBox(
+                  width: 0,
+                  height: 0,
+                ),
+              ),
+      ],
     );
   }
 }

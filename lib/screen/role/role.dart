@@ -25,13 +25,11 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
   late RoleFilter filter;
   late TextEditingController roleNameController = TextEditingController();
   late List<String> status;
-  late List<Role> roles;
-  late int total;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     getRole();
-    super.initState();
   }
 
   @override
@@ -87,6 +85,8 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
 
   @override
   Widget buildChild(BuildContext context, SearchResult<Role> searchResult) {
+    final roles = searchResult.list;
+    final total = searchResult.total;
     return Scaffold(
         backgroundColor: Colors.white,
         body: CustomScrollView(

@@ -147,22 +147,23 @@ class _UserFormState extends State<UserForm> {
                     );
                   }).toList(),
                 )),
-                // SizedBox(
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       FocusScope.of(context).requestFocus(FocusNode());
-                //       filter(null);
-                //     },
-                //     style: ButtonStyle(
-                //       backgroundColor:
-                //           MaterialStateProperty.all<Color>(Colors.green),
-                //     ),
-                //     child: Text(
-                //       'Search',
-                //       style: TextStyle(color: Colors.white, fontSize: 16),
-                //     ),
-                //   ),
-                // )
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      filter(null);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.green),
+                    ),
+                    child: Text(
+                      'Search',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
