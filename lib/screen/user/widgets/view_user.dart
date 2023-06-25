@@ -2,39 +2,40 @@ import 'package:flutter/material.dart';
 
 import '../user_model.dart';
 import '../user_service.dart';
-import 'edit_user_form.dart';
+import 'view_user_form.dart';
 
-class EditUserScreen extends StatefulWidget {
-  const EditUserScreen({
+class ViewUserScreen extends StatefulWidget {
+  const ViewUserScreen({
     Key? key,
     required this.user,
-    required this.handleChangeUser,
   }) : super(key: key);
   final User user;
-  final Function handleChangeUser;
   @override
-  State<EditUserScreen> createState() => _EditUserScreenState();
+  _ViewUserScreenState createState() => _ViewUserScreenState();
 }
 
-class _EditUserScreenState extends State<EditUserScreen> {
+class _ViewUserScreenState extends State<ViewUserScreen> {
   late User userDetail;
   bool _loading = true;
 
-  handleClickSave(User user) async {
-    await UserAPIService.instance.update(user);
+  getUserById() async {
+    final res = await UserAPIService.instance.load(widget.user.userId);
+    setState(() {
+      userDetail = res;
+      _loading = false;
+    });
+  }
+
+  handleChangeUser(User user) {
     setState(() {
       userDetail = user;
     });
-    widget.handleChangeUser(user);
   }
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      userDetail = widget.user;
-      _loading = false;
-    });
+    getUserById();
   }
 
   @override
@@ -50,10 +51,10 @@ class _EditUserScreenState extends State<EditUserScreen> {
         slivers: [
           SliverAppBar(
             backgroundColor: Colors.green[400],
-            title: const Text('Edit user'),
+            title: const Text('View user'),
           ),
-          EditUserFormScreen(
-              userDetail: userDetail, handleClickSave: handleClickSave),
+          ViewUserFormScreen(
+              userDetail: userDetail, handleChangeUser: handleChangeUser),
         ],
       ),
     );

@@ -33,7 +33,6 @@ abstract class SearchState<W extends StatefulWidget, T, S extends Filter>
     final res = getService().search(true, true, filter);
     setState(() {
       searchResult = res;
-      this.setFilter();
     });
   }
 

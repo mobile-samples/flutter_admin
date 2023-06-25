@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/common/appbar.dart';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
 import 'package:flutter_admin/common/state/search_state.dart';
-import 'package:flutter_admin/screen/user/user_model.dart';
-import 'package:flutter_admin/screen/user/widgets/edit_user.dart';
-import 'package:flutter_admin/screen/user/widgets/pagination.dart';
-import 'package:flutter_admin/screen/user/widgets/user_card.dart';
-import 'package:flutter_admin/screen/user/widgets/user_form.dart';
-import 'package:flutter_admin/screen/user/user_service.dart';
 import 'package:flutter_admin/utils/general_method.dart';
+
+import 'user_model.dart';
+import 'user_service.dart';
+import 'widgets/user_card.dart';
+import 'widgets/user_form.dart';
+import 'widgets/view_user.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
@@ -42,7 +41,7 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
     });
   }
 
-  hanleChangeStatus(String type, bool isChecked) {
+  handleChangeStatus(String type, bool isChecked) {
     if (type == 'A') {
       setState(() {
         isChecked == true ? status.add('A') : status.remove('A');
@@ -59,64 +58,86 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
     search();
   }
 
+  void showSearchModal(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            constraints: const BoxConstraints(maxHeight: 250),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  UserForm(
+                    userFilter: filter,
+                    userName: userNameController,
+                    displayName: displayNameController,
+                    status: status,
+                    handleFilters: handleFilters,
+                    handleChangeStatus: handleChangeStatus,
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   PreferredSizeWidget buildAppbar(BuildContext context) {
-    return getAppBarWithArrowBack(context, "User");
+    return AppBar(
+        backgroundColor: Colors.green[400],
+        title: const Text('User'),
+        actions: <Widget>[
+          IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearchModal(context);
+              }),
+        ]);
   }
 
   @override
   Widget buildChild(BuildContext context, SearchResult<User> searchResult) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        UserForm(
-          userFilter: filter,
-          userName: userNameController,
-          displayName: displayNameController,
-          status: status,
-          handleFilters: handleFilters,
-          hanleChangeStatus: hanleChangeStatus,
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              if (searchResult.list.isNotEmpty) {
-                return GestureDetector(
-                    onTap: () async {
-                      final reLoadPage = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                EditUserScreen(user: searchResult.list[index])),
-                      );
-                      if (reLoadPage == null || reLoadPage == true) {
-                        search();
-                        GeneralMethod.autoScrollOnTop(_scrollController);
-                      }
-                    },
-                    child: UserCard(
-                      user: searchResult.list[index],
-                    ));
-              } else {
-                return Container();
-              }
-            },
-            childCount: searchResult.list.length,
-          ),
-        ),
-        (searchResult.total != 0 && searchResult.total > filter.limit!)
-            ? PaginationButtonForUser(
-                handlePagination: handleFilters,
-                total: searchResult.total,
-                userFilter: filter,
-              )
-            : const SliverToBoxAdapter(
-                child: SizedBox(
-                  width: 0,
-                  height: 0,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(mainAxisSize: MainAxisSize.min, children: [
+        Expanded(
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (searchResult.list.isNotEmpty) {
+                      return GestureDetector(
+                          onTap: () {
+                            final reLoadPage = Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewUserScreen(
+                                      user: searchResult.list[index])),
+                            );
+                            if (reLoadPage == null || reLoadPage == true) {
+                              search();
+                              GeneralMethod.autoScrollOnTop(_scrollController);
+                            }
+                          },
+                          child: UserCard(
+                            user: searchResult.list[index],
+                          ));
+                    } else {
+                      return Container();
+                    }
+                  },
+                  childCount: searchResult.list.length,
                 ),
               ),
-      ],
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }
