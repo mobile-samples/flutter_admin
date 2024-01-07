@@ -3,7 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
-import 'package:flutter_admin/screen/user/user_model.dart';
+import 'package:flutter_admin/features/user/user_model.dart';
 
 class UserAPIService
     extends Client<User, String, ResultInfo<User>, UserFilter> {

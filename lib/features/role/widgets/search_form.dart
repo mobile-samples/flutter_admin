@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/screen/role/role_model.dart';
+import 'package:flutter_admin/features/role/role_model.dart';
 
 class RoleForm extends StatefulWidget {
   const RoleForm({

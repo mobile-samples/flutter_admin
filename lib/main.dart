@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/common/app_theme.dart';
-import 'package:flutter_admin/screen/login/login.dart';
+import 'package:flutter_admin/features/login/login.dart';
 
 void main() async {
   runApp(const MyApp());

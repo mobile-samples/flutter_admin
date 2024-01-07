@@ -5,13 +5,19 @@ import 'model.dart';
 
 abstract class ViewClient<T, ID> {
   String serviceUrl;
-  T Function(Map<String, dynamic> json) createObjectFromJson;
+  T Function(Map<String, dynamic> json) fromJson;
 
-  ViewClient({required this.serviceUrl, required this.createObjectFromJson});
+  ViewClient({required this.serviceUrl, required this.fromJson});
 
-  List<T> parseGetAllResult(String jsonString) {
+  List<T> all(String jsonString) {
+    final uri = Uri.parse(this.serviceUrl);
+    return http.get(uri).then((res) {
+
+    }).catchError((err) {
+      throw Exception('Fail to get all')
+    })
     final jsonList = jsonDecode(jsonString) as List;
-    return jsonList.map<T>((json) => createObjectFromJson(json)).toList();
+    return jsonList.map<T>((json) => fromJson(json)).toList();
   }
 
   T parseGetResult(String jsonString) {

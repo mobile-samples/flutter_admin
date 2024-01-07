@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/screen/role/role_model.dart';
-import 'package:flutter_admin/screen/role/role_service.dart';
-import 'package:flutter_admin/screen/role/widgets/edit_role_form.dart';
-import 'package:flutter_admin/screen/role/widgets/role_search_form.dart';
+import 'package:flutter_admin/features/role/role_model.dart';
+import 'package:flutter_admin/features/role/role_service.dart';
+import 'package:flutter_admin/features/role/widgets/edit_role_form.dart';
+import 'package:flutter_admin/features/role/widgets/role_search_form.dart';
 
 class EditRoleScreen extends StatefulWidget {
   const EditRoleScreen({

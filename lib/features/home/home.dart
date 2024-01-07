@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/screen/home/home_provider.dart';
-import 'package:flutter_admin/screen/login/auth_model.dart';
-import 'package:flutter_admin/screen/user/user.dart';
-import 'package:flutter_admin/screen/role/role.dart';
+import 'package:flutter_admin/features/home/home_provider.dart';
+import 'package:flutter_admin/features/login/auth_model.dart';
+import 'package:flutter_admin/features/user/user.dart';
+import 'package:flutter_admin/features/role/role.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

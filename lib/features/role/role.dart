@@ -3,12 +3,12 @@ import 'package:flutter_admin/common/appbar.dart';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
 import 'package:flutter_admin/common/state/search_state.dart';
-import 'package:flutter_admin/screen/role/role_model.dart';
-import 'package:flutter_admin/screen/role/widgets/edit_role.dart';
-import 'package:flutter_admin/screen/role/widgets/pagination.dart';
-import 'package:flutter_admin/screen/role/widgets/role_card.dart';
-import 'package:flutter_admin/screen/role/widgets/search_form.dart';
-import 'package:flutter_admin/screen/role/role_service.dart';
+import 'package:flutter_admin/features/role/role_model.dart';
+import 'package:flutter_admin/features/role/widgets/edit_role.dart';
+import 'package:flutter_admin/features/role/widgets/pagination.dart';
+import 'package:flutter_admin/features/role/widgets/role_card.dart';
+import 'package:flutter_admin/features/role/widgets/search_form.dart';
+import 'package:flutter_admin/features/role/role_service.dart';
 import 'package:flutter_admin/utils/general_method.dart';
 
 class RoleScreen extends StatefulWidget {

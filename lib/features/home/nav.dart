@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/screen/login/auth_model.dart';
-import 'package:flutter_admin/screen/home/home_provider.dart';
-import 'package:flutter_admin/screen/home/home.dart';
+import 'package:flutter_admin/features/login/auth_model.dart';
+import 'package:flutter_admin/features/home/home_provider.dart';
+import 'package:flutter_admin/features/home/home.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key, required this.authInfo}) : super(key: key);

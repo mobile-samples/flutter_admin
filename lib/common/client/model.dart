@@ -38,12 +38,12 @@ class ErrorMessage {
 }
 
 class ResultInfo<T> {
-  num status;
+  num? status;
   List<ErrorMessage>? errors;
   T? value;
   String? message;
 
-  ResultInfo(this.status, this.errors, this.value, this.message);
+  ResultInfo({this.status, this.errors, this.value, this.message});
 }
 
 class SearchResult<T> {

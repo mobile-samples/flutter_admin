@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/screen/user/user_model.dart';
+import 'package:flutter_admin/features/user/user_model.dart';
 
 class PaginationButtonForUser extends StatefulWidget {
   const PaginationButtonForUser({

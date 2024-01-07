@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
-import 'package:flutter_admin/screen/role/role_model.dart';
+import 'package:flutter_admin/features/role/role_model.dart';
 import 'package:flutter_admin/utils/global_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
