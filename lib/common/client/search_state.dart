@@ -13,7 +13,7 @@ abstract class SearchState<W extends StatefulWidget, T, S extends Filter>
   S getFilter();
 
   @protected
-  Client<T, String, ResultInfo<T>, S> getService();
+  Client<T, String, S> getService();
 
   @protected
   PreferredSizeWidget buildAppbar(BuildContext context);

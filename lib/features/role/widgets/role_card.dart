@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/features/role/role_model.dart';
 
 class RoleCard extends StatefulWidget {
-  const RoleCard({Key? key, required this.role}) : super(key: key);
+  const RoleCard({super.key, required this.role});
 
   final Role role;
   @override
@@ -43,7 +43,7 @@ class _RoleCardState extends State<RoleCard> {
                 ),
                 Text(
                   widget.role.remark,
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                   maxLines: 1,
                   overflow: TextOverflow.visible,
                 )

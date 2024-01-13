@@ -3,13 +3,13 @@ import 'package:flutter_admin/features/role/role_model.dart';
 
 class RoleForm extends StatefulWidget {
   const RoleForm({
-    Key? key,
+    super.key,
     required this.roleFilter,
     required this.roleNameController,
     required this.status,
     required this.handleSearchFilter,
     required this.hanleChangeStatus,
-  }) : super(key: key);
+  });
 
   final RoleFilter roleFilter;
   final TextEditingController roleNameController;
@@ -39,12 +39,12 @@ class _RoleFormState extends State<RoleForm> {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+        padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
         child: Column(
           children: [
             Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 2,
                   child: Text(
                     'Role name:',
@@ -54,9 +54,9 @@ class _RoleFormState extends State<RoleForm> {
                 Expanded(
                   flex: 4,
                   child: TextField(
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                     controller: widget.roleNameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
                       ),
@@ -71,7 +71,7 @@ class _RoleFormState extends State<RoleForm> {
               },
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 2,
                     child: Text(
                       'Status:',
@@ -90,7 +90,7 @@ class _RoleFormState extends State<RoleForm> {
                             widget.hanleChangeStatus('A', value!);
                           },
                         ),
-                        Text('Active')
+                        const Text('Active')
                       ],
                     ),
                   ),
@@ -106,7 +106,7 @@ class _RoleFormState extends State<RoleForm> {
                             widget.hanleChangeStatus('I', value!);
                           },
                         ),
-                        Text('Inactive')
+                        const Text('Inactive')
                       ],
                     ),
                   ),
@@ -121,11 +121,11 @@ class _RoleFormState extends State<RoleForm> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(25.0)),
                   ),
                   child: Row(
                     children: [
-                      Text('Page Size: ', style: TextStyle(fontSize: 16.0)),
+                      const Text('Page Size: ', style: TextStyle(fontSize: 16.0)),
                       DropdownButton<String>(
                         value: widget.roleFilter.limit.toString(),
                         iconSize: 0.0,
@@ -154,7 +154,7 @@ class _RoleFormState extends State<RoleForm> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.green),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Search',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'model.dart';
 
@@ -9,151 +8,139 @@ abstract class ViewClient<T, ID> {
 
   ViewClient({required this.serviceUrl, required this.fromJson});
 
-  List<T> all(String jsonString) {
-    final uri = Uri.parse(this.serviceUrl);
-    return http.get(uri).then((res) {
-
-    }).catchError((err) {
-      throw Exception('Fail to get all')
-    })
-    final jsonList = jsonDecode(jsonString) as List;
-    return jsonList.map<T>((json) => fromJson(json)).toList();
-  }
-
-  T parseGetResult(String jsonString) {
-    final json = jsonDecode(jsonString);
-    return createObjectFromJson(json);
-  }
-
   Future<List<T>> all() {
     final uri = Uri.parse(this.serviceUrl);
-    return http.get(uri).then((res) {
-      if (res.statusCode == 200) {
-        return compute(parseGetAllResult, res.body);
-      } else {
-        throw Exception('Failed to load all');
-      }
-    }).catchError((err) {
-      throw err;
-    });
+    return http.get(uri)
+      .then((res) {
+        if (res.statusCode == 200) {
+          var jsonList = jsonDecode(res.body) as List;
+          return jsonList.map<T>((json) => fromJson(json)).toList();
+        } else {
+          throw Exception('Failed to load all');
+        }
+      })
+      .catchError((err) {
+        throw Exception('Fail to get all');
+      });
   }
 
   Future<T> load(ID id) async {
     final uri = Uri.parse('$serviceUrl/$id');
-    return http.get(uri).then((res) {
-      if (res.statusCode == 200) {
-        return compute(parseGetResult, res.body);
-      } else {
-        throw Exception('Failed to load by id');
-      }
-    }).catchError((err) {
-      throw err;
-    });
+    return http.get(uri)
+      .then((res) {
+        if (res.statusCode == 200) {
+          return fromJson(jsonDecode(res.body));
+        } else {
+          throw Exception('Failed to load by id');
+        }
+      })
+      .catchError((err) {
+        throw err;
+      });
   }
 }
 
 class GenericClient<T, ID, R> extends ViewClient<T, ID> {
-  Function(Map<String, dynamic> json) createResultInfoFromJson;
+  R Function(String) createResult;
   String Function(T) getId;
 
   GenericClient({
-    required String serviceUrl,
-    required T Function(Map<String, dynamic>) createObjectFromJson,
-    required this.createResultInfoFromJson,
+    required super.serviceUrl,
+    required super.fromJson,
+    required this.createResult,
     required this.getId,
-  }) : super(
-            serviceUrl: serviceUrl, createObjectFromJson: createObjectFromJson);
-
-  R formatResultInfo(String jsonString) {
-    final json = jsonDecode(jsonString);
-    return this.createResultInfoFromJson(json);
-  }
+  });
 
   Future<R> insert(T object) async {
     final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
-    return http.post(uri, body: jsonEncode(object)).then((value) {
-      if (value.statusCode == 404 || value.statusCode == 410) {
-        throw Exception('Not found');
-      }
-      if (value.statusCode == 409) {
-        throw Exception('Version Error');
-      }
-      return compute(formatResultInfo, value.body);
-    }).catchError((err) {
-      throw err;
-    });
+    return http.post(uri, body: jsonEncode(object))
+      .then((res) {
+        if (res.statusCode == 404 || res.statusCode == 410) {
+          throw Exception('Not found');
+        }
+        if (res.statusCode == 409) {
+          throw Exception('Version Error');
+        }
+        return this.createResult(jsonDecode(res.body));
+      })
+      .catchError((err) {
+        throw err;
+      });
   }
 
   Future<R> update(T object) async {
     final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
-    return http.put(uri, body: jsonEncode(object)).then((value) {
-      if (value.statusCode == 404 || value.statusCode == 410) {
-        throw Exception('Not found');
-      }
-      if (value.statusCode == 409) {
-        throw Exception('Version Error');
-      }
-      return compute(formatResultInfo, value.body);
-    }).catchError((err) {
-      throw err;
-    });
+    return http.put(uri, body: jsonEncode(object))
+      .then((res) {
+        if (res.statusCode == 404 || res.statusCode == 410) {
+          throw Exception('Not found');
+        }
+        if (res.statusCode == 409) {
+          throw Exception('Version Error');
+        }
+        return this.createResult(jsonDecode(res.body));
+      })
+      .catchError((err) {
+        throw err;
+      });
   }
 
   Future<R> patch(T object) async {
     final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
-    return http.patch(uri, body: jsonEncode(object)).then((value) {
-      if (value.statusCode == 404 || value.statusCode == 410) {
-        throw Exception('Not found');
-      }
-      if (value.statusCode == 409) {
-        throw Exception('Version Error');
-      }
-      return compute(formatResultInfo, value.body);
-    }).catchError((err) {
-      throw err;
-    });
+    return http.patch(uri, body: jsonEncode(object))
+      .then((res) {
+        if (res.statusCode == 404 || res.statusCode == 410) {
+          throw Exception('Not found');
+        }
+        if (res.statusCode == 409) {
+          throw Exception('Version Error');
+        }
+        return this.createResult(jsonDecode(res.body));
+      })
+      .catchError((err) {
+        throw err;
+      });
   }
 
   Future<num> delete(ID id) async {
     final uri = Uri.parse('$serviceUrl/$id');
-    return http.delete(uri).then((value) {
-      if (value.statusCode == 404 || value.statusCode == 410) {
-        throw Exception('Not found');
-      }
-      if (value.statusCode == 409) {
-        throw Exception('Version Error');
-      }
-      return value.body as int;
-    }).catchError((err) {
-      throw err;
-    });
+    return http.delete(uri)
+      .then((res) {
+        if (res.statusCode == 404 || res.statusCode == 410) {
+          throw Exception('Not found');
+        }
+        if (res.statusCode == 409) {
+          throw Exception('Version Error');
+        }
+        return res.body as int;
+      })
+      .catchError((err) {
+        throw err;
+      });
   }
 }
 
 class WebClient<T, ID> extends GenericClient<T, ID, ResultInfo<T>> {
   WebClient({
-    required String serviceUrl,
-    required T Function(Map<String, dynamic>) createObjectFromJson,
-    required String Function(T) getId,
+    required super.serviceUrl,
+    required super.fromJson,
+    required super.getId,
   }) : super(
-          serviceUrl: serviceUrl,
-          createObjectFromJson: createObjectFromJson,
-          createResultInfoFromJson: (json) => ResultInfo(
-              json['status'],
-              (json['errors'] as List<dynamic>?)
-                  ?.map((e) => ErrorMessage.fromJson(e as Map<String, dynamic>))
-                  .toList(),
-              createObjectFromJson(json['value']),
-              json['message']),
-          getId: getId,
+          createResult: (value) {
+            if (int.tryParse(value) != null) {
+              return ResultInfo(status: value as int);
+            } else {
+              return ResultInfo(value: fromJson(jsonDecode(value)));
+            }
+          },
         );
 }
 
 class SearchClient<T, S extends Filter> {
   String serviceUrl;
-  T Function(Map<String, dynamic> json) createObjectFromJson;
+  T Function(Map<String, dynamic> json) fromJson;
 
-  SearchClient({required this.serviceUrl, required this.createObjectFromJson});
+  SearchClient({required this.serviceUrl, required this.fromJson});
 
   String makeUrlParameters(Map<String, dynamic> filter) {
     List<String> params = [];
@@ -168,7 +155,7 @@ class SearchClient<T, S extends Filter> {
     return SearchResult(
       json['total'] as int,
       (json['list'] as List<dynamic>)
-          .map((e) => this.createObjectFromJson(e as Map<String, dynamic>))
+          .map((e) => this.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['nextPageToken'] as String?,
       json['last'] as bool?,
@@ -206,26 +193,19 @@ class SearchClient<T, S extends Filter> {
   }
 }
 
-class Client<T, ID, R extends ResultInfo<T>, S extends Filter>
+class GenericSearchClient<T, ID, R, S extends Filter>
     extends SearchClient<T, S> {
   late GenericClient<T, ID, R> genericClient;
-  Client({
+  GenericSearchClient({
     required String serviceUrl,
-    required T Function(Map<String, dynamic>) createObjectFromJson,
+    required T Function(Map<String, dynamic>) fromJson,
+    required R Function(String) createResult,
     required String Function(T) getId,
-  }) : super(
-            serviceUrl: serviceUrl,
-            createObjectFromJson: createObjectFromJson) {
+  }) : super(serviceUrl: serviceUrl, fromJson: fromJson) {
     this.genericClient = GenericClient(
       serviceUrl: serviceUrl,
-      createObjectFromJson: createObjectFromJson,
-      createResultInfoFromJson: (json) => ResultInfo(
-          json['status'] as num,
-          (json['errors'] as List<dynamic>?)
-              ?.map((e) => ErrorMessage.fromJson(e as Map<String, dynamic>))
-              .toList(),
-          createObjectFromJson(json['value']),
-          json['message']),
+      fromJson: fromJson,
+      createResult: createResult,
       getId: getId,
     );
   }
@@ -253,4 +233,20 @@ class Client<T, ID, R extends ResultInfo<T>, S extends Filter>
   Future<num> delete(ID id) {
     return this.genericClient.delete(id);
   }
+}
+
+class Client<T, ID, F extends Filter> extends GenericSearchClient<T, ID, ResultInfo<T>, F> {
+  Client({
+    required super.serviceUrl, 
+    required super.fromJson, 
+    required super.getId,
+  }) : super (
+          createResult: (value) {
+            if (int.tryParse(value) != null) {
+              return ResultInfo(status: value as int);
+            } else {
+              return ResultInfo(value: fromJson(jsonDecode(value)));
+            }
+          },
+  );
 }

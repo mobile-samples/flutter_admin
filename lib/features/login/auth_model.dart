@@ -15,14 +15,14 @@ class AuthInfo {
   String tokenExpiredTime;
 
   factory AuthInfo.fromJson(Map<String, dynamic> json) => AuthInfo(
-      json['username'],
-      json['displayName'],
-      json['id'],
+      json['username'] ?? '',
+      json['displayName'] ?? '',
+      json['id'] ?? '',
       List<Privileges>.from(json['privileges'] == null
           ? []
           : json['privileges'].map((x) => Privileges.fromJson(x))),
-      json['token'],
-      json['tokenExpiredTime']);
+      json['token'] ?? '',
+      json['tokenExpiredTime'] ?? '');
 }
 
 class Privileges {
@@ -47,7 +47,7 @@ class Privileges {
         List<Privileges>.from(json['children'] == null
             ? []
             : json['children'].map((x) => Privileges.fromJson(x))),
-        json['icon'] != null ? json['icon'] : '',
+        json['icon'] ?? '',
         json['id'],
         json['name'],
         json['path'],

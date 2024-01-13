@@ -3,13 +3,13 @@ import 'package:flutter_admin/utils/general_method.dart';
 
 class EditRoleForm extends StatefulWidget {
   const EditRoleForm({
-    Key? key,
+    super.key,
     required this.roleId,
     required this.roleNameController,
     required this.remarkController,
     required this.status,
     required this.handleStatus,
-  }) : super(key: key);
+  });
 
   final String roleId;
   final TextEditingController roleNameController;
@@ -17,7 +17,7 @@ class EditRoleForm extends StatefulWidget {
   final String status;
   final Function handleStatus;
   @override
-  _EditRoleFormState createState() => _EditRoleFormState();
+  State<EditRoleForm> createState() => _EditRoleFormState();
 }
 
 class _EditRoleFormState extends State<EditRoleForm> {
@@ -28,8 +28,9 @@ class _EditRoleFormState extends State<EditRoleForm> {
 
   @override
   Widget build(BuildContext context) {
+    final validateForm = ValidateForm(context: context);
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 5, 20, 10),
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,10 +38,10 @@ class _EditRoleFormState extends State<EditRoleForm> {
             enabled: false,
             decoration: InputDecoration(
               labelText: '*Role Id',
-              labelStyle: TextStyle(color: Colors.black, fontSize: 22),
+              labelStyle: const TextStyle(color: Colors.black, fontSize: 22),
               hintText: widget.roleId,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              focusedBorder: UnderlineInputBorder(
+              focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.green),
               ),
             ),
@@ -50,13 +51,13 @@ class _EditRoleFormState extends State<EditRoleForm> {
             enableSuggestions: false,
             autovalidateMode: AutovalidateMode.always,
             autocorrect: false,
-            validator: ValidateForm.validator,
-            style: TextStyle(
+            validator: validateForm.validator,
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.black,
               decoration: TextDecoration.none,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Role Name',
               labelStyle: TextStyle(color: Colors.black, fontSize: 22),
               hintText: 'Role Name',
@@ -71,13 +72,13 @@ class _EditRoleFormState extends State<EditRoleForm> {
             enableSuggestions: false,
             autocorrect: false,
             autovalidateMode: AutovalidateMode.always,
-            validator: ValidateForm.validator,
-            style: TextStyle(
+            validator: validateForm.validator,
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.black,
               decoration: TextDecoration.none,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Remark',
               labelStyle: TextStyle(color: Colors.black, fontSize: 22),
               hintText: 'Remark',
@@ -90,7 +91,7 @@ class _EditRoleFormState extends State<EditRoleForm> {
           ),
           Container(
             padding: const EdgeInsets.only(top: 10),
-            child: Text(
+            child: const Text(
               'Status',
               style: TextStyle(color: Colors.black, fontSize: 18),
             ),
@@ -100,7 +101,7 @@ class _EditRoleFormState extends State<EditRoleForm> {
               Checkbox(
                 checkColor: Colors.lightGreen,
                 activeColor: Colors.lightGreen,
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
                 value: widget.status == 'A' ? true : false,
                 onChanged: (value) {
                   if (value == true) {
@@ -108,18 +109,18 @@ class _EditRoleFormState extends State<EditRoleForm> {
                   }
                 },
               ),
-              Text('Active', style: TextStyle(fontSize: 16)),
+              const Text('Active', style: TextStyle(fontSize: 16)),
               Checkbox(
                   checkColor: Colors.lightGreen,
                   activeColor: Colors.lightGreen,
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                   value: widget.status == 'I' ? true : false,
                   onChanged: (value) {
                     if (value == true) {
                       widget.handleStatus('I');
                     }
                   }),
-              Text(
+              const Text(
                 'Inactive',
                 style: TextStyle(fontSize: 16),
               ),

@@ -6,12 +6,12 @@ import 'view_user_form.dart';
 
 class ViewUserScreen extends StatefulWidget {
   const ViewUserScreen({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
   final User user;
   @override
-  _ViewUserScreenState createState() => _ViewUserScreenState();
+  State<ViewUserScreen> createState() => _ViewUserScreenState();
 }
 
 class _ViewUserScreenState extends State<ViewUserScreen> {

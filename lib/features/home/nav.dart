@@ -4,10 +4,11 @@ import 'package:flutter_admin/features/home/home_provider.dart';
 import 'package:flutter_admin/features/home/home.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({Key? key, required this.authInfo}) : super(key: key);
+  const Navbar({super.key, required this.authInfo});
   final AuthInfo authInfo;
+
   @override
-  _NavbarState createState() => _NavbarState();
+  State<Navbar> createState() => _NavbarState();
 }
 
 class _NavbarState extends State<Navbar> {
@@ -19,7 +20,7 @@ class _NavbarState extends State<Navbar> {
 
   final List<Widget> screens = [
     const Scaffold(body: Center(child: Text('Search'))),
-    HomeScreen(),
+    const HomeScreen(),
     const Scaffold(body: Center(child: Text('Account'))),
   ];
 
@@ -30,7 +31,7 @@ class _NavbarState extends State<Navbar> {
         backgroundColor: Colors.green[400],
         leading: Builder(
           builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
               onPressed: () => Scaffold.of(context).openDrawer()),
         ),
       ),
@@ -54,9 +55,7 @@ class _NavbarState extends State<Navbar> {
         selectedFontSize: 10.0,
         unselectedFontSize: 10.0,
         currentIndex: selectedIndex,
-        onTap: (i) => setState(() => {
-              selectedIndex = i,
-            }),
+        onTap: (i) => setState(() => selectedIndex = i,),
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.search),
@@ -72,12 +71,12 @@ class _NavbarState extends State<Navbar> {
               label: ''),
         ],
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text('Drawer'),
+              Text('Drawer'),
             ],
           ),
         ),

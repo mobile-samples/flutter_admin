@@ -1,9 +1,7 @@
 {
   "title": "Hello",
-  "@title": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "job_list_title": {
-    "description": "Job list title"
-  }
+  "userManagementTitle": "User Management",
+  "notEmptyMessage": "This Field Cannot Be Empty",
+  "invalidEmailMessage": "Invalid email",
+  "invalidPhoneNumberMessage": "Invalid Phone Number"
 }

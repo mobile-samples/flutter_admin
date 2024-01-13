@@ -5,7 +5,8 @@ import 'package:flutter_admin/features/user/user.dart';
 import 'package:flutter_admin/features/role/role.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
+  
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }

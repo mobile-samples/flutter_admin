@@ -6,10 +6,10 @@ import 'edit_user_form.dart';
 
 class EditUserScreen extends StatefulWidget {
   const EditUserScreen({
-    Key? key,
+    super.key,
     required this.user,
     required this.handleChangeUser,
-  }) : super(key: key);
+  });
   final User user;
   final Function handleChangeUser;
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/common/appbar.dart';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
-import 'package:flutter_admin/common/state/search_state.dart';
+import 'package:flutter_admin/common/client/search_state.dart';
 import 'package:flutter_admin/features/role/role_model.dart';
 import 'package:flutter_admin/features/role/widgets/edit_role.dart';
 import 'package:flutter_admin/features/role/widgets/pagination.dart';
@@ -12,9 +12,7 @@ import 'package:flutter_admin/features/role/role_service.dart';
 import 'package:flutter_admin/utils/general_method.dart';
 
 class RoleScreen extends StatefulWidget {
-  const RoleScreen({
-    Key? key,
-  }) : super(key: key);
+  const RoleScreen({super.key,});
 
   @override
   State<RoleScreen> createState() => _RoleScreenState();
@@ -38,7 +36,7 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
   }
 
   @override
-  Client<Role, String, ResultInfo<Role>, RoleFilter> getService() {
+  Client<Role, String, RoleFilter> getService() {
     return RoleService.instance;
   }
 
@@ -118,7 +116,7 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
                 ),
               );
             },
-            childCount: roles.length > 0 ? roles.length : 0,
+            childCount: roles.isNotEmpty ? roles.length : 0,
           ),
         ),
         (total != 0 && total > filter.limit!)
@@ -127,7 +125,7 @@ class _RoleScreenState extends SearchState<RoleScreen, Role, RoleFilter> {
                 roleFilter: filter,
                 total: total,
               )
-            : SliverToBoxAdapter(
+            : const SliverToBoxAdapter(
                 child: SizedBox(
                   width: 0,
                   height: 0,

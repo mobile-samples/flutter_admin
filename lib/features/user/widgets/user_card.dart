@@ -3,15 +3,15 @@ import 'package:flutter_admin/features/user/user_model.dart';
 
 class UserCard extends StatelessWidget {
   const UserCard({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
   // final UserSQL user;
   final User user;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
       child: Row(
         children: [
           Expanded(
@@ -25,7 +25,7 @@ class UserCard extends StatelessWidget {
           Expanded(
             flex: 8,
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class UserCard extends StatelessWidget {
                           fontWeight: FontWeight.w400)),
                   Text(
                     user.email,
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                     maxLines: 1,
                     overflow: TextOverflow.visible,
                   )
@@ -47,7 +47,7 @@ class UserCard extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
+          const Expanded(
             flex: 1,
             child: Icon(Icons.chevron_right),
           )

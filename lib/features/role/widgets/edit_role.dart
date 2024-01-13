@@ -6,9 +6,9 @@ import 'package:flutter_admin/features/role/widgets/role_search_form.dart';
 
 class EditRoleScreen extends StatefulWidget {
   const EditRoleScreen({
-    Key? key,
+    super.key,
     required this.roleId,
-  }) : super(key: key);
+  });
   final String roleId;
 
   @override
@@ -16,7 +16,7 @@ class EditRoleScreen extends StatefulWidget {
 }
 
 class _EditRoleScreenState extends State<EditRoleScreen> {
-  final _formKey = new GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   TextEditingController searchController = TextEditingController();
 
   late String roleId = '';
@@ -61,14 +61,14 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
     });
   }
 
-  formatPrivilege(List<Privilege> privi) {
+  formatPrivilege(List<Privilege> privileges) {
     List<String> newList = [];
-    privi.forEach((e) {
-      newList.add(e.id);
-      if (e.children.isNotEmpty) {
-        newList.addAll(e.children.map((e) => e.id));
+    for (var privilege in privileges) {
+      newList.add(privilege.id);
+      if (privilege.children.isNotEmpty) {
+        newList.addAll(privilege.children.map((e) => e.id));
       }
-    });
+    }
     setState(() {
       formatPrivileges = newList;
     });
@@ -93,9 +93,9 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
       clone.addAll(searchPrivi[index].children.map((e) => e.id));
     } else {
       clone.remove(searchPrivi[index].id);
-      searchPrivi[index].children.forEach((e) {
-        clone.remove(e.id);
-      });
+      for (var child in searchPrivi[index].children) {
+        clone.remove(child.id);
+      }
     }
     setState(() {
       privilegeListByRole = clone.toSet().toList();
@@ -111,12 +111,11 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
     } else if (value == true) {
       clone.add(searchPrivi[index].children[indexChild].id);
     }
-
-    searchPrivi[index].children.forEach((e) {
-      if (clone.contains(e.id) == true) {
+    for (var child in searchPrivi[index].children) {
+      if (clone.contains(child.id) == true) {
         count++;
       }
-    });
+    }
 
     if (count > 0 && clone.contains(searchPrivi[index].id) == false) {
       clone.add(searchPrivi[index].id);
@@ -137,25 +136,24 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
         searchPrivi = privileges;
       });
     }
-    privileges.forEach((e) {
-      final checkParent = e.name
+    for (var privilege in privileges) {
+      final checkParent = privilege.name
           .replaceAll(' ', '')
           .toLowerCase()
           .indexOf(value.replaceAll(' ', '').toLowerCase());
-      final newChilds = e.children
+      final newChilds = privilege.children
           .where((e1) =>
               e1.name
                   .replaceAll(' ', '')
                   .toLowerCase()
-                  .indexOf(value.replaceAll(' ', '').toLowerCase()) !=
-              -1)
+                  .contains(value.replaceAll(' ', '').toLowerCase()))
           .toList();
-      if (checkParent != -1 || newChilds.length > 0) {
-        final Privilege newPrivi = Privilege(e.id, e.name, '', '', newChilds);
+      if (checkParent != -1 || newChilds.isNotEmpty) {
+        final Privilege newPrivi = Privilege(privilege.id, privilege.name, '', '', newChilds);
         deepClone.add(newPrivi);
       }
-    });
-
+    }
+    
     setState(() {
       searchPrivi = deepClone;
     });
@@ -168,13 +166,13 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   }
 
   void handlePressedSave() async {
-    final Role newRole = Role(
-      roleId,
-      roleNameController.text,
-      status,
-      remarkController.text,
-      privilegeListByRole,
-    );
+    // final Role newRole = Role(
+    //   roleId,
+    //   roleNameController.text,
+    //   status,
+    //   remarkController.text,
+    //   privilegeListByRole,
+    // );
     FocusScope.of(context).requestFocus(FocusNode());
     if (_formKey.currentState!.validate()) {
       // Update data
@@ -193,7 +191,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
   @override
   Widget build(BuildContext context) {
     if (loading == true) {
-      return Center(
+      return const Center(
         child: Text('loading...'),
       );
     } else {
@@ -203,24 +201,22 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
           slivers: [
             SliverAppBar(
               backgroundColor: Colors.green[400],
-              title: Text('Edit role'),
+              title: const Text('Edit role'),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      EditRoleForm(
-                        // role: role,
-                        roleId: roleId,
-                        roleNameController: roleNameController,
-                        remarkController: remarkController,
-                        status: status,
-                        handleStatus: handleStatus,
-                      ),
-                    ],
-                  ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    EditRoleForm(
+                      // role: role,
+                      roleId: roleId,
+                      roleNameController: roleNameController,
+                      remarkController: remarkController,
+                      status: status,
+                      handleStatus: handleStatus,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -237,10 +233,10 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                 final bool findPrivilege =
                     privilegeListByRole.contains(searchPrivi[index].id);
                 return Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     border: Border(bottom: BorderSide(color: Colors.black38)),
                   ),
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -256,7 +252,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                           ),
                           Text(
                             searchPrivi[index].name,
-                            style: TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 18),
                           ),
                         ],
                       ),
@@ -285,7 +281,7 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                                   searchPrivi[index]
                                       .children[indexChildren]
                                       .name,
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             );
@@ -296,20 +292,20 @@ class _EditRoleScreenState extends State<EditRoleScreen> {
                   ),
                 );
               },
-              childCount: searchPrivi.length > 0 ? searchPrivi.length : 0,
+              childCount: searchPrivi.isNotEmpty ? searchPrivi.length : 0,
             )),
             SliverToBoxAdapter(
               child: Container(
-                margin: EdgeInsets.fromLTRB(75, 10, 75, 10),
+                margin: const EdgeInsets.fromLTRB(75, 10, 75, 10),
                 child: ElevatedButton(
                   onPressed: handlePressedSave,
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Save',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),

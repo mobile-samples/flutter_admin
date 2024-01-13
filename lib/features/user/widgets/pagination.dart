@@ -3,11 +3,11 @@ import 'package:flutter_admin/features/user/user_model.dart';
 
 class PaginationButtonForUser extends StatefulWidget {
   const PaginationButtonForUser({
-    Key? key,
+    super.key,
     required this.handlePagination,
     required this.userFilter,
     required this.total,
-  }) : super(key: key);
+  });
 
   final int total;
   final UserFilter userFilter;
@@ -49,7 +49,7 @@ class _PaginationButtonForUserState extends State<PaginationButtonForUser> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5.0)),
                   color: index + 1 == widget.userFilter.page
                       ? Colors.blue
                       : Colors.white,

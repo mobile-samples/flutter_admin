@@ -6,19 +6,19 @@ import 'edit_user.dart';
 
 class ViewUserFormScreen extends StatefulWidget {
   const ViewUserFormScreen({
-    Key? key,
+    super.key,
     required this.userDetail,
     required this.handleChangeUser,
-  }) : super(key: key);
+  });
   final User userDetail;
   final Function handleChangeUser;
 
   @override
-  _ViewUserFormScreenState createState() => _ViewUserFormScreenState();
+  State<ViewUserFormScreen> createState() => _ViewUserFormScreenState();
 }
 
 class _ViewUserFormScreenState extends State<ViewUserFormScreen> {
-  final _formKey = new GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   late String title = widget.userDetail.title!;
   late String position = widget.userDetail.position!;
@@ -60,7 +60,7 @@ class _ViewUserFormScreenState extends State<ViewUserFormScreen> {
                               handleChangeUser: widget.handleChangeUser)),
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),

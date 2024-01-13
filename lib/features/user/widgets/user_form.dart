@@ -4,14 +4,14 @@ import '../user_model.dart';
 
 class UserForm extends StatefulWidget {
   const UserForm({
-    Key? key,
+    super.key,
     required this.userFilter,
     required this.userName,
     required this.displayName,
     required this.status,
     required this.handleFilters,
     required this.handleChangeStatus,
-  }) : super(key: key);
+  });
 
   final UserFilter userFilter;
   final TextEditingController userName;

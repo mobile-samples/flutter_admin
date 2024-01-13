@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/features/login/auth_model.dart';
 import 'package:flutter_admin/features/login/auth_service.dart';
 import 'package:flutter_admin/features/home/nav.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -18,30 +17,31 @@ class _LoginScreenState extends State<LoginScreen> {
   handleLogin() async {
     final String username = userNameController.value.text;
     final String password = passwordController.value.text;
-    final AuthInfo res = await APIService.instance
-        .authenticate(username: username, password: password);
-    if (res.token != '') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Navbar(
-                  authInfo: res,
-                )),
-      );
-    }
+    await APIService.instance
+        .authenticate(username: username, password: password)
+        .then((res) => {
+          if (res.token != '') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Navbar(authInfo: res,)),
+            )
+          }
+        });
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-        constraints: BoxConstraints.expand(),
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+        constraints: const BoxConstraints.expand(),
         color: Colors.white,
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 140,
               ),
               Padding(
@@ -57,9 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                 child: TextField(
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                   controller: userNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Username',
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.green),
@@ -69,10 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               TextField(
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: const TextStyle(fontSize: 16, color: Colors.black),
                 obscureText: true,
                 controller: passwordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.green),
@@ -86,14 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     Checkbox(
                       checkColor: Colors.white,
                       activeColor: Colors.lightGreen,
-                      value: this.check,
+                      value: check,
                       onChanged: (value) {
                         setState(() {
-                          this.check = value!;
+                          check = value!;
                         });
                       },
                     ),
-                    Text(
+                    const Text(
                       'Remember me',
                       style: TextStyle(fontSize: 16.0),
                     ),
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       handleLogin();
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign in',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),

@@ -3,7 +3,20 @@
   "@title": {
     "description": "The conventional newborn programmer greeting"
   },
-  "job_list_title": {
-    "description": "Job list title"
+  "userManagementTitle": "User Management",
+  "@userManagementTitle": {
+    "description": "User Management title"
+  },
+  "notEmptyMessage": "This Field Cannot Be Empty",
+  "@notEmptyMessage": {
+    "description": "Validate TextFormField cannot be empty"
+  },
+  "invalidEmailMessage": "Invalid email",
+  "@invalidEmailMessage": {
+    "description": "Validate TextFormField invalid email format"
+  },
+  "invalidPhoneNumberMessage": "Invalid Phone Number",
+  "@invalidPhoneNumberMessage": {
+    "description": "Validate TextFormField invalid phone number format"
   }
 }

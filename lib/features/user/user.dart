@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/common/client/client.dart';
 import 'package:flutter_admin/common/client/model.dart';
-import 'package:flutter_admin/common/state/search_state.dart';
-import 'package:flutter_admin/utils/general_method.dart';
+import 'package:flutter_admin/common/client/search_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'user_model.dart';
 import 'user_service.dart';
@@ -11,7 +11,7 @@ import 'widgets/user_form.dart';
 import 'widgets/view_user.dart';
 
 class UserScreen extends StatefulWidget {
-  const UserScreen({Key? key}) : super(key: key);
+  const UserScreen({super.key});
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
@@ -29,7 +29,7 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
   }
 
   @override
-  Client<User, String, ResultInfo<User>, UserFilter> getService() {
+  Client<User, String, UserFilter> getService() {
     return UserAPIService.instance;
   }
 
@@ -88,7 +88,7 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
   PreferredSizeWidget buildAppbar(BuildContext context) {
     return AppBar(
         backgroundColor: Colors.green[400],
-        title: const Text('User'),
+        title: Text(AppLocalizations.of(context)!.userManagementTitle),
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.search),
@@ -113,16 +113,12 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
                     if (searchResult.list.isNotEmpty) {
                       return GestureDetector(
                           onTap: () {
-                            final reLoadPage = Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ViewUserScreen(
                                       user: searchResult.list[index])),
                             );
-                            if (reLoadPage == null || reLoadPage == true) {
-                              search();
-                              GeneralMethod.autoScrollOnTop(_scrollController);
-                            }
                           },
                           child: UserCard(
                             user: searchResult.list[index],

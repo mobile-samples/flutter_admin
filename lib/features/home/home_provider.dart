@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/features/login/auth_model.dart';
 
 class AuthInheritedWidget extends InheritedWidget {
-  AuthInheritedWidget({required Widget child, required this.authData})
-      : super(child: child);
-
+  const AuthInheritedWidget({super.key, required super.child, required this.authData});
   final AuthInfo authData;
 
   @override

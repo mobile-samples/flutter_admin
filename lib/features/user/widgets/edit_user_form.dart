@@ -7,10 +7,10 @@ import '../user_model.dart';
 
 class EditUserFormScreen extends StatefulWidget {
   const EditUserFormScreen({
-    Key? key,
+    super.key,
     required this.userDetail,
     required this.handleClickSave,
-  }) : super(key: key);
+  });
   final User userDetail;
   final Function handleClickSave;
 
@@ -23,9 +23,9 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
   List<String> itemsTitle = ['Mr', 'Mrs', 'Ms', 'Dr'];
   List<String> itemsPosition = ['Employee', 'Manager', 'Director'];
 
-  TextEditingController _displayNameController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _emailAddressController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailAddressController = TextEditingController();
 
   late String title = widget.userDetail.title!;
   late String position = widget.userDetail.position!;
@@ -65,6 +65,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
     FocusScope.of(context).requestFocus(FocusNode());
     if (_formKey.currentState!.validate()) {
       await widget.handleClickSave(postForm);
+      if (!mounted) return;
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Successfully updated')));
       Navigator.pop(context, true);
@@ -128,9 +129,10 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final validateForm = ValidateForm(context: context);
     return SliverToBoxAdapter(
         child: Container(
-      padding: EdgeInsets.fromLTRB(20, 5, 20, 10),
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
       child: Form(
           key: _formKey,
           child:
@@ -141,7 +143,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                 labelStyle:
                     const TextStyle(color: Colors.black54, fontSize: 22),
                 hintText: widget.userDetail.userId,
-                hintStyle: TextStyle(height: 2.0),
+                hintStyle: const TextStyle(height: 2.0),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.green),
@@ -165,7 +167,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
               enableSuggestions: false,
               autocorrect: false,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: ValidateForm.validator,
+              validator: validateForm.validator,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -173,44 +175,48 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
               ),
             ),
             DropdownSearch<String>(
-              dropdownSearchDecoration: const InputDecoration(
-                labelText: 'Title',
-                labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
-                hintText: 'Please Select',
-                contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green, width: 2),
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: 'Title',
+                  labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
+                  hintText: 'Please Select',
+                  contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 2),
+                  ),
                 ),
               ),
-              mode: Mode.MENU,
+              // mode: Mode.MENU,
               items: itemsTitle,
               selectedItem: selectedTitle,
               onChanged: handleChangeTitle,
-              validator: ValidateForm.validator,
+              validator: validateForm.validator,
               autoValidateMode: AutovalidateMode.onUserInteraction,
-              showClearButton: true,
-              showSelectedItems: true,
+              clearButtonProps: const ClearButtonProps(isVisible: true),
+              // showSelectedItems: true,
             ),
             DropdownSearch<String>(
-              dropdownSearchDecoration: const InputDecoration(
-                labelText: 'Position',
-                hintText: 'Please Select',
-                labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
-                contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green, width: 2),
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: 'Position',
+                  hintText: 'Please Select',
+                  labelStyle: TextStyle(color: Colors.black54, fontSize: 22),
+                  contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 2),
+                  ),
                 ),
               ),
-              mode: Mode.MENU,
+              // mode: Mode.MENU,
               items: itemsPosition,
               selectedItem: selectedPosition,
               onChanged: handleChangePosition,
-              validator: ValidateForm.validator,
+              validator: validateForm.validator,
               autoValidateMode: AutovalidateMode.onUserInteraction,
-              showClearButton: true,
-              showSelectedItems: true,
+              clearButtonProps: const ClearButtonProps(isVisible: true),
+              // showSelectedItems: true,
             ),
             TextFormField(
               decoration: const InputDecoration(
@@ -227,7 +233,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
               enableSuggestions: false,
               autocorrect: false,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: ValidateForm.validatorForPhoneNumber,
+              validator: validateForm.validatorForPhoneNumber,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -249,7 +255,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
               enableSuggestions: false,
               autocorrect: false,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: ValidateForm.validatorForEmail,
+              validator: validateForm.validatorForEmail,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -312,7 +318,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                       Checkbox(
                         checkColor: Colors.lightGreen,
                         activeColor: Colors.lightGreen,
-                        shape: CircleBorder(),
+                        shape: const CircleBorder(),
                         value: gender == 'F' ? true : false,
                         onChanged: (bool? value) {
                           handleChangeGender(value, 'F');
@@ -322,7 +328,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                       Checkbox(
                           checkColor: Colors.lightGreen,
                           activeColor: Colors.lightGreen,
-                          shape: CircleBorder(),
+                          shape: const CircleBorder(),
                           value: gender == 'M' ? true : false,
                           onChanged: (bool? value) {
                             handleChangeGender(value, 'M');
@@ -346,7 +352,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.grey[600],
+                        backgroundColor: Colors.grey[600],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
@@ -364,7 +370,7 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                     child: ElevatedButton(
                       onPressed: handlePressSave,
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                        backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
@@ -375,8 +381,6 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
                       ),
                     ),
                   )
-
-                  /////////
                 ],
               ),
             )
