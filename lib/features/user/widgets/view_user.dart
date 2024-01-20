@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/common/widget/size.dart';
-import 'package:flutter_admin/features/user/widgets/edit_user.dart';
+import 'package:flutter_admin/features/user/widgets/edit_user_form.dart';
 
 import '../user_model.dart';
 import '../user_service.dart';
@@ -73,7 +73,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditUserScreen(
+                    builder: (context) => EditUserFormScreen(
                       user: userDetail!,
                       handleChangeUser: handleChangeUser
                     )
