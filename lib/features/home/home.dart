@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: const SizedBox(),
             title: Text(
               item.name,
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleLarge,
             ));
       });
     }
@@ -62,10 +62,27 @@ class _HomeScreenState extends State<HomeScreen> {
       leading: Icon(getIconForName(item.icon)),
       title: Text(
         item.name,
-        style: Theme.of(context).textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleLarge,
       ),
-      children: item.children.map(_buildList).toList(),
+      children: item.children.map(_buildChildren).toList(),
     );
+  }
+
+  Widget _buildChildren(Privileges item) {
+    return Builder(builder: (context) {
+      return ListTile(
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => item.id == 'user'
+                      ? const UserScreen()
+                      : const RoleScreen())),
+          leading: const SizedBox(),
+          title: Text(
+            item.name,
+            style: Theme.of(context).textTheme.titleSmall,
+          ));
+    });
   }
 
   IconData getIconForName(String iconName) {

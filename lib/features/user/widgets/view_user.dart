@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/common/widget/size.dart';
+import 'package:flutter_admin/features/user/widgets/edit_user.dart';
 
 import '../user_model.dart';
 import '../user_service.dart';
-import 'view_user_form.dart';
 
 class ViewUserScreen extends StatefulWidget {
   const ViewUserScreen({
@@ -15,7 +16,7 @@ class ViewUserScreen extends StatefulWidget {
 }
 
 class _ViewUserScreenState extends State<ViewUserScreen> {
-  late User userDetail;
+  User? userDetail;
   bool _loading = true;
 
   getUserById() async {
@@ -26,7 +27,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
     });
   }
 
-  handleChangeUser(User user) {
+   handleChangeUser(User user) {
     setState(() {
       userDetail = user;
     });
@@ -38,6 +39,22 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
     getUserById();
   }
 
+  buildTextRow(String label, String? value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        Text(
+          value ?? '',
+          style: Theme.of(context).textTheme.headlineMedium,
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading == true) {
@@ -46,16 +63,53 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
       );
     }
     return Scaffold(
-      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.green[400],
+           SliverAppBar(
             title: const Text('View user'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditUserScreen(
+                      user: userDetail!,
+                      handleChangeUser: handleChangeUser
+                    )
+                  ),
+                )
+              ),
+            ],
           ),
-          ViewUserFormScreen(
-              userDetail: userDetail, handleChangeUser: handleChangeUser),
-        ],
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTextRow('User Id', userDetail?.userId),
+                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
+                    buildTextRow('Name', userDetail?.displayName),
+                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
+                    buildTextRow(
+                      'Position', 
+                      ['Employee', 'Manager', 'Director', 'Other'].firstWhere(
+                        (e) => e.startsWith(userDetail?.position ?? 'O')
+                      ),
+                    ),
+                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
+                    buildTextRow('Telephone', userDetail?.phone),
+                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
+                    buildTextRow('Email', userDetail?.email),
+                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
+                    buildTextRow('Status', userDetail?.status == 'A' ? 'Actived' : 'Inactive'),
+                  ],
+                ),
+              ),
+            ),
+        ]
       ),
     );
   }

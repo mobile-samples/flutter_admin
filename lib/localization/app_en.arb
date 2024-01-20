@@ -18,5 +18,21 @@
   "invalidPhoneNumberMessage": "Invalid Phone Number",
   "@invalidPhoneNumberMessage": {
     "description": "Validate TextFormField invalid phone number format"
+  },
+  "signin": "Sign in",
+  "@signin": {
+    "description": "Sign in"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Username"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password"
+  },
+  "rememberMe": "Remember me",
+  "@rememberMe": {
+    "description": "Remember me"
   }
 }

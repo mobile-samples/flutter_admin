@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/common/widget/size.dart';
 import 'package:flutter_admin/features/login/auth_service.dart';
-import 'package:flutter_admin/features/home/nav.dart';
+import 'package:flutter_admin/features/dashboard.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,102 +20,69 @@ class _LoginScreenState extends State<LoginScreen> {
     final String username = userNameController.value.text;
     final String password = passwordController.value.text;
     await APIService.instance
-        .authenticate(username: username, password: password)
-        .then((res) => {
-          if (res.token != '') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Navbar(authInfo: res,)),
-            )
-          }
-        });
-    
+      .authenticate(username: username, password: password)
+      .then((res) => {
+        if (res.token != '') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Navbar(authInfo: res,)),
+          )
+        }
+      });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-        constraints: const BoxConstraints.expand(),
-        color: Colors.white,
-        child: SingleChildScrollView(
+      body: SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: Column(
-            children: <Widget>[
-              const SizedBox(
-                height: 140,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.signin,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                child: Text(
-                  'Sign in',
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.green[400],
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                child: TextField(
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
-                  controller: userNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
-                      //  when the TextFormField in focused
-                    ),
-                  ),
+              TextField(
+                controller: userNameController,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.username,
                 ),
               ),
               TextField(
-                style: const TextStyle(fontSize: 16, color: Colors.black),
                 obscureText: true,
                 controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green),
-                    //  when the TextFormField in focused
-                  ),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.password,
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Row(children: <Widget>[
-                    Checkbox(
-                      checkColor: Colors.white,
-                      activeColor: Colors.lightGreen,
-                      value: check,
-                      onChanged: (value) {
-                        setState(() {
-                          check = value!;
-                        });
-                      },
-                    ),
-                    const Text(
-                      'Remember me',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ])),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      handleLogin();
-                    },
-                    child: const Text(
-                      'Sign in',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
+              AppSizedWidget.spaceHeight(10),
+              Row(
+                children: [
+                  Checkbox(
+                    activeColor: Colors.lightGreen,
+                    value: check,
+                    onChanged: (value) => setState(() {check = value!;})
                   ),
+                  Text(
+                    AppLocalizations.of(context)!.rememberMe,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ]
+              ),
+              AppSizedWidget.spaceHeight(30),
+              ElevatedButton(
+                onPressed: () {
+                  handleLogin();
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.signin,
+                  // style: Theme.of(context).textTheme.titleMedium,
                 ),
-              )
+              ),
             ],
           ),
         ),

@@ -87,15 +87,14 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
   @override
   PreferredSizeWidget buildAppbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.green[400],
-        title: Text(AppLocalizations.of(context)!.userManagementTitle),
-        actions: <Widget>[
-          IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                showSearchModal(context);
-              }),
-        ]);
+      title: Text(AppLocalizations.of(context)!.userManagementTitle),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () => showSearchModal(context)
+        ),
+      ]
+    );
   }
 
   @override
@@ -111,18 +110,16 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     if (searchResult.list.isNotEmpty) {
-                      return GestureDetector(
-                          onTap: () {
+                      return UserCard(
+                            user: searchResult.list[index],
+                            onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ViewUserScreen(
-                                      user: searchResult.list[index])),
-                            );
-                          },
-                          child: UserCard(
-                            user: searchResult.list[index],
-                          ));
+                                builder: (context) => ViewUserScreen(
+                                  user: searchResult.list[index])),
+                            );  
+                            });
                     } else {
                       return Container();
                     }

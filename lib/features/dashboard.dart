@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_admin/features/login/auth_model.dart';
 import 'package:flutter_admin/features/home/home_provider.dart';
 import 'package:flutter_admin/features/home/home.dart';
+import 'package:flutter_admin/features/role/role.dart';
+import 'package:flutter_admin/features/user/user.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key, required this.authInfo});
@@ -12,27 +14,26 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  int selectedIndex = 1;
+  int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
   }
 
   final List<Widget> screens = [
-    const Scaffold(body: Center(child: Text('Search'))),
     const HomeScreen(),
-    const Scaffold(body: Center(child: Text('Account'))),
+    const RoleScreen(),
+    const UserScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[400],
         leading: Builder(
           builder: (context) => IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () => Scaffold.of(context).openDrawer()),
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer()),
         ),
       ),
       body: AuthInheritedWidget(
@@ -58,8 +59,8 @@ class _NavbarState extends State<Navbar> {
         onTap: (i) => setState(() => selectedIndex = i,),
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              activeIcon: Icon(Icons.search),
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
               label: ''),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
