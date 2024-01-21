@@ -35,7 +35,8 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
   late String title = userDetail.title!;
   late String position = userDetail.position!;
   late String gender = userDetail.gender!;
-  late String status = userDetail.status == 'A' ? Status.active : Status.inactive;
+  late String status =
+      userDetail.status == 'A' ? Status.active : Status.inactive;
 
   late String? selectedTitle =
       title.isNotEmpty ? itemsTitle[itemsTitle.indexOf(title)] : null;
@@ -81,11 +82,10 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
         });
         widget.handleChangeUser(postForm);
         if (!mounted) return;
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Successfully updated')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully updated')));
         Navigator.pop(context, true);
       }
-      
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in the fields above')),
@@ -154,196 +154,192 @@ class _EditUserFormScreenState extends State<EditUserFormScreen> {
     }
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.green[400],
-            title: const Text('Edit user'),
-          ),
-          SliverToBoxAdapter(
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          backgroundColor: Colors.green[400],
+          title: const Text('Edit user'),
+        ),
+        SliverToBoxAdapter(
             child: Container(
-            padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-            child: Form(
+          padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+          child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, 
-                children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'User Id*',
-                      hintText: userDetail.userId,
-                    ),
-                    enabled: false,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Display Name*',
-                      hintText: 'Display Name',
-                    ),
-                    controller: _displayNameController,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: validateForm.validator,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  DropdownSearch<String>(
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: 'Title',
-                        hintText: 'Please Select',
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'User Id*',
+                        hintText: userDetail.userId,
                       ),
+                      enabled: false,
                     ),
-                    items: itemsTitle,
-                    selectedItem: selectedTitle,
-                    onChanged: handleChangeTitle,
-                    validator: validateForm.validator,
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                    clearButtonProps: const ClearButtonProps(isVisible: true),
-                  ),
-                  DropdownSearch<String>(
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: 'Position',
-                        hintText: 'Please Select',
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Display Name*',
+                        hintText: 'Display Name',
                       ),
+                      controller: _displayNameController,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: validateForm.validator,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
-                    items: itemsPosition,
-                    selectedItem: selectedPosition,
-                    onChanged: handleChangePosition,
-                    validator: validateForm.validator,
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                    clearButtonProps: const ClearButtonProps(isVisible: true),
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Telephone',
-                      hintText: 'Telephone',
-                    ),
-                    controller: _phoneNumberController,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: validateForm.validatorForPhoneNumber,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Email',
-                    ),
-                    controller: _emailAddressController,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: validateForm.validatorForEmail,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  AppSizedWidget.spaceHeight(10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Status',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: RadioListTile<String>(
-                              title: const Text('Yes'),
-                              activeColor: Colors.lightGreen,
-                              value: Status.active,
-                              groupValue: status,
-                              onChanged: (value) {
-                                setState(() {
-                                  status = value!;
-                                });
-                              },
-                            ),
-                          ),
-                          Flexible(
-                            child: RadioListTile<String>(
-                              title: const Text('No'),
-                              activeColor: Colors.lightGreen,
-                              value: Status.inactive,
-                              groupValue: status,
-                              onChanged: (value) {
-                                setState(() {
-                                  status = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  AppSizedWidget.spaceHeight(10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gender',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: RadioListTile<String>(
-                              title: const Text('Female'),
-                              activeColor: Colors.lightGreen,
-                              value: "F",
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value!;
-                                });
-                              },
-                            ),
-                          ),
-                          Flexible(
-                            child: RadioListTile<String>(
-                              title: const Text('Male'),
-                              activeColor: Colors.lightGreen,
-                              value: 'M',
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  AppSizedWidget.spaceHeight(20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () =>Navigator.pop(context),
-                          child: const Text('Cancel'),
+                    DropdownSearch<String>(
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: 'Title',
+                          hintText: 'Please Select',
                         ),
                       ),
-                      AppSizedWidget.spaceWidth(10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: handlePressSave,
-                          child: const Text('Save'),
+                      items: itemsTitle,
+                      selectedItem: selectedTitle,
+                      onChanged: handleChangeTitle,
+                      validator: validateForm.validator,
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      clearButtonProps: const ClearButtonProps(isVisible: true),
+                    ),
+                    DropdownSearch<String>(
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: 'Position',
+                          hintText: 'Please Select',
                         ),
-                      )
-                    ],
-                  ),
-                ]
-              )
-            ),
-          )
-        ),
+                      ),
+                      items: itemsPosition,
+                      selectedItem: selectedPosition,
+                      onChanged: handleChangePosition,
+                      validator: validateForm.validator,
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      clearButtonProps: const ClearButtonProps(isVisible: true),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Telephone',
+                        hintText: 'Telephone',
+                      ),
+                      controller: _phoneNumberController,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: validateForm.validatorForPhoneNumber,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Email',
+                      ),
+                      controller: _emailAddressController,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: validateForm.validatorForEmail,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    spaceHeight(10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Status',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: RadioListTile<String>(
+                                title: const Text('Yes'),
+                                activeColor: Colors.lightGreen,
+                                value: Status.active,
+                                groupValue: status,
+                                onChanged: (value) {
+                                  setState(() {
+                                    status = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              child: RadioListTile<String>(
+                                title: const Text('No'),
+                                activeColor: Colors.lightGreen,
+                                value: Status.inactive,
+                                groupValue: status,
+                                onChanged: (value) {
+                                  setState(() {
+                                    status = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    spaceHeight(10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Gender',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: RadioListTile<String>(
+                                title: const Text('Female'),
+                                activeColor: Colors.lightGreen,
+                                value: "F",
+                                groupValue: gender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    gender = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              child: RadioListTile<String>(
+                                title: const Text('Male'),
+                                activeColor: Colors.lightGreen,
+                                value: 'M',
+                                groupValue: gender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    gender = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    spaceHeight(20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                        ),
+                        spaceWidth(10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: handlePressSave,
+                            child: const Text('Save'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ])),
+        )),
       ]),
     );
   }

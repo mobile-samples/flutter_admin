@@ -21,34 +21,35 @@ class UserCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: (user.imageURL == null || user.imageURL!.isEmpty)
-                      ? null
-                      : NetworkImage(user.imageURL.toString()),
+                  backgroundImage:
+                      (user.imageURL == null || user.imageURL!.isEmpty)
+                          ? null
+                          : NetworkImage(user.imageURL.toString()),
                 ),
-                AppSizedWidget.spaceWidth(10),
+                spaceWidth(10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       user.displayName,
-                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: user.status == 'A'
-                                  ? Colors.teal[700]
-                                  : Colors.grey,
-                        ),
-                      ),
-                      Text(
-                        user.email,
-                        style: Theme.of(context).textTheme.titleSmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.visible,
-                      )
-                    ],
-                  ),
-                ],
-          ),
-          const Icon(Icons.chevron_right),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: user.status == 'A'
+                                ? Colors.teal[700]
+                                : Colors.grey,
+                          ),
+                    ),
+                    Text(
+                      user.email,
+                      style: Theme.of(context).textTheme.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                  ],
+                ),
+              ],
+            ),
+            const Icon(Icons.chevron_right),
           ],
         ),
       ),

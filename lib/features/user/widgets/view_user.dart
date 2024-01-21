@@ -27,7 +27,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
     });
   }
 
-   handleChangeUser(User user) {
+  handleChangeUser(User user) {
     setState(() {
       userDetail = user;
     });
@@ -63,54 +63,49 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
       );
     }
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-           SliverAppBar(
-            title: const Text('View user'),
-            actions: [
-              IconButton(
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          title: const Text('View user'),
+          actions: [
+            IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditUserFormScreen(
-                      user: userDetail!,
-                      handleChangeUser: handleChangeUser
-                    )
-                  ),
-                )
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildTextRow('User Id', userDetail?.userId),
-                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
-                    buildTextRow('Name', userDetail?.displayName),
-                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
-                    buildTextRow(
-                      'Position', 
-                      ['Employee', 'Manager', 'Director', 'Other'].firstWhere(
-                        (e) => e.startsWith(userDetail?.position ?? 'O')
-                      ),
-                    ),
-                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
-                    buildTextRow('Telephone', userDetail?.phone),
-                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
-                    buildTextRow('Email', userDetail?.email),
-                    AppSizedWidget.spaceHeightWithChild(20, const Divider()),
-                    buildTextRow('Status', userDetail?.status == 'A' ? 'Actived' : 'Inactive'),
-                  ],
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditUserFormScreen(
+                              user: userDetail!,
+                              handleChangeUser: handleChangeUser)),
+                    )),
+          ],
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildTextRow('User Id', userDetail?.userId),
+                spaceHeightWithChild(20, const Divider()),
+                buildTextRow('Name', userDetail?.displayName),
+                spaceHeightWithChild(20, const Divider()),
+                buildTextRow(
+                  'Position',
+                  ['Employee', 'Manager', 'Director', 'Other'].firstWhere(
+                      (e) => e.startsWith(userDetail?.position ?? 'O')),
                 ),
-              ),
+                spaceHeightWithChild(20, const Divider()),
+                buildTextRow('Telephone', userDetail?.phone),
+                spaceHeightWithChild(20, const Divider()),
+                buildTextRow('Email', userDetail?.email),
+                spaceHeightWithChild(20, const Divider()),
+                buildTextRow('Status',
+                    userDetail?.status == 'A' ? 'Actived' : 'Inactive'),
+              ],
             ),
-        ]
-      ),
+          ),
+        ),
+      ]),
     );
   }
 }

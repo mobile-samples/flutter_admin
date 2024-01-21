@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AppSizedWidget {
-  static spaceHeight(double size) {
-    return SizedBox(height: size);
-  } 
+spaceHeight(double size) {
+  return SizedBox(height: size);
+}
 
-  static spaceHeightWithChild(double size, Widget? child) {
-    return SizedBox(
-      height: size,
-      child: child
-    );
-  } 
+spaceHeightWithChild(double size, Widget? child) {
+  return SizedBox(height: size, child: child);
+}
 
-  static spaceWidth(double size) {
-    return SizedBox(width: size);
-  } 
+spaceWidth(double size) {
+  return SizedBox(width: size);
 }

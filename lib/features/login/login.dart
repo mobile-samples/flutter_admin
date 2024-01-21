@@ -20,16 +20,19 @@ class _LoginScreenState extends State<LoginScreen> {
     final String username = userNameController.value.text;
     final String password = passwordController.value.text;
     await APIService.instance
-      .authenticate(username: username, password: password)
-      .then((res) => {
-        if (res.token != '') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Navbar(authInfo: res,)),
-          )
-        }
-      });
+        .authenticate(username: username, password: password)
+        .then((res) => {
+              if (res.token != '')
+                {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Navbar(
+                              authInfo: res,
+                            )),
+                  )
+                }
+            });
   }
 
   @override
@@ -59,21 +62,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: AppLocalizations.of(context)!.password,
                 ),
               ),
-              AppSizedWidget.spaceHeight(10),
-              Row(
-                children: [
-                  Checkbox(
+              spaceHeight(10),
+              Row(children: [
+                Checkbox(
                     activeColor: Colors.lightGreen,
                     value: check,
-                    onChanged: (value) => setState(() {check = value!;})
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.rememberMe,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ]
-              ),
-              AppSizedWidget.spaceHeight(30),
+                    onChanged: (value) => setState(() {
+                          check = value!;
+                        })),
+                Text(
+                  AppLocalizations.of(context)!.rememberMe,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ]),
+              spaceHeight(30),
               ElevatedButton(
                 onPressed: () {
                   handleLogin();
