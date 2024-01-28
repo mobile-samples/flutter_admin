@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/features/login/auth_model.dart';
-import 'package:flutter_admin/features/home/home_provider.dart';
+import 'package:flutter_admin/features/auth/auth_model.dart';
 import 'package:flutter_admin/features/home/home.dart';
-import 'package:flutter_admin/features/role/role.dart';
-import 'package:flutter_admin/features/user/user.dart';
+import 'package:flutter_admin/features/role/widgets/role_list.dart';
+import 'package:flutter_admin/features/user/widgets/user_list.dart';
 
-class Navbar extends StatefulWidget {
-  const Navbar({super.key, required this.authInfo});
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key, required this.authInfo});
   final AuthInfo authInfo;
 
   @override
-  State<Navbar> createState() => _NavbarState();
+  State<Dashboard> createState() => _NavbarState();
 }
 
-class _NavbarState extends State<Navbar> {
+class _NavbarState extends State<Dashboard> {
   int selectedIndex = 0;
   @override
   void initState() {
@@ -26,37 +25,31 @@ class _NavbarState extends State<Navbar> {
     const UserScreen(),
   ];
 
+  void _onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer()),
+              icon: const Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openDrawer()),
         ),
       ),
-      body: AuthInheritedWidget(
-        authData: widget.authInfo,
-        child: Stack(
-          children: screens
-              .asMap()
-              .map((i, screen) => MapEntry(
-                  i,
-                  Offstage(
-                    offstage: selectedIndex != i,
-                    child: screen,
-                  )))
-              .values
-              .toList(),
-        ),
+      body: Center(
+        child: screens.elementAt(selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 10.0,
         unselectedFontSize: 10.0,
         currentIndex: selectedIndex,
-        onTap: (i) => setState(() => selectedIndex = i,),
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),

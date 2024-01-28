@@ -1,19 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/features/home/home_provider.dart';
-import 'package:flutter_admin/features/login/auth_model.dart';
-import 'package:flutter_admin/features/user/user.dart';
-import 'package:flutter_admin/features/role/role.dart';
+import 'package:flutter_admin/features/auth/auth_model.dart';
+import 'package:flutter_admin/features/user/widgets/user_list.dart';
+import 'package:flutter_admin/features/role/widgets/role_list.dart';
+import 'package:flutter_admin/utils/auth_storage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AuthInfo authInfo;
-  List<Privileges> data = [];
+  List<Privileges> privileges = [];
 
   @override
   void initState() {
@@ -27,24 +28,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getData() async {
-    authInfo = AuthInheritedWidget.of(context)!.authData;
-    setState(() {
-      data = authInfo.privileges;
+    AuthStorage.getInfo('user').then((value) {
+      AuthInfo authInfo = AuthInfo.fromJson(jsonDecode(value));
+      setState(() {
+        privileges = authInfo.privileges;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (BuildContext context, int index) => _buildList(data[index]),
+      itemCount: privileges.length,
+      itemBuilder: (BuildContext context, int index) =>
+          _buildList(privileges[index]),
     );
   }
 
   Widget _buildList(Privileges item) {
     if (item.children.isEmpty) {
       return Builder(builder: (context) {
-        return ListTile(
+        return Material(
+          child: ListTile(
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -55,33 +60,37 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text(
               item.name,
               style: Theme.of(context).textTheme.titleLarge,
-            ));
+            ),
+          ),
+        );
       });
     }
-    return ExpansionTile(
+    return Material(
+        child: ExpansionTile(
       leading: Icon(getIconForName(item.icon)),
       title: Text(
         item.name,
         style: Theme.of(context).textTheme.titleLarge,
       ),
       children: item.children.map(_buildChildren).toList(),
-    );
+    ));
   }
 
   Widget _buildChildren(Privileges item) {
     return Builder(builder: (context) {
       return ListTile(
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => item.id == 'user'
-                      ? const UserScreen()
-                      : const RoleScreen())),
-          leading: const SizedBox(),
-          title: Text(
-            item.name,
-            style: Theme.of(context).textTheme.titleSmall,
-          ));
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => item.id == 'user'
+                    ? const UserScreen()
+                    : const RoleScreen())),
+        leading: const SizedBox(),
+        title: Text(
+          item.name,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+      );
     });
   }
 

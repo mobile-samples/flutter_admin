@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'model.dart';
 
@@ -11,33 +10,29 @@ abstract class ViewClient<T, ID> {
 
   Future<List<T>> all() {
     final uri = Uri.parse(this.serviceUrl);
-    return http.get(uri)
-      .then((res) {
-        if (res.statusCode == 200) {
-          var jsonList = jsonDecode(res.body) as List;
-          return jsonList.map<T>((json) => fromJson(json)).toList();
-        } else {
-          throw Exception('Failed to load all');
-        }
-      })
-      .catchError((err) {
-        throw Exception('Fail to get all');
-      });
+    return http.get(uri).then((res) {
+      if (res.statusCode == 200) {
+        var jsonList = jsonDecode(res.body) as List;
+        return jsonList.map<T>((json) => fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load all');
+      }
+    }).catchError((err) {
+      throw Exception('Fail to get all');
+    });
   }
 
   Future<T> load(ID id) async {
     final uri = Uri.parse('$serviceUrl/$id');
-    return http.get(uri)
-      .then((res) {
-        if (res.statusCode == 200) {
-          return fromJson(jsonDecode(res.body));
-        } else {
-          throw Exception('Failed to load by id');
-        }
-      })
-      .catchError((err) {
-        throw err;
-      });
+    return http.get(uri).then((res) {
+      if (res.statusCode == 200) {
+        return fromJson(jsonDecode(res.body));
+      } else {
+        throw Exception('Failed to load by id');
+      }
+    }).catchError((err) {
+      throw err;
+    });
   }
 }
 
@@ -54,70 +49,62 @@ class GenericClient<T, ID, R> extends ViewClient<T, ID> {
 
   Future<R> insert(T object) async {
     final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
-    return http.post(uri, body: jsonEncode(object))
-      .then((res) {
-        if (res.statusCode == 404 || res.statusCode == 410) {
-          throw Exception('Not found');
-        }
-        if (res.statusCode == 409) {
-          throw Exception('Version Error');
-        }
-        return this.createResult(res.body);
-      })
-      .catchError((err) {
-        throw err;
-      });
+    return http.post(uri, body: jsonEncode(object)).then((res) {
+      if (res.statusCode == 404 || res.statusCode == 410) {
+        throw Exception('Not found');
+      }
+      if (res.statusCode == 409) {
+        throw Exception('Version Error');
+      }
+      return this.createResult(res.body);
+    }).catchError((err) {
+      throw err;
+    });
   }
 
   Future<R> update(T object) async {
     final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
-    return http.put(uri, body: jsonEncode(object))
-      .then((res) {
-        if (res.statusCode == 404 || res.statusCode == 410) {
-          throw Exception('Not found');
-        }
-        if (res.statusCode == 409) {
-          throw Exception('Version Error');
-        }
-        return this.createResult(res.body);
-      })
-      .catchError((err) {
-        throw err;
-      });
+    return http.put(uri, body: jsonEncode(object)).then((res) {
+      if (res.statusCode == 404 || res.statusCode == 410) {
+        throw Exception('Not found');
+      }
+      if (res.statusCode == 409) {
+        throw Exception('Version Error');
+      }
+      return this.createResult(res.body);
+    }).catchError((err) {
+      throw err;
+    });
   }
 
   Future<R> patch(T object) async {
     final uri = Uri.parse('$serviceUrl/${this.getId(object)}');
-    return http.patch(uri, body: jsonEncode(object))
-      .then((res) {
-        if (res.statusCode == 404 || res.statusCode == 410) {
-          throw Exception('Not found');
-        }
-        if (res.statusCode == 409) {
-          throw Exception('Version Error');
-        }
-        return this.createResult(res.body);
-      })
-      .catchError((err) {
-        throw err;
-      });
+    return http.patch(uri, body: jsonEncode(object)).then((res) {
+      if (res.statusCode == 404 || res.statusCode == 410) {
+        throw Exception('Not found');
+      }
+      if (res.statusCode == 409) {
+        throw Exception('Version Error');
+      }
+      return this.createResult(res.body);
+    }).catchError((err) {
+      throw err;
+    });
   }
 
   Future<num> delete(ID id) async {
     final uri = Uri.parse('$serviceUrl/$id');
-    return http.delete(uri)
-      .then((res) {
-        if (res.statusCode == 404 || res.statusCode == 410) {
-          throw Exception('Not found');
-        }
-        if (res.statusCode == 409) {
-          throw Exception('Version Error');
-        }
-        return res.body as int;
-      })
-      .catchError((err) {
-        throw err;
-      });
+    return http.delete(uri).then((res) {
+      if (res.statusCode == 404 || res.statusCode == 410) {
+        throw Exception('Not found');
+      }
+      if (res.statusCode == 409) {
+        throw Exception('Version Error');
+      }
+      return res.body as int;
+    }).catchError((err) {
+      throw err;
+    });
   }
 }
 
@@ -236,12 +223,13 @@ class GenericSearchClient<T, ID, R, S extends Filter>
   }
 }
 
-class Client<T, ID, F extends Filter> extends GenericSearchClient<T, ID, ResultInfo<T>, F> {
+class Client<T, ID, F extends Filter>
+    extends GenericSearchClient<T, ID, ResultInfo<T>, F> {
   Client({
-    required super.serviceUrl, 
-    required super.fromJson, 
+    required super.serviceUrl,
+    required super.fromJson,
     required super.getId,
-  }) : super (
+  }) : super(
           createResult: (value) {
             if (int.tryParse(value) != null) {
               return ResultInfo(status: value as int);
@@ -249,5 +237,5 @@ class Client<T, ID, F extends Filter> extends GenericSearchClient<T, ID, ResultI
               return ResultInfo(value: fromJson(jsonDecode(value)));
             }
           },
-  );
+        );
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/common/widget/size.dart';
-import 'package:flutter_admin/features/login/auth_service.dart';
+import 'package:flutter_admin/features/auth/auth_service.dart';
 import 'package:flutter_admin/features/dashboard.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,20 +19,23 @@ class _LoginScreenState extends State<LoginScreen> {
   handleLogin() async {
     final String username = userNameController.value.text;
     final String password = passwordController.value.text;
-    await APIService.instance
+    await AuthService.instance
         .authenticate(username: username, password: password)
-        .then((res) => {
-              if (res.token != '')
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Navbar(
-                              authInfo: res,
-                            )),
-                  )
-                }
-            });
+        .then(
+          (res) => {
+            if (res.token != '')
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Dashboard(
+                      authInfo: res,
+                    ),
+                  ),
+                )
+              }
+          },
+        );
   }
 
   @override

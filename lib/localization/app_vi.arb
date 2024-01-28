@@ -1,6 +1,7 @@
 {
   "title": "Hello",
   "userManagementTitle": "User Management",
+  "roleManagementTitle": "Role Management",
   "notEmptyMessage": "This Field Cannot Be Empty",
   "invalidEmailMessage": "Invalid email",
   "invalidPhoneNumberMessage": "Invalid Phone Number",

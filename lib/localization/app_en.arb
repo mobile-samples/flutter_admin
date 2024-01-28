@@ -7,6 +7,10 @@
   "@userManagementTitle": {
     "description": "User Management title"
   },
+  "roleManagementTitle": "Role Management",
+  "@roleManagementTitle": {
+    "description": "Role Management title"
+  },
   "notEmptyMessage": "This Field Cannot Be Empty",
   "@notEmptyMessage": {
     "description": "Validate TextFormField cannot be empty"

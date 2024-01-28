@@ -1,61 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/features/role/role_model.dart';
 
-class RoleCard extends StatefulWidget {
+class RoleCard extends StatelessWidget {
   const RoleCard({super.key, required this.role});
 
   final Role role;
-  @override
-  State<RoleCard> createState() => _RoleCardState();
-}
 
-class _RoleCardState extends State<RoleCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey.shade300,
-            width: 3,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 9,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
-                  child: Text(
-                    widget.role.roleName,
-                    style: TextStyle(
-                        color: Colors.teal[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400),
+    return Card(
+      child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    role.roleName,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: role.status == 'A'
+                              ? Colors.teal[700]
+                              : Colors.grey,
+                        ),
                   ),
-                ),
-                Text(
-                  widget.role.remark,
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
-                  maxLines: 1,
-                  overflow: TextOverflow.visible,
-                )
-              ],
-            ),
-          ),
-          const Expanded(
-            flex: 1,
-            child: Icon(Icons.chevron_right),
-          )
-        ],
-      ),
+                  Text(
+                    role.remark,
+                    style: Theme.of(context).textTheme.titleSmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.visible,
+                  )
+                ],
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          )),
     );
   }
 }

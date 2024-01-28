@@ -4,11 +4,11 @@ import 'package:flutter_admin/common/client/model.dart';
 import 'package:flutter_admin/common/client/search_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'user_model.dart';
-import 'user_service.dart';
-import 'widgets/user_card.dart';
-import 'widgets/user_form.dart';
-import 'widgets/view_user.dart';
+import '../user_model.dart';
+import '../user_service.dart';
+import 'user_card.dart';
+import 'user_search_form.dart';
+import 'view_user.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -69,7 +69,7 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserForm(
+                  UserSearchForm(
                     userFilter: filter,
                     userName: userNameController,
                     displayName: displayNameController,
@@ -87,51 +87,41 @@ class _UserScreenState extends SearchState<UserScreen, User, UserFilter> {
   @override
   PreferredSizeWidget buildAppbar(BuildContext context) {
     return AppBar(
-      title: Text(AppLocalizations.of(context)!.userManagementTitle),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () => showSearchModal(context)
-        ),
-      ]
-    );
+        title: Text(AppLocalizations.of(context)!.userManagementTitle),
+        actions: <Widget>[
+          IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => showSearchModal(context)),
+        ]);
   }
 
   @override
   Widget buildChild(BuildContext context, SearchResult<User> searchResult) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(mainAxisSize: MainAxisSize.min, children: [
-        Expanded(
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (searchResult.list.isNotEmpty) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewUserScreen(
-                                user: searchResult.list[index])),
-                          );  
-                        },
-                        child: UserCard(user: searchResult.list[index])
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              if (searchResult.list.isNotEmpty) {
+                return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ViewUserScreen(user: searchResult.list[index])),
                       );
-                    } else {
-                      return Container();
-                    }
-                  },
-                  childCount: searchResult.list.length,
-                ),
-              ),
-            ],
+                    },
+                    child: UserCard(user: searchResult.list[index]));
+              } else {
+                return Container();
+              }
+            },
+            childCount: searchResult.list.length,
           ),
         ),
-      ]),
+      ],
     );
   }
 }
